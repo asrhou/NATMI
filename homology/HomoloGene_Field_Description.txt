@@ -1,0 +1,94 @@
+HomoloGeneEntrySet
+------------------
+Set of HomoloGeneEntry (analogous to Bioseq-set)
+
+
+HomoloGeneEntry
+---------------
+Entry for each HomoloGene group (corresponds to each entry on
+the webpage).  Contains the following:
+- HomoloGeneEntry_hg-id: unique integer identifier for the group
+- HomoloGeneEntry_version: version of the group (group version
+  changes when elements from the group changes (e.g. new genes added)
+  but the majority of the members in the group stay the same
+- HomoloGeneEntry_caption: string describing highest taxonomic level
+  of conservation for the group
+- HomoloGeneEntry_taxid: taxonomic id for the highest taxonomic level
+  of conservation for the group
+- HomoloGeneEntry_genes: set of Gene objects
+- HomoloGeneEntry_cr-date: creation date for HomoloGene group
+- HomoloGeneEntry_up-date: last update date for HomoloGene group
+- HomoloGeneEntry_distances: set of Stats objects
+- HomoloGeneEntry_commentaries: set of CommentarySet objects
+
+
+Gene
+----
+Contains information about each gene in a HomoloGene group.  Contains
+the following:
+- Gene_geneid: GeneID (from EntrezGene) identifier
+- Gene_symbol: "best" symbol for gene (official if available)
+- Gene_title: name of the gene
+- Gene_taxid: taxonomic id for the gene
+- Gene_prot-gi: gi of protein used for calculations
+- Gene_prot-acc: accession of protein used for calculations
+- Gene_prot-len: length of protein used for calculations
+- Gene_nuc-gi: gi of corresponding mRNA to protein used in
+  calculations (if available)
+- Gene_nuc-acc: accession of corresponding mRNA to proteinused in
+  calculations (if available)
+- Gene_domains: set of Domain objects
+
+
+Domain
+------
+Contains information of domains for each protein in a HomoloGene
+group.  Contains the following:
+- Domain_begin: beginning position of the domain
+- Domain_end: end position of the domain
+- Domain_pssm-id: PSSM id of the domain
+- Domain_cdd-id: CDD id of the domain
+- Domain_cdd-name: common name of the domain
+
+
+Stats
+-----
+Contains different pairwise statistics between the proteins in a
+HomoloGene group.  Contains the following:
+- Stats_gi1: gi of the first protein in the pair
+- Stats_gi2: gi of the second protein in the pair
+- Stats_nuc-change: ratio of nucleotide differences between the pair
+- Stats_nuc-change-jc: ratio of nucleotide differences between the
+  pair (corrected for back substitions through Jukes and Cantor
+  formula)
+- Stats_prot-change: ratio of amino acid differences between the pair
+- Stats_ka: Ka for the pair (ratio of non-synonymous differences per
+  non-synonymous site)
+- Stats_ks: Ks for the pair (ratio of synonymous differences per
+  synonymous site)
+- Stats_knr: Knr for the pair (ratio of radical non-synonymous
+  differences per radical non-synonymous site)
+- Stats_knc: Knc for the pair (ratio of conservative non-synonymous
+  differences per conservative non-synonymous site)
+- Stats_recip-best: is this pair reciprocal best using bitscore as
+  the measurement
+
+
+CommentarySet
+-------------
+Set of Commentary objects.  Contains the following:
+- CommentarySet_title: string describing what type of commentaries this
+  set contains
+- CommentarySet_commentaries: set of Commentary objects
+
+
+Commentary
+----------
+Provides information and links to other information pertaining to
+members of a HomoloGene group.  Contains the following:
+- Commentary_link: link to source of other information.
+  Contains the following:
+  - Link_hypertext: simple description of the content of the link
+  - Link_url: URL of the link
+- Commentary_description: description of contents of the data
+- Commentary_provider: name of the source of the data

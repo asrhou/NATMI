@@ -13,8 +13,6 @@ This tool currently provides command line utilities only.
 
 ## Command Line Utilities
 
-This tool can construct the cell-to-cell communication network based on the transcriptome data. The required user inputs are a gene expression matrix file in CSV format. For single-cell or single-nucli
-
 This tool can construct cell-to-cell communication networks based on multiomics abundance data. It works with with user-sepcified gene/protein abundance matrix files (CSV format -- only csv??) or can be used to explore Tabula Muris cell atlas data set and other deafult data sets provided (see: data/deafult direcorty). For single-cell or single-nucli ???
 
 Which python is needed? 2.X/3.X?

@@ -13,7 +13,7 @@ This tool currently provides command line utilities only.
 
 ## Command Line Utilities
 
-This tool can construct cell-to-cell communication networks based on multiomics abundance data. It works with with user-sepcified gene/protein abundance matrix files (CSV format -- only csv??) or can be used to explore Tabula Muris cell atlas data set and other deafult data sets provided (see: data/deafult direcorty). For single-cell or single-nucli ???
+NATMI is a tool to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-sepcified gene/protein abundance matrix files (CSV format -- only csv??) or can be used to explore Tabula Muris cell atlas data set [or other deafult data sets provided (see: data/deafult direcorty)--if you have more examples]. For single-cell or single-nucli ???
 
 Which python is needed? 2.X/3.X?
 
@@ -35,7 +35,7 @@ optional arguments:
 
 ```
 
-*Note: The format of expression matrix and metafile could be csv, tsv, txt, xls or xlsx file.
+*Note: Expression matrix and metafile are supported in csv, tsv, txt, xls or xlsx format.
 
 Predict ligand-receptor-mediated interactions in a mouse single-cell RNA-seq dataset using literature supported ligand-receptor pairs and four CPUs:
 ```bat
@@ -52,7 +52,7 @@ ExtractEdges.py creates a folder using the name of the expression matrix. README
 [Could add --out option and keep the above if 'out' is not specfied--a general comment for other outputs too.]
 
 
-### DiffEdges: Identifying the weight of each ligand-receptor-mediated interaction between a cell-type pair in two datasets.
+### DiffEdges: Identification of the weight of each ligand-receptor-mediated interaction between a cell-type pair in two datasets.
 
 ```
 DiffEdges.py [-h] --refFolder REFFOLDER --targetFolder TARGETFOLDER [--signalType SIGNALTYPE] [--weightType WEIGHTTYPE]
@@ -125,7 +125,7 @@ optional arguments:
                         ligand and receptor's symbols
 ```
 
-*Note: Users have to install [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) to visualise the cell-to-cell communication network at three distinct levels. 
+*Note: Python libaries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. 
 
 Visualise cell-connectivity-summary networks from the results of ExtractEdges.py and DiffEdges.py:
 ```bat

@@ -434,7 +434,7 @@ def main(species, emFile, annFile, signalType, coreNum):
 if __name__ == '__main__':
     #process arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--species', default='human', help='only expression data generated from human, mouse and other 19 species in HomoloGene database (https://www.ncbi.nlm.nih.gov/homologene/statistics/) are currently supported, default is "human"') 
+    parser.add_argument('--species', default='human', help='only human and mouse expression data are currently supported, default is "human"') 
     parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene symbols) and column names (single-cell identifiers)')
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
     parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a, folder name of the interaction database')

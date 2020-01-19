@@ -22,7 +22,7 @@ ExtractEdges.py [-h] [--species SPECIES] --emFile EMFILE [--annFile ANNFILE] [--
 
 optional arguments:
   -h, --help            show this help message and exit
-  --species SPECIES     only expression data generated from human, mouse and other 19 species in HomoloGene database (https://www.ncbi.nlm.nih.gov/homologene/statistics/) are currently supported
+  --species SPECIES     only human and mouse expression data are currently supported, default is "human"
   --emFile EMFILE       the path to the expression matrix file with row names (gene symbols) and column names (cell names/single-cell identifiers)
   --annFile ANNFILE     the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file 'toy.sc.ann.txt' as an example)
   --signalType SIGNALTYPE

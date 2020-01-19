@@ -13,9 +13,7 @@ This tool currently provides command line utilities only.
 
 ## Command Line Utilities
 
-NATMI is a tool to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-sepcified gene/protein abundance matrix files (CSV format -- only csv??) or can be used to explore Tabula Muris cell atlas data set [or other deafult data sets provided (see: data/deafult direcorty)--if you have more examples]. For single-cell or single-nucli ???
-
-Which python is needed? 2.X/3.X?
+NATMI is a tool to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-sepcified gene/protein abundance matrix files (csv, tsv, txt, xls or xlsx format) or can be used to explore [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/). Besides, NATMI is compatible with both python 2 and 3 versions.
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 
@@ -24,11 +22,9 @@ ExtractEdges.py [-h] [--species SPECIES] --emFile EMFILE [--annFile ANNFILE] [--
 
 optional arguments:
   -h, --help            show this help message and exit
-  --species SPECIES     the expression data can only be generated from human or mouse for now
-  (users provide expression data. do you mean: only human and mouse expression data are currently supported)
+  --species SPECIES     only expression data generated from human, mouse and other 19 species in HomoloGene database (https://www.ncbi.nlm.nih.gov/homologene/statistics/) are currently supported
   --emFile EMFILE       the path to the expression matrix file with row names (gene symbols) and column names (cell names/single-cell identifiers)
-  --annFile ANNFILE     the path to the metafile in which row one has column names, column one has single-cell identifiers and column two has corresponding cluster IDs. This file is NOT required for bulk data
-(row one has column names, column one has single-cell identifiers and column two has corresponding cluster IDs--> cant follow that)
+  --annFile ANNFILE     the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file 'toy.sc.ann.txt' as an example)
   --signalType SIGNALTYPE
                         lrc2p (default) has literature supported ligand-receptor pairs | lrc2a has putative and literature supported ligand-receptor pairs, folder name of the interaction database
   --coreNum CORENUM     the number of CPU cores used, default is one
@@ -44,12 +40,13 @@ Predict ligand-receptor-mediated interactions in a mouse single-cell RNA-seq dat
 
 Predict ligand-receptor-mediated interactions in a human bulk RNA-seq dataset using putative and literature supported ligand-receptor pairs and one CPU:
 ```bat
-   python ExtractEdges.py --species human --emFile toy.bulk.em.xls --signalType lrc2a (if one CPU is deafult maybe remove --coreNum 1)
+   python ExtractEdges.py --species human --emFile toy.bulk.em.xls --signalType lrc2a --coreNum 4
 ```
 
 ExtractEdges.py creates a folder using the name of the expression matrix. README.txt (in the output folder) contains information about other files in the folder.
 
-[Could add --out option and keep the above if 'out' is not specfied--a general comment for other outputs too.]
+[Could add --out option and keep the above if 'out' is not specfied--a general comment for other outputs too. ]
+[Thank you! I will add this option to all outputs in the next version.]
 
 
 ### DiffEdges: Identification of the weight of each ligand-receptor-mediated interaction between a cell-type pair in two datasets.

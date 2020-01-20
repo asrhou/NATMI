@@ -17,10 +17,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 #build the folder to save the analysis results
-def BuildSaveFolder(refFolder, targetFolder):
-    ref = os.path.basename(refFolder)
-    target = os.path.basename(targetFolder)
-    resultFolder = os.path.join(os.path.dirname(refFolder), "delta_ref_%s_tgt_%s" % (ref, target))
+def BuildSaveFolder(refFolder, targetFolder, outFolder):
+    ref = os.path.abspath(refFolder)
+    target = os.path.abspath(targetFolder)
+    if outFolder!='':
+        resultFolder = os.path.abspath(outFolder)
+    else:
+        resultFolder = os.path.join(os.path.dirname(refFolder), "delta_ref_%s_tgt_%s" % (ref, target))
     if not os.path.exists(resultFolder):
         os.mkdir(resultFolder)
     rmf = os.path.join(resultFolder,'README.txt')
@@ -99,7 +102,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     disaperEdgeDF.columns = deltaColNames
     disaperEdgeDF = disaperEdgeDF.sort_values(by='Delta edge expression weight', ascending=False)
     disaperEdgeDF.to_csv(os.path.join(resultEdgeF, 'Disappeared_%s.csv' % (weightType)), index=False, header=True, columns=deltaColNames)
-    print('%s edges disappeared' % "{:,}".format(len(disaperEdgeDF)))
+    print('#### %s edges disappeared' % "{:,}".format(len(disaperEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->Disappeared_xxx.csv: edges that only detected in the reference dataset\n')
         
@@ -107,7 +110,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     aperEdgeDF.columns = deltaColNames
     aperEdgeDF = aperEdgeDF.sort_values(by='Delta edge expression weight', ascending=False)
     aperEdgeDF.to_csv(os.path.join(resultEdgeF, 'Appeared_%s.csv' % (weightType)), index=False, header=True, columns=deltaColNames)
-    print('%s edges appeared' % "{:,}".format(len(aperEdgeDF)))
+    print('#### %s edges appeared' % "{:,}".format(len(aperEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->Appeared_xxx.csv: edges that only detected in the target dataset\n')
     
@@ -139,7 +142,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     upEdgeDF = upEdgeDF.ix[:,changedColNames]
     upEdgeDF.columns = newdeltaColNames
     upEdgeDF.to_csv(os.path.join(resultEdgeF, 'UP-regulated_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
-    print('%s edges are up-regulated' % "{:,}".format(len(upEdgeDF)))
+    print('#### %s edges are up-regulated' % "{:,}".format(len(upEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->UP-regulated_xxx.csv: edges that have higher expression weights in the target dataset\n')
     
@@ -167,7 +170,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     downEdgeDF = downEdgeDF.ix[:,changedColNames]
     downEdgeDF.columns = newdeltaColNames
     downEdgeDF.to_csv(os.path.join(resultEdgeF, 'DOWN-regulated_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
-    print('%s edges are down-regulated' % "{:,}".format(len(downEdgeDF)))
+    print('#### %s edges are down-regulated' % "{:,}".format(len(downEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->DOWN-regulated_xxx.csv: edges that have lower expression weights in the target dataset\n')
     
@@ -195,7 +198,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     eqEdgeDF = eqEdgeDF.ix[:,changedColNames]
     eqEdgeDF.columns = newdeltaColNames
     eqEdgeDF.to_csv(os.path.join(resultEdgeF, 'Stable_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
-    print('%s edges are not changed' % "{:,}".format(len(eqEdgeDF)))
+    print('#### %s edges are not changed' % "{:,}".format(len(eqEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->Stable_xxx.csv: edges that have identical expression weights in two datasets\n')
         
@@ -222,7 +225,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     mergedDF = mergedDF.ix[:,changedColNames]
     mergedDF.columns = newdeltaColNames
     mergedDF.to_csv(os.path.join(resultEdgeF, 'All_edges_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
-    print('%s edges are detected in at least one dataset' % "{:,}".format(len(mergedDF)))
+    print('#### %s edges are detected in at least one dataset' % "{:,}".format(len(mergedDF)))
     
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->All_edges_xxx.csv: all edges that detected in both dataset\n')
@@ -242,7 +245,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     return aperEdgeDF, disaperEdgeDF, upEdgeDF, downEdgeDF, eqEdgeDF
 
 #start to construct the delta network
-def main(refFolder, targetFolder, signalType, weightType):
+def main(refFolder, targetFolder, signalType, weightType, outFolder):
     #load data
     try:
         testClusterMapDF = pd.read_csv(os.path.join(targetFolder, 'ClusterMapping.csv'), index_col=None, header=0)
@@ -266,15 +269,15 @@ def main(refFolder, targetFolder, signalType, weightType):
         newColNames = ["sending cluster name", "ligand", "receptor", "target cluster name", "count ligand", "frequency ligand", "original ligand", "specified ligand", "count receptor", "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
         refEdgeDF.columns = newColNames
         testEdgeDF.columns = newColNames
-        print('all data are loaded, reference dataset has %s edges, target dataset has %s edges' % (len(refEdgeDF), len(testEdgeDF)))
+        print('#### all data are loaded, reference dataset has %s edges, target dataset has %s edges' % (len(refEdgeDF), len(testEdgeDF)))
     
     except Exception as e: 
         print(e)
         return
         
     #build the folder to save the analysis results
-    resultFolder, rmf = BuildSaveFolder(refFolder, targetFolder)
-    print('the folder "%s" is made to save the analysis results' % resultFolder)
+    resultFolder, rmf = BuildSaveFolder(refFolder, targetFolder, outFolder)
+    print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultFolder))
     with open(rmf, 'a') as file_object:
         file_object.write('Reference dataset has %s edges\n' % len(refEdgeDF))
         file_object.write('Target dataset has %s edges\n' % len(testEdgeDF))
@@ -282,21 +285,17 @@ def main(refFolder, targetFolder, signalType, weightType):
             
     # find population changes in clusters
     sizeClusterDF = IdentifyPopulationChanges(refClusterMapDF, testClusterMapDF, resultFolder, rmf)
-    print('all population changes have been identified')
+    print('#### all population changes have been identified')
     
     # calculate changes in the cell-to-cell communications 
     aperEdgeDF, disaperEdgeDF, upEdgeDF, downEdgeDF, eqEdgeDF = IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weightType, resultFolder, rmf)
-    print('all signaling changes have been identified')
-    
+    print('#### all signaling changes have been identified')
+
+    print('#### DONE')
 
 #===================================================================#
 #-------------------------------START-------------------------------#
 #===================================================================#
-
-'''
-python DiffEdges.py --refFolder /Users/rhou/Public/c2cnetworkwebtool/CLI/tbs/3m.em --targetFolder /Users/rhou/Public/c2cnetworkwebtool/CLI/tbs/18m.em --signalType LRC2.0r --coreNum 1
-python DiffEdges.py --refFolder /Users/rhou/Public/c2cnetworkwebtool/CLI/tbs/18m.em --targetFolder /Users/rhou/Public/c2cnetworkwebtool/CLI/tbs/21m.em --signalType LRC2.0r --coreNum 1
-'''
 
 if __name__ == '__main__':
     #process arguments
@@ -305,6 +304,7 @@ if __name__ == '__main__':
     parser.add_argument('--targetFolder', required=True, help='the path to the folder of the target dataset')
     parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a, folder name of the interaction database')
     parser.add_argument('--weightType', default='mean', help="mean (default) | sum")
+    parser.add_argument('--out', default='', help='the path to save the analysis results')
     
     opt = parser.parse_args()
     
@@ -341,7 +341,9 @@ if __name__ == '__main__':
     print('The target dataset: %s' % opt.targetFolder)
     print('The cell-to-cell signaling type: %s' % signalType)
     print('The weight type of cell-to-cell signaling: %s' % weightType)
+    if opt.out != '':
+        print('The folder to save all results: %s' % os.path.abspath(opt.out))
     print('===================================================')
     
     #start to construct the delta network
-    main(opt.refFolder, opt.targetFolder, signalType, weightType)
+    main(opt.refFolder, opt.targetFolder, signalType, weightType, opt.out)

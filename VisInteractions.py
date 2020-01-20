@@ -35,8 +35,7 @@ def ChooseTopEdges(adjM, keepTopEdge):
     edgeD = pd.DataFrame(edgeDict).sort_values(by=['v'], ascending=False)
     edgeD = edgeD.head(keepTopEdge)
             
-    nlist = list(set(edgeD['s']).union(set(edgeD['t'])))
-    nadjM = pd.DataFrame(0.0, index=nlist,columns=nlist)
+    nadjM = pd.DataFrame(0.0, index=adjM.index,columns=adjM.index)
     for idx in edgeD.index:
         nadjM.ix[edgeD.ix[idx,['s']],edgeD.ix[idx,['t']]] = adjM.ix[edgeD.ix[idx,['s']],edgeD.ix[idx,['t']]]
     return nadjM
@@ -200,8 +199,20 @@ def BuildAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThreshold,
     adjCountM = adjCountM.ix[nlist,nlist]
     
     adjM = ChooseTopEdges(adjM, keepTopEdge)
+    ilist = adjM.index[adjM.max(axis=1)>0]
+    clist = adjM.columns[adjM.max(axis=0)>0]
+    nlist = sorted(list(set(ilist).union(set(clist))))
+    adjM = adjM.ix[nlist,nlist]
     adjSpecM = ChooseTopEdges(adjSpecM, keepTopEdge)
+    ilist = adjSpecM.index[adjSpecM.max(axis=1)>0]
+    clist = adjSpecM.columns[adjSpecM.max(axis=0)>0]
+    nlist = sorted(list(set(ilist).union(set(clist))))
+    adjSpecM = adjSpecM.ix[nlist,nlist]
     adjCountM = ChooseTopEdges(adjCountM, keepTopEdge)
+    ilist = adjCountM.index[adjCountM.max(axis=1)>0]
+    clist = adjCountM.columns[adjCountM.max(axis=0)>0]
+    nlist = sorted(list(set(ilist).union(set(clist))))
+    adjCountM = adjCountM.ix[nlist,nlist]
     
     nxgW = nx.MultiDiGraph(adjM)
     nxgS = nx.MultiDiGraph(adjSpecM)
@@ -984,10 +995,11 @@ def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weig
             return
         
         #cluster to cluster weighted directed network
-        print('#### plotting cluster to cluster weighted directed network')
+        print('#### plotting the weighted directed cell-to-cell communication network')
         resultDir = os.path.join(sourceFolder,'Network_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,signalType, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
+        print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
         BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
     else:
         # process node properties for delta dataset
@@ -1019,12 +1031,13 @@ def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weig
         resultDir = os.path.join(sourceFolder,'Delta_Network_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold,keepTopEdge,signalType, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
+        print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
         for kind in dynamDict.keys():
             if kind != 'all':
                 continue
             tempedgeDF = dynamDict[kind]
             #cluster to cluster weighted directed network
-            print ('#### plotting cluster to cluster weighted directed network for %s interactions' % kind)
+            print ('#### plotting the weighted directed cell-to-cell communication network for delta interactions')
             BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, tempedgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, kind)
     
     print('#### DONE')
@@ -1324,10 +1337,11 @@ def MainLRNetwork(sourceFolder, signalType, weightType, specificityThreshold, we
         resultDir = os.path.join(sourceFolder,'LRNetwork_%s-%s_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (ls,rs,weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,signalType, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
+        print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
         BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
     print('#### DONE')
           
-def DrawBipartieGraph(flag, humanDF, homoDF, hidCol, taxidCol, geneSymbolCol, lrm, readmeStr, curDF, sendCltLabel, targetCltLabel, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
+def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
     
     # prepare lr edges.
     curDF['cellligand'] = curDF['sending cluster name'] + curDF['target cluster name'] + "->" + curDF['ligand']
@@ -1589,30 +1603,12 @@ def DrawBipartieGraph(flag, humanDF, homoDF, hidCol, taxidCol, geneSymbolCol, lr
     dataFileName = os.path.join(resultDir, dataFileName)
     curDF = curDF.ix[:,oldcols]
     curDF.columns = columns
-    for idx in curDF.index:
-        ligand = curDF.ix[idx,'Ligand symbol']
-        ligand = homoDF.ix[homoDF[geneSymbolCol]==ligand, hidCol].values[0]
-        ligand = humanDF.ix[humanDF[hidCol]==ligand, geneSymbolCol].values[0]
-        receptor = curDF.ix[idx,'Receptor symbol']
-        receptor = homoDF.ix[homoDF[geneSymbolCol]==receptor, hidCol].values[0]
-        receptor = humanDF.ix[humanDF[hidCol]==receptor, geneSymbolCol].values[0]
-        curDF.ix[idx,'PMID_support'] = lrm.ix[(lrm['Ligand_current_gene_symbol_aug2019']==ligand)&(lrm['Receptor_current_gene_symbol_aug2019']==receptor),'PMID_support'].values[0]
-    curDF.to_csv(dataFileName, index=False, header=True, columns= columns+['PMID_support'])
+    curDF.to_csv(dataFileName, index=False, header=True, columns= columns)
     
     return readmeStr
     
 def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, dataType = ''):
     readmeStr = '\n'
-    ## HID (HomoloGene group id)[0] - Taxonomy ID[1] - Gene ID[2] - Gene Symbol[3] - Protein gi[4] - Protein accession[5]
-    homoMapDir = '/Users/rhou/Public/c2cnetworkwebtool/CLI/homology/homologene.data'
-    homoDF = pd.read_csv(homoMapDir, sep='\t', index_col=None, header=None)
-    # reduce the list to genes of the given species
-    hidCol = 0
-    taxidCol = 1
-    geneSymbolCol = 3
-    humanDF = homoDF.ix[homoDF[taxidCol] == 9606,]
-    homoDF = homoDF.ix[homoDF[taxidCol] == 10090,]
-    lrm = pd.read_excel('/Users/rhou/Public/c2cnetworkwebtool/CLI/LRC2.0r/connectome2.xlsx',index_col=False,header=0)
     
     for sendClt in origlabels:
         for targetClt in origlabels:
@@ -1624,7 +1620,7 @@ def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificity
                 curDF = curDF.sort_values(by=['delta specificity'], ascending=False)
             if len(curDF) > 0:
                 print('#### plotting ligand-receptor pairs from "%s" to "%s"' % (sendClt, targetClt))
-                readmeStr = DrawBipartieGraph(flag, humanDF, homoDF, hidCol, taxidCol, geneSymbolCol, lrm, readmeStr, curDF, labelDict[sendClt], labelDict[targetClt], plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType)
+                readmeStr = DrawBipartieGraph(flag, readmeStr, curDF, labelDict[sendClt], labelDict[targetClt], plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType)
             
     with open(os.path.join(resultDir,'README.txt'), 'w') as file_object:
         file_object.write('README\n')
@@ -1677,6 +1673,7 @@ def MainCltPair(sourceFolder, signalType, weightType, specificityThreshold, weig
         resultDir = os.path.join(sourceFolder,'CltPair_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,signalType, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
+        print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
         BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType)
         
     else:
@@ -1711,12 +1708,13 @@ def MainCltPair(sourceFolder, signalType, weightType, specificityThreshold, weig
         resultDir = os.path.join(sourceFolder,'Delta_CltPair_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold,keepTopEdge,signalType, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
+        print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
         for kind in dynamDict.keys():
             if kind == 'all':
                 continue
             tempedgeDF = dynamDict[kind]
             #cluster to cluster edges
-            print 'plotting cluster to cluster bubble charts for %s interactions' % kind
+            print('#### plotting %s cluster-to-cluster interactions' % kind)
             BuildInterClusterPlot(origlabels, labelDict, tempedgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, kind)
     
     print('#### DONE')
@@ -1867,7 +1865,7 @@ if __name__ == '__main__':
         print('The plot height: %s' % plotHeight)
         print('The plot format: %s' % plotFormat)
         print('===================================================')
-        print('Start to construct ligand-receptor pairs between clusters')
+        print('#### start to construct ligand-receptor pairs between clusters')
         
         #start to construct ligand-receptor pairs between clusters
         MainCltPair(opt.sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance)
@@ -1925,7 +1923,7 @@ if __name__ == '__main__':
             print('The plot height: %s' % plotHeight)
             print('The plot format: %s' % plotFormat)
             print('===================================================')
-            print('Start to construct the %s-%s-mediated cell-to-cell communication network' % (ls,rs))
+            print('#### start to construct the %s-%s-mediated cell-to-cell communication network' % (ls,rs))
         
             #start to draw single-LR network
             MainLRNetwork(opt.sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, ls, rs, plotFormat, layout, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance)
@@ -1951,7 +1949,7 @@ if __name__ == '__main__':
             print('The plot height: %s' % plotHeight)
             print('The plot format: %s' % plotFormat)
             print('===================================================')
-            print('Start to construct the cell-to-cell communication network')
+            print('#### start to construct the cell-to-cell communication network')
             
             #start to construct the cell-to-cell communication network
             MainNetwork(opt.sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, layout, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance)

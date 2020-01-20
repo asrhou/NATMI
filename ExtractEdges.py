@@ -358,7 +358,7 @@ def GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeSt
             file_object.write('\n')
             file_object.write('No signaling interactions found')
 
-def main(species, emFile, annFile, signalType, coreNum):
+def main(species, emFile, annFile, signalType, coreNum, outFolder):
     #load data
     emFileExtention = emFile.split('.')[-1]
     if emFileExtention == 'csv':
@@ -413,9 +413,13 @@ def main(species, emFile, annFile, signalType, coreNum):
         lrM = TransferToGeneSymbol(homoMapDir, species, taxidCol, geneSymbolCol, hidCol, lrM)
     
     #build the folder to save the analysis results
-    resultDir = emFile.split('.'+emFileExtention)[0]
+    if outFolder != '':
+        resultDir = os.path.abspath(outFolder)
+    else:
+        resultDir = emFile.split('.'+emFileExtention)[0]
     if not os.path.exists(resultDir):
         os.mkdir(resultDir)
+    print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
     
     #cluster expression matrix
     print('#### cluster the expression matrix')
@@ -439,6 +443,7 @@ if __name__ == '__main__':
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
     parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a, folder name of the interaction database')
     parser.add_argument('--coreNum', type=int, default=1, help='the number of CPU cores used, default is one')
+    parser.add_argument('--out', default='', help='the path to save the analysis results')
     
     opt = parser.parse_args()
     
@@ -481,7 +486,9 @@ if __name__ == '__main__':
         print('The metafile is not provided')
     print('The cell-to-cell signaling type: %s' % signalType)
     print('The number of cores to use: %s' % opt.coreNum)
+    if opt.out != '':
+        print('The folder to save all results: %s' % os.path.abspath(opt.out))
     print('===================================================')
     
     #start to construct cell-to-cell network
-    main(species, opt.emFile, opt.annFile, signalType, opt.coreNum)
+    main(species, opt.emFile, opt.annFile, signalType, opt.coreNum, opt.out)

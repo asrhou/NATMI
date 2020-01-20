@@ -53,7 +53,7 @@ ExtractEdges.py creates a folder using the name of the expression matrix. README
 
 ### DiffEdges: Identification of changes in ligand-receptor edge weights between a cell-type pair in two conditions. 
 
-*Note: Only weight changes across two condition from the same or similar datasets should be compared. Only comparison between the same 'signalType' ligand-receptor pairs (literature-supported with literature-supported or putative with putative) makes sense. 
+*Note: Only weight changes across two condition from the same, or similar, datasets and with the same 'signalType' of ligand-receptor pairs (literature-supported with literature-supported or putative with putative) should be compared. 
 
 ```
 DiffEdges.py [-h] --refFolder REFFOLDER --targetFolder TARGETFOLDER [--signalType SIGNALTYPE] [--weightType WEIGHTTYPE]

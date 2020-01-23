@@ -123,7 +123,7 @@ optional arguments:
                         ligand and receptor's symbols
 ```
 
-*Note: Python libaries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. NATMI was tested using seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
+*Note: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. NATMI was tested using seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
 
 Visualise cell-connectivity-summary networks from the results of ExtractEdges.py and DiffEdges.py:
 ```bat
@@ -152,7 +152,7 @@ DiffEdges.py creates a folder (in the result folder) containing the simple graph
 ### Example workflow (Extract edges in xxx and yyy, identify and visualize resulting differential edges.)
 (make a toy example of something you are showing in the paper so the reviewer can run it all at once and put it all to the "test folder". For VisInteractions.py, consider if your script can check if seaborn, igraph, NetworkX and PyGraphviz are installed and if not, try to suggest and install):
 
-*NotePython libaries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will proceed to intalation if they are missing. 
+*NotePython libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will proceed to instalation if they are missing. 
 
 ```bat
    python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4

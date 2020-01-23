@@ -150,7 +150,7 @@ DiffEdges.py creates a folder (in the result folder) containing the simple graph
 
 
 ### Example workflow (Extract edges in xxx and yyy, identify and visualize resulting differential edges.)
-(make a toy example of something you are showing in the paper so the reviewer can run it all at once and put it all to the "test folder". For VisInteractions.py, consider if your script can check if seaborn, igraph, NetworkX and PyGraphviz are installed and if not, try to suggest and install):
+(make a toy example of something you are showing in the paper so the reviewer can run it all at once and put it all to the "test folder". For VisInteractions.py, consider if your script can check if seaborn, igraph, NetworkX and PyGraphviz are installed and if not, warn the user and proceed to install):
 
 *NotePython libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will proceed to instalation if they are missing. 
 

@@ -21,7 +21,7 @@ NATMI is a python-based (both python 2 and 3 are supported) tool to construct ce
 ```
 ExtractEdges.py [-h] [--species SPECIES] --emFile EMFILE [--annFile ANNFILE] [--signalType SIGNALTYPE] [--coreNum CORENUM] [--out OUT]
 
-optional arguments:
+optional arguments: [optional and required arguments are mixed]
   -h, --help            show this help message and exit
   --species SPECIES     only human and mouse expression data are currently supported, default is "human"
   --emFile EMFILE       the path to the expression matrix file with row names (gene symbols) and column names (cell names/single-cell identifiers)
@@ -29,14 +29,14 @@ optional arguments:
   --signalType SIGNALTYPE
                         lrc2p (default) has literature supported ligand-receptor pairs | lrc2a has putative and literature supported ligand-receptor pairs, folder name of the interaction database
   --coreNum CORENUM     the number of CPU cores used, default is one
-  --out OUT     the path to save the analysis results
+  --out OUT             the path to save the analysis results [is this optonal or required?]
 ```
 
 *Note: Expression matrix and metafile are supported in csv, tsv, txt, xls or xlsx format.
 
 Predict ligand-receptor-mediated interactions in a mouse single-cell RNA-seq dataset using literature supported ligand-receptor pairs and four CPUs:
 ```bat
-   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p
+   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4
 ```
 
 Predict ligand-receptor-mediated interactions in a human bulk RNA-seq dataset using putative and literature supported ligand-receptor pairs and one CPU:
@@ -48,12 +48,12 @@ ExtractEdges.py creates a folder using the name of the expression matrix or the 
 
 ### DiffEdges: Identification of changes in ligand-receptor edge weights between a cell-type pair in two conditions. 
 
-*Note: Only weight changes across two condition from the same, or similar, datasets and with the same 'signalType' of ligand-receptor pairs (literature-supported with literature-supported or putative with putative) should be compared. 
+*Note: Only weight changes across two condition from the same, or similar, datasets and with the same 'signalType' of ligand-receptor pairs (literature-supported with literature-supported or all with all) should be compared. 
 
 ```
 DiffEdges.py [-h] --refFolder REFFOLDER --targetFolder TARGETFOLDER [--signalType SIGNALTYPE] [--weightType WEIGHTTYPE] [--out OUT]
 
-optional arguments:
+optional arguments:  [optional and required arguments are mixed]
   -h, --help            show this help message and exit
   --refFolder REFFOLDER
                         the path to the folder of the reference dataset
@@ -123,7 +123,7 @@ optional arguments:
                         ligand and receptor's symbols
 ```
 
-*Note: Python libaries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. NATMI was tested using seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
+*Note: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. NATMI was tested using seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
 
 Visualise cell-connectivity-summary networks from the results of ExtractEdges.py and DiffEdges.py:
 ```bat
@@ -147,3 +147,17 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 ```
 
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
+
+
+### Example workflow (Extract edges in xxx and yyy, identify and visualize resulting differential edges.)
+(make a toy example of something you are showing in the paper so the reviewer can run it all at once and put it all to the "test folder". For VisInteractions.py, consider if your script can check if seaborn, igraph, NetworkX and PyGraphviz are installed and if not, warn the user and proceed to install):
+
+*NotePython libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will proceed to instalation if they are missing. 
+
+```bat
+   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4
+   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4
+   python DiffEdges.py --refFolder /path/to/ExtractEdges.py's/output/folder/of/reference/dataset --targetFolder     /path/to/ExtractEdges.py's/output/folder/of/target/dataset --signalType lrc2p
+   python VisInteractions.py --sourceFolder /path/to/result/folder --signalType lrc2p --weightType mean --detectionThreshold 0.2 --plotFormat pdf --drawNetwork y --plotWidth 12 --plotHeight 10 --layout kk --fontSize 8 --edgeWidth 0 --maxClusterSize 0 --clusterDistance 1
+```
+*Results are in the test folder

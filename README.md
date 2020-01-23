@@ -149,8 +149,8 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
 
-### Example workflow (Extract edges in xxx and yyy and identfy and visualize differential edges.)
-(make a toy exmaple of something you are showing in the paper so the reviewer can run it all at once and put it all to the "test folder". For VisInteractions.py, consider if your script can check if seaborn, igraph, NetworkX and PyGraphviz are installed and if not, try to suggest and install):
+### Example workflow (Extract edges in xxx and yyy, identify and visualize resulting differential edges.)
+(make a toy example of something you are showing in the paper so the reviewer can run it all at once and put it all to the "test folder". For VisInteractions.py, consider if your script can check if seaborn, igraph, NetworkX and PyGraphviz are installed and if not, try to suggest and install):
 
 *NotePython libaries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will proceed to intalation if they are missing. 
 
@@ -160,4 +160,4 @@ DiffEdges.py creates a folder (in the result folder) containing the simple graph
    python DiffEdges.py --refFolder /path/to/ExtractEdges.py's/output/folder/of/reference/dataset --targetFolder     /path/to/ExtractEdges.py's/output/folder/of/target/dataset --signalType lrc2p
    python VisInteractions.py --sourceFolder /path/to/result/folder --signalType lrc2p --weightType mean --detectionThreshold 0.2 --plotFormat pdf --drawNetwork y --plotWidth 12 --plotHeight 10 --layout kk --fontSize 8 --edgeWidth 0 --maxClusterSize 0 --clusterDistance 1
 ```
-*Results are in test folder
+*Results are in the test folder

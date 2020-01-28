@@ -34,7 +34,7 @@ Arguments:
   --out OUT             the path to save the analysis results [is this optonal or required?]
 ```
 
-*Note: Expression matrix and metafile are supported in csv, tsv, txt, xls or xlsx format.
+**Note**: Expression matrix and metafile are supported in csv, tsv, txt, xls or xlsx format.
 
 Predict ligand-receptor-mediated interactions in a mouse single-cell RNA-seq dataset using literature supported ligand-receptor pairs and four CPUs:
 ```bat
@@ -51,7 +51,7 @@ ExtractEdges.py creates a folder using the name of the expression matrix or the 
 ### DiffEdges: Identification of changes in ligand-receptor edge weights between a cell-type pair in two conditions. 
 *Optional arguments are enclosed in square brackets […]*
 
-*Note: Only weight changes across two condition from the same, or similar, datasets and with the same 'signalType' of ligand-receptor pairs (literature-supported with literature-supported or all with all) should be compared. 
+**Note**: Only weight changes across two condition from the same, or similar, datasets and with the same 'signalType' of ligand-receptor pairs (literature-supported with literature-supported or all with all) should be compared.
 
 ```
 DiffEdges.py [-h] --refFolder REFFOLDER --targetFolder TARGETFOLDER [--signalType SIGNALTYPE] [--weightType WEIGHTTYPE] [--out OUT]
@@ -126,7 +126,7 @@ Arguments:
                         ligand and receptor's symbols
 ```
 
-*Note: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. NATMI was tested using seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
+**Note**: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. NATMI was tested using seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
 
 Visualise cell-connectivity-summary networks from the results of ExtractEdges.py and DiffEdges.py:
 ```bat
@@ -151,8 +151,45 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
-### Example workflow (Identify age-related changes in intercellular communication between the mammary gland of 3 and 18-month-old mice in the Tabula Muris Senis dataset.)
-To demonstrate the usage of NATMI, we repeat the analysis on Tabula Muris Senis data in our manuscript here. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' is downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
+## Example workflows 
+
+### Explore intercellular communication in a toy single-cell dataset
+In order to explain the procedure for disclosing intercellular communication in a gene expression dataset, we give the commands to extract ligand-receptor-mediated interactions in 'toy.sc.em.txt'. 'toy.sc.em.txt' is a mouse single-cell RNA-seq dataset, 'toy.sc.ann.txt' is the corresponding annotation file.
+
+#### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'test' folder using ExtractEdges.py. 
+The first step of NATMI-based analysis is always to predict the potential ligand-receptor-mediated interactions between cells using the user-specified ligand-receptor pairs. Here, we use literature supported ligand-receptor pairs in connectomeDB2020 and ExtractEdges.py to extract interactions in the toy single-cell dataset.
+
+```bat
+   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4 --out test
+```
+
+#### Visualise ligand-receptor-mediated interaction network of in 'toy.sc.em.txt' in three different ways. 
+The output of ExtractEdges.py in 'test' folder is the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges.In order to have a complete view of the cell-to-cell communicatioin network, we first visualise the cell-connectivity-summary network in 'test' folder.
+
+```bat
+   python VisInteractions.py --sourceFolder test --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
+```
+
+Network in *test/Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_total-specificity-based_layout_circle.pdf* is the cell-connectivity-summary network weighted by the sum of specificity weights for each ligand-receptor pair. Apparently, there are more specific ligand-receptor pairs from endothelial cell to itself. 
+
+We then visualise top ten ligand-receptor pairs between three cell types.
+
+```bat
+   python VisInteractions.py --sourceFolder test --drawClusterPair y --keepTopEdge 15
+```
+
+Bipartite graph in *test/CltPair_exp_0_spe_0_det_0.2_top_15_signal_lrc2p_weight_mean/From_Endothelial Cells_to_Endothelial Cells_spe.pdf* shows fifteen most specific ligand-receptor pairs endothelial cell to itself. Based on the edge weights (specificities), eleven of them are only detected in endothelial cells. Since the specificity of Efnb2-Pecam1 pair in the graph is less than one, it is interesting to know which cell-type pairs are also connected by Efnb2-Pecam1 pair.
+
+We then visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
+
+```bat
+   python VisInteractions.py --sourceFolder test --drawLRNetwork Efnb2 Pecam1 --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
+```
+
+Network in *test/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
+
+### Identify age-related changes in intercellular communication between the mammary gland of 3 and 18-month-old mice in the Tabula Muris Senis dataset
+To demonstrate the usage of delta network analysis, we repeat the analysis on Tabula Muris Senis data in our manuscript here. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' is downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 
 #### We firstly extract edges between cells of the 3 and 18-month-old mammary glands in mice using ExtractEdges.py. 
 ```bat
@@ -167,8 +204,10 @@ To demonstrate the usage of NATMI, we repeat the analysis on Tabula Muris Senis 
 ```
 
 #### In order to display the up- and down-regulated edges between 3 months and 18 months, we use VisInteractions.py to visualize the cell-to-cell communication networks shown in Figure 6 of the manuscript.
-*Note: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will NOT proceed to draw cell-to-cell communication networks if they are missing. 
+**Note**: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will NOT proceed to draw cell-to-cell communication networks if they are missing.
+
 ```bat
    python VisInteractions.py --sourceFolder 3m-18m --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 10 --plotHeight 10 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```
-**Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'**
+
+*Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*

@@ -8,16 +8,29 @@ Created on Sun Sep  8 08:53:30 2019
 
 import warnings
 warnings.filterwarnings("ignore")
+import os, sys
 import argparse
 import matplotlib
 matplotlib.use('agg')
 import pandas as pd
 import numpy as np
-import seaborn as sns 
-import igraph as ig
-import networkx as nx
-import os, sys
-
+try:
+    import seaborn as sns 
+except ImportError:
+    sys.exit('\n\nError: seaborn module is missing, please install it before proceeding.')
+try:
+    import igraph as ig
+except ImportError:
+    sys.exit('\n\nError: igraph module is missing, please install it before proceeding.')
+try:
+    import networkx as nx
+except ImportError:
+    sys.exit('\n\nError: NetworkX module is missing, please install it before proceeding.')
+try:
+    import pygraphviz as pgv
+except ImportError:
+    sys.exit('\n\nError: PyGraphviz module is missing, please install it before proceeding.')
+    
 #filter adjacency matrix
 def ChooseTopEdges(adjM, keepTopEdge):
     if keepTopEdge == 0:

@@ -4,7 +4,19 @@ Recent development of high throughput single-cell sequencing technologies has ma
 
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
-[The Document has grown, so thinking if we could add a Table of Content here]
+- [Download and Installation](#download-and-installation)
+- [Command Line Utilities](#command-line-utilities)
+  * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
+  * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
+  * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
+- [Example workflows](#example-workflows)
+  * [Explore intercellular communication in a toy single-cell dataset](#explore-intercellular-communication-in-a-toy-single-cell-dataset)
+    + [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
+    + [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
+  * [Identify age-related changes in a time-course dataset](#identify-age-related-changes-in-intercellular-communication-between-the-mammary-gland-of-3-and-18-month-old-mice-in-the-tabula-muris-senis-dataset)
+    + [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
+    + [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
+    + [Visualize the cell-to-cell communication networks shown in Figure 6 of the manuscript.](#in-order-to-display-the-up--and-down-regulated-edges-between-3-months-and-18-months-we-use-visinteractionspy-to-visualize-the-cell-to-cell-communication-networks-shown-in-figure-6-of-the-manuscript)
 
 ## Download and Installation
 ```bat
@@ -168,10 +180,6 @@ The first step of NATMI-based analysis is always to predict the potential ligand
 #### Visualise ligand-receptor-mediated interaction network of in 'toy.sc.em.txt' in three different ways. 
 The output of ExtractEdges.py in 'test' folder is the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges.In order to have a complete view of the cell-to-cell communicatioin network, we first visualise the cell-connectivity-summary network in 'test' folder.
 
-**Note**: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will NOT proceed to draw cell-to-cell communication networks if they are missing.
-
-[wonder if you can make a check of all required libraries in your VisInteractions.py at once and throw an a message: "Error: igraph, seaborn python modules are missing. Please install them before proceeding."]
-
 ```bat
    python VisInteractions.py --sourceFolder test --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```
@@ -210,8 +218,6 @@ To demonstrate the usage of delta network analysis, we repeat the analysis on Ta
 ```
 
 #### In order to display the up- and down-regulated edges between 3 months and 18 months, we use VisInteractions.py to visualize the cell-to-cell communication networks shown in Figure 6 of the manuscript.
-**Note**: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will NOT proceed to draw cell-to-cell communication networks if they are missing.
-
 ```bat
    python VisInteractions.py --sourceFolder 3m-18m --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 10 --plotHeight 10 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```

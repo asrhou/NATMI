@@ -4,6 +4,8 @@ Recent development of high throughput single-cell sequencing technologies has ma
 
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
+[The Document has grown, so thinking if we could add a Table of Content here]
+
 ## Download and Installation
 ```bat
    git clone https://github.com/asrhou/xxx.git
@@ -165,6 +167,10 @@ The first step of NATMI-based analysis is always to predict the potential ligand
 
 #### Visualise ligand-receptor-mediated interaction network of in 'toy.sc.em.txt' in three different ways. 
 The output of ExtractEdges.py in 'test' folder is the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges.In order to have a complete view of the cell-to-cell communicatioin network, we first visualise the cell-connectivity-summary network in 'test' folder.
+
+**Note**: Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required. NATMI will NOT proceed to draw cell-to-cell communication networks if they are missing.
+
+[wonder if you can make a check of all required libraries in your VisInteractions.py at once and throw an a message: "Error: igraph, seaborn python modules are missing. Please install them before proceeding."]
 
 ```bat
    python VisInteractions.py --sourceFolder test --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6

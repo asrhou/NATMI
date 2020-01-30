@@ -10,9 +10,9 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
   * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
-- [Example workflow simple (single cell toy problem)](#example-workflow-simple-single-cell-toy-dataset)
+- [Example workflow simple (single cell toy dataset)](#example-workflow-simple-single-cell-toy-dataset)
   * [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
-* [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
+  * [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
 - [Example workflow advanced (Tabula Muris Senis dataset)](#example-workflow-advanced)
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
@@ -172,7 +172,7 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
-## Example workflow simple: single-cell toy dataset
+## Example workflow simple (single-cell toy dataset)
 [intercellular communication] To explain the procedure for disclosing intercellular communication in a gene expression dataset, we give the commands to extract ligand-receptor-mediated interactions in 'toy.sc.em.txt'. 'toy.sc.em.txt' is a mouse single-cell RNA-seq dataset, 'toy.sc.ann.txt' is the corresponding annotation file.
 
 ### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'test' folder using ExtractEdges.py. 

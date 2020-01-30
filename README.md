@@ -16,7 +16,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 - [Example workflow advanced (Tabula Muris Senis dataset)](#example-workflow-advanced-tabula-muris-senis-dataset)
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
-  * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-use-VisInteractions-to-visualize-up-and-downregulated-edges-between-3-months-and-18-months-as-shown-in-Figure-6-of-the-mansucript)
+  * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-use-VisInteractions-to-visualize-up-and-downregulated-edges-between-3-months-and-18-months)
 
 ## Download and Installation
 ```bat
@@ -223,7 +223,8 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
    python DiffEdges.py --refFolder 3m.mg --targetFolder 18m.mg --signalType lrc2p --out 3m-18m
 ```
 
-### We use VisInteractions.py to visualize up and downregulated edges between 3 months and 18 months as shown in Figure 6 of the mansucript.
+### We use VisInteractions.py to visualize up and downregulated edges between 3 months and 18 months.
+
 ```bat
    python VisInteractions.py --sourceFolder 3m-18m --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 10 --plotHeight 10 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```

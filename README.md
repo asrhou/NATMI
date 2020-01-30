@@ -16,7 +16,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 - [Example workflow advanced (Tabula Muris Senis dataset)](#example-workflow-advanced-tabula-muris-senis-dataset)
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
-  * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up-and-downregulated-edges-between-3-months-and-18-months-using-VisInteractionspy)
+  * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-downregulated-edges-between-3-months-and-18-months-using-VisInteractionspy)
 
 ## Download and Installation
 ```bat

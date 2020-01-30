@@ -5,20 +5,18 @@ Recent development of high throughput single-cell sequencing technologies has ma
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
-- [Software Requirements](#software-equirements)
+- [Software Requirements](#software-requirements)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
   * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
 - [Example workflow (simple)](#example-workflows-simple)
-  * [Explore intercellular communication in a toy single-cell dataset](#explore-intercellular-communication-in-a-toy-single-cell-dataset)
-    + [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
-    + [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
-- [Example workflow (advanced)](#example-workflows-advanced)
-  * [Identify age-related changes in a time-course dataset](#identify-age-related-changes-in-intercellular-communication-between-the-mammary-gland-of-3-and-18-month-old-mice-in-the-tabula-muris-senis-dataset)
-    + [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
-    + [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
-    + [Visualize the cell-to-cell communication networks shown in Figure 6 of the manuscript.](#in-order-to-display-the-up--and-down-regulated-edges-between-3-months-and-18-months-we-use-visinteractionspy-to-visualize-the-cell-to-cell-communication-networks-shown-in-figure-6-of-the-manuscript)
+  * [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
+  * [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
+- [Example workflow (advanced)](#example-workflow-advanced)
+  * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
+  * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
+  * [Visualize the cell-to-cell communication networks shown in Figure 6 of the manuscript.](#in-order-to-display-the-up--and-down-regulated-edges-between-3-months-and-18-months-we-use-visinteractionspy-to-visualize-the-cell-to-cell-communication-networks-shown-in-figure-6-of-the-manuscript)
 
 ## Download and Installation
 ```bat

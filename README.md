@@ -172,8 +172,8 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
-## Example workflow simple (intercellular communication in a toy single-cell dataset)
-In order to explain the procedure for disclosing intercellular communication in a gene expression dataset, we give the commands to extract ligand-receptor-mediated interactions in 'toy.sc.em.txt'. 'toy.sc.em.txt' is a mouse single-cell RNA-seq dataset, 'toy.sc.ann.txt' is the corresponding annotation file.
+## Example workflow simple (toy single-cell dataset)
+[intercellular communication] To explain the procedure for disclosing intercellular communication in a gene expression dataset, we give the commands to extract ligand-receptor-mediated interactions in 'toy.sc.em.txt'. 'toy.sc.em.txt' is a mouse single-cell RNA-seq dataset, 'toy.sc.ann.txt' is the corresponding annotation file.
 
 ### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'test' folder using ExtractEdges.py. 
 The first step of NATMI-based analysis is always to predict the potential ligand-receptor-mediated interactions between cells using the user-specified ligand-receptor pairs. Here, we use literature supported ligand-receptor pairs in connectomeDB2020 and ExtractEdges.py to extract interactions in the toy single-cell dataset.
@@ -207,9 +207,9 @@ We then visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
 
 Network in *test/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
 
-## Example workflow advanced (age-related changes in intercellular communication in the Tabula Muris Senis dataset)
+## Example workflow advanced (Tabula Muris Senis dataset)
 
-To demonstrate the usage of delta network analysis, we repeat the analysis on Tabula Muris Senis data in our manuscript here. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' is downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
+To [age-related changes in intercellular communication in the ] demonstrate the usage of delta network analysis, we repeat the analysis on Tabula Muris Senis data in our manuscript here. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' is downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 
 ### We firstly extract edges between cells of the 3 and 18-month-old mammary glands in mice using ExtractEdges.py. 
 ```bat

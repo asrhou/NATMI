@@ -10,7 +10,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
   * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
-- [Example workflow simple (toy problem)](#example-workflows-simple)
+- [Example workflow simple (toy problem)](#example-workflow-simple-(intercellular-communication-in-a-toy-single-cell-dataset))
   * [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
   * [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
 - [Example workflow advanced (Tabula Muris Senis dataset)](#example-workflow-simple-(intercellular-communication-in-a-toy single-cell-dataset)

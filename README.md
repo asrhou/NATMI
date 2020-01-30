@@ -9,10 +9,11 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
   * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
-- [Example workflows](#example-workflows)
+- [Example workflows (simple)](#example-workflows-simple)
   * [Explore intercellular communication in a toy single-cell dataset](#explore-intercellular-communication-in-a-toy-single-cell-dataset)
     + [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
     + [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
+ - [Example workflows (advanced)](#example-workflows-advanced)
   * [Identify age-related changes in a time-course dataset](#identify-age-related-changes-in-intercellular-communication-between-the-mammary-gland-of-3-and-18-month-old-mice-in-the-tabula-muris-senis-dataset)
     + [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
     + [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
@@ -165,7 +166,7 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
-## Example workflows 
+## Example workflows (simple)
 
 ### Explore intercellular communication in a toy single-cell dataset
 In order to explain the procedure for disclosing intercellular communication in a gene expression dataset, we give the commands to extract ligand-receptor-mediated interactions in 'toy.sc.em.txt'. 'toy.sc.em.txt' is a mouse single-cell RNA-seq dataset, 'toy.sc.ann.txt' is the corresponding annotation file.
@@ -201,6 +202,8 @@ We then visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
 ```
 
 Network in *test/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
+
+## Example workflows (advanced)
 
 ### Identify age-related changes in intercellular communication between the mammary gland of 3 and 18-month-old mice in the Tabula Muris Senis dataset
 To demonstrate the usage of delta network analysis, we repeat the analysis on Tabula Muris Senis data in our manuscript here. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' is downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.

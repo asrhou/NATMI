@@ -173,7 +173,7 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
 ## Example workflow simple (single-cell toy dataset)
-This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt').
+This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt') and literature supported ligand-receptor pairs from connectomeDB2020.
 
 ### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'test' folder using ExtractEdges.py. 
 The first step of NATMI-based analysis is always to predict the potential ligand-receptor-mediated interactions between cells using the user-specified ligand-receptor pairs. Here, we use literature supported ligand-receptor pairs in connectomeDB2020 and ExtractEdges.py to extract interactions in the toy single-cell dataset.
@@ -183,7 +183,7 @@ The first step of NATMI-based analysis is always to predict the potential ligand
 ```
 
 ### Visualise ligand-receptor-mediated interaction network of in 'toy.sc.em.txt' in three different ways. 
-The output of ExtractEdges.py in 'test' folder are the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges. To have a complete view of the cell-to-cell communicatioin network, we first visualise the cell-connectivity-summary network in 'test' folder.
+The output of ExtractEdges.py in 'test' folder are the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges. To have a complete view of the cell-to-cell communication network, we first visualise the cell-connectivity-summary network in 'test' folder.
 
 ```bat
    python VisInteractions.py --sourceFolder test --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
@@ -209,7 +209,7 @@ Network in *test/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_w
 
 ## Example workflow advanced (Tabula Muris Senis dataset)
 
-To demonstrate the usage of delta network analysis, we show the analysis on Tabula Muris Senis as in our manuscript. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' was downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We tehn extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
+To demonstrate the usage of delta network analysis, we show the analysis on Tabula Muris Senis as in our manuscript. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' was downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We then extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 
 ### We firstly extract edges between cells of the 3 and 18-month-old mammary glands in mice using ExtractEdges.py. 
 ```bat
@@ -223,7 +223,9 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
    python DiffEdges.py --refFolder 3m.mg --targetFolder 18m.mg --signalType lrc2p --out 3m-18m
 ```
 
-### To display the up- and down-regulated edges between 3 months and 18 months, we use VisInteractions.py to visualize the cell-to-cell communication networks shown in Figure 6 of the manuscript.
+### To display the up- and down-regulated edges between 3 months and 18 months, we use VisInteractions.py to visualize the cell-to-cell 
+
+unication networks shown in Figure 6 of the manuscript.
 ```bat
    python VisInteractions.py --sourceFolder 3m-18m --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 10 --plotHeight 10 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```

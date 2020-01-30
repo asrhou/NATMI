@@ -223,7 +223,7 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
    python DiffEdges.py --refFolder 3m.mg --targetFolder 18m.mg --signalType lrc2p --out 3m-18m
 ```
 
-### We visualize up and downregulated edges between 3 months and 18 months using VisInteractions.py.
+### We visualize up- and downregulated edges between 3 months and 18 months using VisInteractions.py.
 
 ```bat
    python VisInteractions.py --sourceFolder 3m-18m --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 10 --plotHeight 10 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6

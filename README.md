@@ -10,13 +10,14 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
   * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
-- [Example workflow simple (single-cell toy dataset)](#example-workflow-simple-single-cell-toy-dataset)
+- [Example Workflow Simple (single-cell toy dataset)](#example-workflow-simple-single-cell-toy-dataset)
   * [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-test-folder-using-extractedgespy)
   * [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
-- [Example workflow advanced (Tabula Muris Senis dataset)](#example-workflow-advanced-tabula-muris-senis-dataset)
+- [Example Workflow Advanced (Tabula Muris Senis dataset)](#example-workflow-advanced-tabula-muris-senis-dataset)
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
-  * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-downregulated-edges-between-3-months-and-18-months-using-VisInteractionspy-as-in-Figure-6-of-the-manuscript)
+  * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](##we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-VisInteractionspy-as-in-Figure-6-of-the-manuscript)
+- [User-specified Interaction Database](#user-specified-interaction-database)
 
 ## Download and Installation
 ```bat
@@ -172,7 +173,7 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 
 DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
-## Example workflow simple (single-cell toy dataset)
+## Example Workflow Simple (single-cell toy dataset)
 This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt') and literature supported ligand-receptor pairs from connectomeDB2020.
 
 ### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'test' folder using ExtractEdges.py. 
@@ -207,7 +208,7 @@ We then visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
 
 Network in *test/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
 
-## Example workflow advanced (Tabula Muris Senis dataset)
+## Example Workflow Advanced (Tabula Muris Senis dataset)
 
 To demonstrate the usage of delta network analysis, we show the analysis on Tabula Muris Senis as in our manuscript. Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' was downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982). We then extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by total number of unique molecular identifiers and then rescaled by multiplying by 1,000,000. Normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 
@@ -223,10 +224,22 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
    python DiffEdges.py --refFolder 3m.mg --targetFolder 18m.mg --signalType lrc2p --out 3m-18m
 ```
 
-### We visualize up- and downregulated edges between 3 months and 18 months using VisInteractions.py as in Figure 6 of the manuscript.
+### We visualize up- and down-regulated edges between 3 months and 18 months using VisInteractions.py as in Figure 6 of the manuscript.
 
 ```bat
    python VisInteractions.py --sourceFolder 3m-18m --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 10 --plotHeight 10 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```
 
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
+
+## User-specified Interaction Database
+Since ExtractEdges.py is able to construct cell-to-cell communication networks based on user-specified ligand-receptor interaction database (argument 'signalType'), here we describe the format of an interaction database that ExtractEdges.py can process. 
+
+Firstly, like two pre-compiled datasets of connectomeDB2020 in the repository, a data file is stored in a folder at the same location as ExtractEdges.py. ExtractEdges.py will search for the data file named 'pairsM.xlsx' based on the folder name. The data file 'pairsM.xlsx' is a binary matrix where row names are ligands and column names are receptors. These ligands and receptors are represented by the appropriate human gene symbols. If a ligand can bind to a receptor, then the corresponding element in the matrix is 1, otherwise, it is 0. Following table is a toy example of the binding matrix.
+                        
+||Receptor1|Receptor2|Receptor3|...|
+|-:|:-:|:-:|:-:|:-|
+|**Ligand1**|1|0|0|...|
+|**Ligand2**|0|0|1|...|
+|**Ligand3**|1|1|0|...|
+|**...**|...|...|...|...|

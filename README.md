@@ -7,6 +7,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 - [Download and Installation](#download-and-installation)
 - [Software Requirements](#software-requirements)
 - [Required Data and Formats](#required-data-and-formats)
+  * [Supported Species](#supported-species)
   * [Expression Data](#expression-data)
   * [ConnectomeDB2020 Interactions](#connectomeDB2020-interactions)
   * [User-specified Interactions](#user-specified-interactions)
@@ -38,9 +39,13 @@ NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7
 
 ## Required Data and Formats
 
-To explore cell-cell to cell communication NATMI uses gene/protein abundance data, ligand-receptor interactions and for the single cell data analysis it requires the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [HUGO](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
+To explore cell-cell to cell communication NATMI uses gene/protein abundance data, ligand-receptor interactions and for the single cell data analysis it requires the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
 
-### Expression data 
+## Supported Species
+
+Somethinng about supporting other species and how it works briefly
+
+### Expression Data 
 
 User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx. [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored.
 
@@ -50,7 +55,7 @@ Something about connectomeDB literature-supported and putative pairs...
 
 ### User-specified Interactions
 
-Since ExtractEdges.py can also work with user-specified ligand-receptor interaction database (argument 'signalType'), here we describe requirements and the format of the interactions. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
+Since ExtractEdges.py can also work with user-specified ligand-receptor interaction database (argument 'signalType'), we briefly describe requirements and the format of the interactions. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
                         
 ||Receptor1|Receptor2|Receptor3|...|
 |-:|:-:|:-:|:-:|:-|

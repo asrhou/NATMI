@@ -5,6 +5,10 @@ Recent development of high throughput single-cell sequencing technologies has ma
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
+- [Required Data and Formats](#required-data-and-formats)
+ * [Expression data](#expression-data)
+ * [ConnectomeDB2020](#connectomeDB2020)
+ * [User-specified Interactions](#user-specified-interactions)
 - [Software Requirements](#software-requirements)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
@@ -33,10 +37,33 @@ Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph
 
 NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
 
+## Required Data and Formats
+
+Expresion data and ligand receptor-pairs
+
+### Expression data 
+
+User-specified gene/protein abundance matrix files (csv, tsv, txt, xls or xlsx format) or can be used to explore [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/).
+
+### ConnectomeDB2020
+
+Something about connectomeDB
+
+### User-specified Interactions
+Since ExtractEdges.py is able to construct cell-to-cell communication networks based on user-specified ligand-receptor interaction database (argument 'signalType'), here we describe the format of an interaction database that ExtractEdges.py can process. 
+
+Firstly, like two pre-compiled datasets of connectomeDB2020 in the repository, a data file is stored in a folder at the same location as ExtractEdges.py. ExtractEdges.py will search for the data file named 'pairsM.xlsx' based on the folder name. The data file 'pairsM.xlsx' is a binary matrix where row names are ligands and column names are receptors. These ligands and receptors are represented by the appropriate human gene symbols. If a ligand can bind to a receptor, then the corresponding element in the matrix is 1, otherwise, it is 0. Following table is a toy example of the binding matrix.
+                        
+||Receptor1|Receptor2|Receptor3|...|
+|-:|:-:|:-:|:-:|:-|
+|**Ligand1**|1|0|0|...|
+|**Ligand2**|0|0|1|...|
+|**Ligand3**|1|1|0|...|
+|**...**|...|...|...|...|
+
 ## Command Line Utilities
 
-NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files (csv, tsv, txt, xls or xlsx format) or can be used to explore [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/).
-
+NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files see [Required Data](#Required-Data)) or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [Required Data](#Required-Data)). 
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]
@@ -231,15 +258,3 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
 ```
 
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
-
-## User-specified Interaction Database
-Since ExtractEdges.py is able to construct cell-to-cell communication networks based on user-specified ligand-receptor interaction database (argument 'signalType'), here we describe the format of an interaction database that ExtractEdges.py can process. 
-
-Firstly, like two pre-compiled datasets of connectomeDB2020 in the repository, a data file is stored in a folder at the same location as ExtractEdges.py. ExtractEdges.py will search for the data file named 'pairsM.xlsx' based on the folder name. The data file 'pairsM.xlsx' is a binary matrix where row names are ligands and column names are receptors. These ligands and receptors are represented by the appropriate human gene symbols. If a ligand can bind to a receptor, then the corresponding element in the matrix is 1, otherwise, it is 0. Following table is a toy example of the binding matrix.
-                        
-||Receptor1|Receptor2|Receptor3|...|
-|-:|:-:|:-:|:-:|:-|
-|**Ligand1**|1|0|0|...|
-|**Ligand2**|0|0|1|...|
-|**Ligand3**|1|1|0|...|
-|**...**|...|...|...|...|

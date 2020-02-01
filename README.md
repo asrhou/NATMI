@@ -5,7 +5,6 @@ Recent development of high throughput single-cell sequencing technologies has ma
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
-- [Software Requirements](#software-requirements)
 - [Required Data and Formats](#required-data-and-formats)
   * [Supported Species](#supported-species)
   * [Expression Data](#expression-data)
@@ -24,37 +23,39 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-visinteractionspy-as-in-figure-6-of-the-manuscript)
 
 ## Download and Installation
+
+In order to use NATMI, please make sure you match the following pre-requisites:
+
+- Python 2.X or Python3.X
+
+- Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. 
+
+NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
+
+From the directory in which you wish to install NATMI, run the following command:
 ```bat
-   git clone https://github.com/asrhou/xxx.git
+   git clone https://github.com/asrhou/NATMI.git
 ```
 
 This tool currently provides command line utilities only.
 
-## Software Requirements
-Python 2.X or Python3.X
-
-Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. 
-
-NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
-
 ## Required Data and Formats
 
-To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
+To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain official gene symbols from human and mouse, but we are working on supporting other forms of gene/proteins IDs.
 
 ### Supported Species
 
-Something on supported species and how it works briefly
+Currently, NATMI supports to process gene expression data from human and mouse. The species of input data is specified by the argument '--species' in ExtractEdges.py.
 
 ### Expression Data 
 
 User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx. Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored.
 
-
 ### Ligand-Receptor Interactions (ConnectomeDB2020 or user-supplied)
 
-First something about connectomeDB literature-supported and putative pairs...
+In 2015, we set up a workflow to manually curated human ligand-receptor pairs ([Ramilowski, J. A., et al. A draft network of ligand–receptor-mediated multicellular signalling in human. Nature communications. 2015 Jul 22;6(1):1-2.](https://www.nature.com/articles/ncomms8866)). The first version named **ConnectomeDB2015** has 2,422 human ligand-receptor pairs from 708 ligands and 691 receptors. This database has two parts, a set of 1,894 ligand-receptor pairs are supported by primary literature, and a further 528 pairs that are putative but with high throughput protein-protein interaction evidence. Then in 2020, the updated version **ConnectomeDB2020** is publised. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on ConnectomeDB2020.
 
-Alternatively, since ExtractEdges.py can also work with user-supplied ligand-receptor interaction database (argument 'signalType'), we briefly describe requirements and the format of these interactions. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' [guess not .xlsx only] must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
+Alternatively, since ExtractEdges.py can also work with user-supplied ligand-receptor interaction database (argument '--signalType'), we briefly describe requirements and the format of these interactions. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
                         
 ||Receptor1|Receptor2|Receptor3|...|
 |-:|:-:|:-:|:-:|:-|
@@ -65,11 +66,20 @@ Alternatively, since ExtractEdges.py can also work with user-supplied ligand-rec
 
 ### Metafile (single cell analysis only)
 
-short desctiption
+For single-cell gene expression data, the user needs to provide a metafile with the mapping between each cell in the dataset and a cell-type label. Following table displays the format of a metafile.
+
+|Cell|Annotation|
+|-:|:-|
+|Barcode1|Cell-type1|
+|Barcode2|Cell-type1|
+|Barcode3|Cell-type2|
+|...|...|
 
 ## Command Line Utilities
 
 NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
+
+From the directory in which you installed NATMI, you can run the following command.
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]

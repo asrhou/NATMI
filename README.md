@@ -11,6 +11,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Expression Data](#expression-data)
   * [ConnectomeDB2020 Interactions](#connectomeDB2020-interactions)
   * [User-specified Interactions](#user-specified-interactions)
+  * [Metafile (single cell analysis only)s](#metafile-single-cell-analysis-only)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
@@ -39,7 +40,7 @@ NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7
 
 ## Required Data and Formats
 
-To explore cell-cell to cell communication NATMI uses (1) gene/protein abundance data, (2) ligand-receptor interactions and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
+To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
 
 ### Supported Species
 
@@ -47,7 +48,7 @@ Something on supported species and how it works briefly
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx. [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored.
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx. Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored.
 
 ### ConnectomeDB2020 Interactions
 
@@ -64,9 +65,13 @@ Since ExtractEdges.py can also work with user-specified ligand-receptor interact
 |**Ligand3**|1|1|0|...|
 |**...**|...|...|...|...|
 
+### Metafile (single cell analysis only)
+
+short desctiption
+
 ## Command Line Utilities
 
-NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
+NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]

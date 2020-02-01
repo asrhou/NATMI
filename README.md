@@ -5,11 +5,11 @@ Recent development of high throughput single-cell sequencing technologies has ma
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
+- [Software Requirements](#software-requirements)
 - [Required Data and Formats](#required-data-and-formats)
-  * [Expression data](#expression-data)
+  * [Expression Data](#expression-data)
   * [ConnectomeDB2020](#connectomeDB2020)
   * [User-specified Interactions](#user-specified-interactions)
-- [Software Requirements](#software-requirements)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
@@ -21,7 +21,6 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
   * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-visinteractionspy-as-in-figure-6-of-the-manuscript)
-- [User-specified Interaction Database](#user-specified-interaction-database)
 
 ## Download and Installation
 ```bat
@@ -63,7 +62,7 @@ Firstly, like two pre-compiled datasets of connectomeDB2020 in the repository, a
 
 ## Command Line Utilities
 
-NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files see [required data](#required-data)) or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#required-data)). 
+NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]

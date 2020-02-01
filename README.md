@@ -39,7 +39,7 @@ NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7
 
 ## Required Data and Formats
 
-To explore cell-cell to cell communication NATMI uses gene/protein abundance data, ligand-receptor interactions and for the single cell data analysis it requires the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
+To explore cell-cell to cell communication NATMI uses (1) gene/protein abundance data, (2) ligand-receptor interactions and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
 
 ### Supported Species
 

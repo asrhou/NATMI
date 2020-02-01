@@ -6,9 +6,9 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
 - [Required Data and Formats](#required-data-and-formats)
- * [Expression data](#expression-data)
- * [ConnectomeDB2020](#connectomeDB2020)
- * [User-specified Interactions](#user-specified-interactions)
+  * [Expression data](#expression-data)
+  * [ConnectomeDB2020](#connectomeDB2020)
+  * [User-specified Interactions](#user-specified-interactions)
 - [Software Requirements](#software-requirements)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
@@ -63,7 +63,7 @@ Firstly, like two pre-compiled datasets of connectomeDB2020 in the repository, a
 
 ## Command Line Utilities
 
-NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files see [Required Data](#Required-Data)) or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [Required Data](#Required-Data)). 
+NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files see [required data](#required-data)) or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#required-data)). 
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]

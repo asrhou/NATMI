@@ -6,6 +6,11 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
 - [Software Requirements](#software-requirements)
+- [Required Data and Formats](#required-data-and-formats)
+  * [Supported Species](#supported-species)
+  * [Expression Data](#expression-data)
+  * [Ligand-Receptor Interactions (ConnectomeDB2020 or user-specified)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied)
+  * [Metafile (single cell analysis only)](#metafile-single-cell-analysis-only)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
@@ -17,7 +22,6 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-firstly-extract-edges-between-cells-of-the-3-and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
   * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-visinteractionspy-as-in-figure-6-of-the-manuscript)
-- [User-specified Interaction Database](#user-specified-interaction-database)
 
 ## Download and Installation
 ```bat
@@ -33,10 +37,39 @@ Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph
 
 NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
 
+## Required Data and Formats
+
+To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain HUGO gene symbol [(HUGO)](https://www.genenames.org/), but we are working on supporting other forms of gene/proteins IDs.
+
+### Supported Species
+
+Something on supported species and how it works briefly
+
+### Expression Data 
+
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx. Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored.
+
+
+### Ligand-Receptor Interactions (ConnectomeDB2020 or user-supplied)
+
+First something about connectomeDB literature-supported and putative pairs...
+
+Alternatively, since ExtractEdges.py can also work with user-supplied ligand-receptor interaction database (argument 'signalType'), we briefly describe requirements and the format of these interactions. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' [guess not .xlsx only] must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
+                        
+||Receptor1|Receptor2|Receptor3|...|
+|-:|:-:|:-:|:-:|:-|
+|**Ligand1**|1|0|0|...|
+|**Ligand2**|0|0|1|...|
+|**Ligand3**|1|1|0|...|
+|**...**|...|...|...|...|
+
+### Metafile (single cell analysis only)
+
+short desctiption
+
 ## Command Line Utilities
 
-NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with with user-specified gene/protein abundance matrix files (csv, tsv, txt, xls or xlsx format) or can be used to explore [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/).
-
+NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]
@@ -231,15 +264,3 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
 ```
 
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
-
-## User-specified Interaction Database
-Since ExtractEdges.py is able to construct cell-to-cell communication networks based on user-specified ligand-receptor interaction database (argument 'signalType'), here we describe the format of an interaction database that ExtractEdges.py can process. 
-
-Firstly, like two pre-compiled datasets of connectomeDB2020 in the repository, a data file is stored in a folder at the same location as ExtractEdges.py. ExtractEdges.py will search for the data file named 'pairsM.xlsx' based on the folder name. The data file 'pairsM.xlsx' is a binary matrix where row names are ligands and column names are receptors. These ligands and receptors are represented by the appropriate human gene symbols. If a ligand can bind to a receptor, then the corresponding element in the matrix is 1, otherwise, it is 0. Following table is a toy example of the binding matrix.
-                        
-||Receptor1|Receptor2|Receptor3|...|
-|-:|:-:|:-:|:-:|:-|
-|**Ligand1**|1|0|0|...|
-|**Ligand2**|0|0|1|...|
-|**Ligand3**|1|1|0|...|
-|**...**|...|...|...|...|

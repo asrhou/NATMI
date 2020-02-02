@@ -358,7 +358,7 @@ def GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeSt
             file_object.write('\n')
             file_object.write('No signaling interactions found')
 
-def main(species, emFile, annFile, signalType, coreNum, outFolder):
+def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     #load data
     emFileExtention = emFile.split('.')[-1]
     if emFileExtention == 'csv':
@@ -372,6 +372,17 @@ def main(species, emFile, annFile, signalType, coreNum, outFolder):
 
     em = em.ix[em.max(axis=1)>0,]
     
+    #id conversion
+    if idType != 'symbol':
+        if idType == 'hgnc' or idType == 'mgi':
+            idType = 'ID'
+        idT = pd.read_csv('ids/' + species + '_' + idType + '.csv', dtype=object, index_col=0, header=0)
+        commonIDs = list(set(idT.index).intersection(set(em.index)))
+        idT = idT.ix[commonIDs,]
+        em = em.ix[commonIDs,]
+        em.index = idT.ix[commonIDs,'Symbol']
+        em = em.groupby(level=0).sum()
+        
     if os.path.exists(opt.annFile):
         annFileExtention = annFile.split('.')[-1]
         if annFileExtention == 'csv':
@@ -439,8 +450,9 @@ if __name__ == '__main__':
     #process arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--species', default='human', help='only human and mouse expression data are currently supported, default is "human"') 
-    parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene symbols) and column names (single-cell identifiers)')
+    parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene identifiers) and column names (single-cell/cell-type identifiers)')
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
+    parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi, gene identifier used in the expression matrix')
     parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a, folder name of the interaction database')
     parser.add_argument('--coreNum', type=int, default=1, help='the number of CPU cores used, default is one')
     parser.add_argument('--out', default='', help='the path to save the analysis results')
@@ -453,7 +465,18 @@ if __name__ == '__main__':
         sys.exit("The species can only be 'human' or 'mouse' for now.")
     else:
         species = avaSpecDict[opt.species.lower()]
-        
+    
+    #check gene ids
+    avaIDList = ['symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', 'mgi']
+    if opt.idType.lower() not in avaIDList:
+        sys.exit("The gene identifiers can only be 'symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', or 'mgi' for now.")
+    elif species == '9606' and opt.idType.lower() == 'mgi':
+        sys.exit("Human expression data cannot use MGI IDs.")
+    elif species == '10090' and opt.idType.lower() == 'hgnc':
+        sys.exit("Mouse expression data cannot use HGNC IDs.")
+    else:
+        idType = opt.idType.lower()
+    
     #check signalType
     if not os.path.exists(opt.signalType):
         sys.exit("The folder of interaction database does not exist.")
@@ -491,4 +514,4 @@ if __name__ == '__main__':
     print('===================================================')
     
     #start to construct cell-to-cell network
-    main(species, opt.emFile, opt.annFile, signalType, opt.coreNum, opt.out)
+    main(species, opt.emFile, opt.annFile, idType, signalType, opt.coreNum, opt.out)

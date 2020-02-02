@@ -55,12 +55,14 @@ User-specified gene/protein abundance matrix files are supported in the followin
 
 In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al. Nature communications. 2015 Jul 22;6(1):1-2.](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 ligand-receptor pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated database of 2,XXX human ligand-receptor pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on connectomeDB2020.
 
-Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
+Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similar to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
 
 'pairsM.xlsx' --> can this be csv, tsv etc? If so we, need a beter wording
+    No, ExtractEdges.py will only search for 'pairsM.xlsx' only.
+
 connectomeDB2020 --> I changed that to lower caps to be consistent and removed connectomeDB2015 as the name doesn't really exist (google search will not lead any exact hits); 
 also, it starts feeling like the name is real close to ConnectomeDB (we knew that...)
-
+    In this FANTOM5 paper [Update of the FANTOM web resource: high resolution transcriptome of diverse cell types in mammals](https://academic.oup.com/nar/article/45/D1/D737/2333885), connectomeDB2015 was referred as 'Ligand Receptor Connectome'.
 
                         
 ||Receptor1|Receptor2|Receptor3|...|
@@ -93,7 +95,7 @@ From the directory in which you installed NATMI, you can run the following comma
 *Optional arguments are enclosed in square brackets […]*
 
 ```
-ExtractEdges.py [-h] [--species SPECIES] --emFile EMFILE [--annFile ANNFILE] [--signalType SIGNALTYPE] [--coreNum CORENUM] [--out OUT]
+ExtractEdges.py [-h] [--species SPECIES] --emFile EMFILE [--idType IDTYPE] [--annFile ANNFILE] [--signalType SIGNALTYPE] [--coreNum CORENUM] [--out OUT]
 
 Arguments:
   -h, --help            show this help message and exit
@@ -102,6 +104,7 @@ Arguments:
   --annFile ANNFILE     the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file 'toy.sc.ann.txt' as an example)
   --signalType SIGNALTYPE
                         lrc2p (default) has literature supported ligand-receptor pairs | lrc2a has putative and literature supported ligand-receptor pairs, folder name of the interaction database
+  --idType IDTYPE       symbol (default) | [entrez](https://www.ncbi.nlm.nih.gov/gene) | [ensembl](https://www.ensembl.org/) | [uniprot](https://www.uniprot.org/) | [hgnc](https://www.genenames.org/) | [mgi](http://www.informatics.jax.org/mgihome/nomen/index.shtml), gene identifier used in the expression matrix
   --coreNum CORENUM     the number of CPU cores used, default is one
   --out OUT             the path to save the analysis results [is this optonal or required?]
 ```

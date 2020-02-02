@@ -8,7 +8,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 - [Required Data and Formats](#required-data-and-formats)
   * [Supported Species](#supported-species)
   * [Expression Data](#expression-data)
-  * [Ligand-Receptor Interactions (ConnectomeDB2020 or user-specified)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied)
+  * [Ligand-Receptor Interactions (connectomeDB2020 or user-specified)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied)
   * [Metafile (single cell analysis only)](#metafile-single-cell-analysis-only)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
@@ -41,7 +41,7 @@ This tool currently provides command line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing xxx. Currently, user-provided abundance data and ligand-receptor interactions must contain official gene symbols from human and mouse, but we are working on supporting other forms of gene/proteins IDs.
+To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing mapping between each cell in the dataset and a cell-type label. Currently, user-provided abundance data and ligand-receptor interactions must contain official gene symbols from human and mouse, but we are working on supporting other forms of gene/proteins IDs.
 
 ### Supported Species
 
@@ -51,11 +51,15 @@ Currently, NATMI supports to process gene expression data from human and mouse. 
 
 User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx. Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored.
 
-### Ligand-Receptor Interactions (ConnectomeDB2020 or user-supplied)
+### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied)
 
-In 2015, we set up a workflow to manually curated human ligand-receptor pairs ([Ramilowski, J. A., et al. A draft network of ligand–receptor-mediated multicellular signalling in human. Nature communications. 2015 Jul 22;6(1):1-2.](https://www.nature.com/articles/ncomms8866)). The first version named **ConnectomeDB2015** has 2,422 human ligand-receptor pairs from 708 ligands and 691 receptors. This database has two parts, a set of 1,894 ligand-receptor pairs are supported by primary literature, and a further 528 pairs that are putative but with high throughput protein-protein interaction evidence. Then in 2020, the updated version **ConnectomeDB2020** is publised. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on ConnectomeDB2020.
+In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al. A draft network of ligand–receptor-mediated multicellular signalling in human. Nature communications. 2015 Jul 22;6(1):1-2.](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 ligand-receptor pairs are supported by primary literature, and a further 528 pairs that are putative with high throughput protein-protein interaction evidence). In 2020, we made an updated database of human ligand-receptor pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on connectomeDB2020.
 
 Alternatively, since ExtractEdges.py can also work with user-supplied ligand-receptor interaction database (argument '--signalType'), we briefly describe requirements and the format of these interactions. Similarly to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
+
+'pairsM.xlsx' --> can this be csv, tsv etc? If so we need a beter wording
+connectomeDB2020 --> I change that lower caps to be consisten and removed connectomeDB2015 as te name doesnt exists (google search will not lead any exact hits); also the name is real close to ConnectomeDB (we knew that...)
+
                         
 ||Receptor1|Receptor2|Receptor3|...|
 |-:|:-:|:-:|:-:|:-|

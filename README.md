@@ -59,7 +59,7 @@ So what happens if one let's say trie that on a zebrafish data?]
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: human and mouse official gene symbols (deafult) or HGNC IDs, MGI IDs, Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [required data and formats](#required-ata-and-formats)). 
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: human and mouse official gene symbols (deafult) or HGNC IDs, MGI IDs, Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [required data and formats](#required-data-and-formats)). 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)

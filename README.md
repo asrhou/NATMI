@@ -28,6 +28,8 @@ In order to use NATMI, please make sure you match the following pre-requisites:
 
 - Python 2.X or Python3.X
 
+- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/)  are required for general data processing issues. 
+
 - Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. 
 
 NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
@@ -41,36 +43,24 @@ This tool currently provides command line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-cell to cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing mapping between each cell in the dataset and a cell-type label. By deaful NATMI uses official gene symbols from human and mouse, but it can also automatically convert HGNC IDs, MGI IDs, Entrez gene IDs, Ensembl gene IDs, and UniProt IDs using biomartXXX [short technical details here]. 
-
-[We need to say what happens for the converted IDs -> will the output be in original IDs or in gene symbols?]
-
+To explore cell-to-cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing mapping between each cell in the dataset and a cell-type label. By deaful NATMI uses official gene symbols from 21 species including human, mouse, rat, zebrafish etc. in [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/). However, if gene identifiers provided in the user-supplied gene/protein abundance data are HGNC IDs, MGI IDs, Entrez gene IDs, Ensembl gene IDs, and UniProt IDs from human or mouse, NATMI first converts them to gene symbols using [HGNC](ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files before extracting ligand-receptor-mediated edges. In all output files, ligands and receptors are represented by their symbols.
 
 ### Supported Species
 
-Currently, NATMI can process expression data from human and mouse. The species of input data is specified by the argument '--species' in ExtractEdges.py.
+Currently, NATMI can process expression data from 21 species including human, mouse, rat, zebrafish etc. However, if the gene identifiers are not gene symbols, only human and mouse gene identifiers can be converted to gene symbols. The species of input data is specified by the argument '--species' in ExtractEdges.py.
 
-
-[We might need to expand the above by a sentence or two. This is what I see in the methods: 
-
-"The curated ligand-receptor database provided in this manuscript is based on interactions between human ligands and receptors. To run NATMI on other species we extracted the homologs of interacting pairs from NCBI HomoloGene Database [22]. The homologous pairs for 20 commonly requested species such as mouse, rat, zebrafish (https://www.ncbi.nlm.nih.gov/homologene/statistics/) can be automatically inferred by NATMI based on the input gene expression data. Note there are reported ligand-receptor pairs that are species specific, thus when applying NATMI to other species, please always check the literature to verify if a reported edge is only seen in humans."
-
-So what happens if one let's say trie that on a zebrafish data?]
+**Note**: The ligand-receptor interactions provided in connectomeDB2020 are based on human ligands and receptors. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. Since there are reported ligand-receptor pairs that are species specific, please always check the literature to verify if a reported edge is only seen in humans.
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: human and mouse official gene symbols (deafult) or HGNC IDs, MGI IDs, Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [required data and formats](#required-data-and-formats)). 
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [required data and formats](#required-data-and-formats)). 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)
 
 In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary litarture support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020.
 
-Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similar to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.xlsx' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.xlsx' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
-
-'pairsM.xlsx' --> I wonder if we can think how to make it readible in other formats too. Seems like a punishment to ask for excel :)
-
-    No, ExtractEdges.py will only search for 'pairsM.xlsx' only.
+Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similar to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.csv' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.csv' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
 
 connectomeDB2020 --> it starts feeling like the name is real close to ConnectomeDB (we knew that...)
 
@@ -111,8 +101,8 @@ python ExtractEdges.py [-h] [--species SPECIES] --emFile EMFILE [--idType IDTYPE
 
 Arguments:
   -h, --help            show this help message and exit
-  --species SPECIES     only human and mouse expression data are currently supported, default is "human"
-  --emFile EMFILE       the path to the expression matrix file with row names (gene symbols) and column names (cell names/single-cell identifiers)
+  --species SPECIES     human (default) | mouse | rat | zebrafish | fruitfly | chimpanzee | dog | monkey | cattle | chicken | frog | mosquito | nematode | thalecress | rice | riceblastfungus | bakeryeast | neurosporacrassa | fissionyeast | eremotheciumgossypii | kluyveromyceslactis, 21 species are supported
+  --emFile EMFILE       the path to the normalised expression matrix file with row names (gene identifiers) and column names (cell-type/single-cell identifiers)
   --annFile ANNFILE     the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file 'toy.sc.ann.txt' as an example)
   --signalType SIGNALTYPE
                         lrc2p (default) has literature supported ligand-receptor pairs | lrc2a has putative and literature supported ligand-receptor pairs, folder name of the interaction database
@@ -121,7 +111,7 @@ Arguments:
   --out OUT             the path to save the analysis results [is this optonal or required?]
 ```
 
-**Note**: Expression matrix and metafile are supported in csv, tsv, txt, xls or xlsx format.
+**Note**: Normalised expression matrix and metafile are supported in csv, tsv, txt, xls or xlsx format.
 
 Predict ligand-receptor-mediated interactions in a mouse single-cell RNA-seq dataset using literature supported ligand-receptor pairs and four CPUs:
 ```bat
@@ -214,20 +204,21 @@ Arguments:
 ```
 
 
-Visualise cell-connectivity-summary networks from the results of ExtractEdges.py and DiffEdges.py:
+Visualise cell-connectivity-summary networks from the results of ExtractEdges.py or DiffEdges.py:
+
 ```bat
    python VisInteractions.py --sourceFolder /path/to/result/folder --signalType lrc2p --weightType mean --detectionThreshold 0.2 --plotFormat pdf --drawNetwork y --plotWidth 12 --plotHeight 10 --layout kk --fontSize 8 --edgeWidth 0 --maxClusterSize 0 --clusterDistance 1
 ```
 
-ExtractEdges.py creates a folder (in the result folder) containing networks with three different weights. DiffEdges.py creates a folder (in the result folder), containing networks with three different weights in reference and target datasets. Additionally, delta networks are drawn, where yellow edges are (non-significant) edges with the fold change of their weights in two conditions of two or less. For other edges, a red color indicates the edges with a weight higher in the reference dataset, and a green color indicates the edges with a weight higher in the target dataset. The color intensity scales with the degree of change.
+If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing networks with three different weights. If run on the output of DiffEdges.py, VisInteractions.py creates a new folder in the output folder of DiffEdges.py, containing networks with three different weights in reference and target datasets. Additionally, delta networks are drawn, where yellow edges are (non-significant) edges with the fold change of their weights in two conditions of two or less. For other edges, a red color indicates the edges with a weight higher in the reference dataset, and a green color indicates the edges with a weight higher in the target dataset. The color intensity scales with the degree of change.
 
-Visualise cell-to-cell communication networks between two cell types using results of ExtractEdges.py and DiffEdges.py:
+Visualise cell-to-cell communication networks between all possible pairs of cell types using results of ExtractEdges.py or DiffEdges.py:
 
 ```bat
    python VisInteractions.py --sourceFolder /path/to/result/folder --signalType lrc2p --drawClusterPair y
 ```
 
-ExtractEdges.py creates a folder (in the result folder) containing bipartite graphs with three different weights. DiffEdges.py creates a folder (in the result folder) containing four kinds of interactions. From a cell type to another cell type, each kind of interactions form a separate bipartite graph.
+If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing bipartite graphs with three different weights. If run on the output of DiffEdges.py, VisInteractions.py creates a new folder in the output folder of DiffEdges.py, containing four kinds of interactions. From a cell type to another cell type, each kind of interactions form a separate bipartite graph.
 
 Visualise cell-to-cell communication networks via a ligand-receptor pair from the results of ExtractEdges.py:
 
@@ -235,42 +226,44 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
    python VisInteractions.py --sourceFolder /path/to/result/folder --signalType lrc2p --drawLRNetwork LIGAND.SYMBOL RECEPTOR.SYMBOL
 ```
 
-DiffEdges.py creates a folder (in the result folder) containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
+If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
 ## Example Workflow Simple (single-cell toy dataset)
-This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt') and literature supported ligand-receptor pairs from connectomeDB2020.
+This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt') and literature supported ligand-receptor pairs from connectomeDB2020. 
 
-### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'test' folder using ExtractEdges.py. 
+**Note**: All results of following commands can be found in 'example' folder.
+
+### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'example' folder using ExtractEdges.py. 
 The first step of NATMI-based analysis is always to predict the potential ligand-receptor-mediated interactions between cells using the user-specified ligand-receptor pairs. Here, we use literature supported ligand-receptor pairs in connectomeDB2020 and ExtractEdges.py to extract interactions in the toy single-cell dataset.
 
 ```bat
-   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4 --out test
+   python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4 --out example
 ```
 
 ### Visualise ligand-receptor-mediated interaction network of in 'toy.sc.em.txt' in three different ways. 
-The output of ExtractEdges.py in 'test' folder are the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges. To have a complete view of the cell-to-cell communication network, we first visualise the cell-connectivity-summary network in 'test' folder.
+The output of ExtractEdges.py in 'example' folder are the predicted edges between three cell types. Visualisation of the extracted edges is a good place to start interrogating biological processes through these predicted edges. To have a complete view of the cell-to-cell communication network, we first visualise the cell-connectivity-summary network in 'example' folder.
 
 ```bat
-   python VisInteractions.py --sourceFolder test --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
+   python VisInteractions.py --sourceFolder example --signalType lrc2p --weightType mean --detectionThreshold 0.2 --drawNetwork y --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```
 
-Network in *test/Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_total-specificity-based_layout_circle.pdf* is the cell-connectivity-summary network weighted by the sum of specificity weights for each ligand-receptor pair. Apparently, there are more specific ligand-receptor pairs from endothelial cell to itself. 
+Network in *example/Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_total-specificity-based_layout_circle.pdf* is the cell-connectivity-summary network weighted by the sum of specificity weights for ligand-receptor pairs with common sending and receiving cell types. Apparently, there are more specific ligand-receptor pairs from endothelial cell to itself. 
 
-We then visualise top ten ligand-receptor pairs between three cell types.
+We then visualise top fifteen ligand-receptor pairs between three cell types.
 
 ```bat
-   python VisInteractions.py --sourceFolder test --drawClusterPair y --keepTopEdge 15
+   python VisInteractions.py --sourceFolder example --drawClusterPair y --keepTopEdge 15
 ```
 
-Bipartite graph in *test/CltPair_exp_0_spe_0_det_0.2_top_15_signal_lrc2p_weight_mean/From_Endothelial Cells_to_Endothelial Cells_spe.pdf* shows fifteen most specific ligand-receptor pairs endothelial cell to itself. Based on the edge weights (specificities), eleven of them are only detected in endothelial cells. Since the specificity of Efnb2-Pecam1 pair in the graph is less than one, it is interesting to know which cell-type pairs are also connected by Efnb2-Pecam1 pair.
+Bipartite graph in *example/CltPair_exp_0_spe_0_det_0.2_top_15_signal_lrc2p_weight_mean/From_Endothelial Cells_to_Endothelial Cells_spe.pdf* shows fifteen most specific ligand-receptor pairs endothelial cell to itself. Based on the edge weights (specificities), eleven of them are only detected in endothelial cells. Since the specificity of Efnb2-Pecam1 pair in the graph is less than one, it is interesting to know which cell-type pairs are also connected by Efnb2-Pecam1 pair.
 
 We then visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
 
 ```bat
-   python VisInteractions.py --sourceFolder test --drawLRNetwork Efnb2 Pecam1 --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
+   python VisInteractions.py --sourceFolder example --drawLRNetwork Efnb2 Pecam1 --plotWidth 4 --plotHeight 4 --layout circle --fontSize 15 --edgeWidth 6 --maxClusterSize 0 --clusterDistance 0.6
 ```
 
-Network in *test/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
+Network in *example/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
 
 ## Example Workflow Advanced (Tabula Muris Senis dataset)
 

@@ -12,7 +12,6 @@ import pandas as pd
 import argparse, os, sys
 import multiprocessing
 from functools import partial
-
     
 # transfer hid to gene symbols of the certain species
 def TransferToGeneSymbol(homoMapDir, speciestype, taxidCol, geneSymbolCol, hidCol, lrM):
@@ -161,7 +160,7 @@ def LRExpressions(typeString, ann, cellligandDF, cellreceptorDF, countligandDF, 
         tempmeanligandDF = meanligandDF.ix[:,[origlabel]]
         tempsumSpecifiedLigandDF = sumSpecifiedLigandDF.ix[:,[origlabel]]
         tempmeanSpecifiedLigandDF = meanSpecifiedLigandDF.ix[:,[origlabel]]
-        tempLigandDF = pd.concat([tempcellligandDF, tempcountligandDF, tempsumligandDF,tempsumSpecifiedLigandDF,tempmeanligandDF,tempmeanSpecifiedLigandDF], axis=1)
+        tempLigandDF = pd.concat([tempcellligandDF, tempcountligandDF, tempmeanligandDF, tempmeanSpecifiedLigandDF, tempsumligandDF, tempsumSpecifiedLigandDF], axis=1)
         tempLigandDF = tempLigandDF.reset_index()
         tempLigandDF.columns = ['Ligand symbol', 'Total number of cells', 'Ligand detection rate', 'Ligand average expression value', 'Ligand derived specificity of average expression value', 'Ligand total expression value', 'Ligand derived specificity of total expression value']
         tempLigandDF['Total number of cells'] = tempLigandDF['Total number of cells'].astype(int)
@@ -174,7 +173,7 @@ def LRExpressions(typeString, ann, cellligandDF, cellreceptorDF, countligandDF, 
         tempmeanreceptorDF = meanreceptorDF.ix[:,[origlabel]]
         tempmeanSpecifiedReceptorDF = meanSpecifiedReceptorDF.ix[:,[origlabel]]
         tempsumSpecifiedReceptorDF = sumSpecifiedReceptorDF.ix[:,[origlabel]]
-        tempReceptorDF = pd.concat([tempcellreceptorDF, tempcountreceptorDF, tempsumreceptorDF,tempsumSpecifiedReceptorDF,tempmeanreceptorDF,tempmeanSpecifiedReceptorDF], axis=1)
+        tempReceptorDF = pd.concat([tempcellreceptorDF, tempcountreceptorDF,tempmeanreceptorDF,tempmeanSpecifiedReceptorDF, tempsumreceptorDF,tempsumSpecifiedReceptorDF], axis=1)
         tempReceptorDF = tempReceptorDF.reset_index()
         tempReceptorDF.columns = ['Receptor symbol', 'Total number of cells', 'Receptor detection rate', 'Receptor average expression value', 'Receptor derived specificity of average expression value', 'Receptor total expression value', 'Receptor derived specificity of total expression value']
         tempReceptorDF['Total number of cells'] = tempReceptorDF['Total number of cells'].astype(int)
@@ -282,7 +281,7 @@ def GenCell2CellEdges(signalType, pairListDF, ligandApprovedSymbolDict, receptor
         d = pd.read_excel(f, index_col=False, header=0)
         fl.append(d)
     edgeListDF = pd.concat(fl, axis=0)
-    print('#### collected %s LR-miediated edges' % len(edgeListDF))
+    print('#### collected %s LR-mediated edges' % len(edgeListDF))
     
     return edgeListDF
 
@@ -336,6 +335,7 @@ def GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeSt
             file_object.write('README\n')
             file_object.write('\n')
             file_object.write('ClusterMapping.csv: cell-to-cluster mapping.\n')
+            file_object.write('Ligands_Receptors_xx.xlsx: information about ligands and receptors in each cell-type/single-cell cluster.\n')
             file_object.write('Edges_xx.csv: all ligand-receptor-mediated communications.\n')
             file_object.write('LR-pairs_xx folder: all ligand-receptor-mediated communications via a ligand-receptor pair.\n')
             file_object.write('\n')
@@ -349,7 +349,7 @@ def GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeSt
             file_object.write('Ligand/receptor total expression value: the total expression level of the ligand/receptor in the cluster.\n')
             file_object.write('Ligand/receptor derived specificity of total expression value: the ratio of the total expression level of the ligand/receptor in the cluster to the sum of the total expression levels of the ligand/receptor in every cluster.\n')
             file_object.write('Edge average expression weight: the product of average expression levels of the ligand and the receptor in the corresponding cluster(s).\n')
-            file_object.write('Edge average expression derived specificity: tThe product of the ligand and receptor derived specificity of average expression values.\n')
+            file_object.write('Edge average expression derived specificity: the product of the ligand and receptor derived specificity of average expression values.\n')
             file_object.write('Edge total expression weight: the product of total expression levels of the ligand and the receptor in the corresponding cluster(s).\n')
             file_object.write('Edge total expression derived specificity: the product of the ligand and receptor derived specificity of total expression values.\n')
     else:
@@ -411,7 +411,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
         ann = pd.DataFrame({'cluster':list(em.columns)},index=em.columns)
             
     #load interaction list
-    lrM = pd.read_excel('%s/pairsM.xlsx' % signalType, index_col=0, header=0)
+    lrM = pd.read_csv('%s/pairsM.csv' % signalType, index_col=0, header=0)
     
     # change gene symbols if necessary
     if species != '9606':
@@ -449,7 +449,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
 if __name__ == '__main__':
     #process arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--species', default='human', help='only human and mouse expression data are currently supported, default is "human"') 
+    parser.add_argument('--species', default='human', help='human (default) | mouse | rat | zebrafish | fruitfly | chimpanzee | dog | monkey | cattle | chicken | frog | mosquito | nematode | thalecress | rice | riceblastfungus | bakeryeast | neurosporacrassa | fissionyeast | eremotheciumgossypii | kluyveromyceslactis') 
     parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene identifiers) and column names (single-cell/cell-type identifiers)')
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
     parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi, gene identifier used in the expression matrix')
@@ -460,7 +460,7 @@ if __name__ == '__main__':
     opt = parser.parse_args()
     
     #check species
-    avaSpecDict = {'human':'9606', 'mouse':'10090'}
+    avaSpecDict = {'human':'9606', 'mouse':'10090', 'chimpanzee':'9598', 'dog':'9615', 'monkey':'9544', 'cattle':'9913', 'rat':'10116', 'chicken':'9031', 'frog':'8364', 'zebrafish':'7955', 'fruitfly':'7227', 'mosquito':'7165', 'nematode':'6239', 'thalecress':'3702', 'rice':'4530', 'riceblastfungus':'318829', 'bakeryeast':'4932', 'neurosporacrassa':'5141', 'fissionyeast':'4896', 'eremotheciumgossypii':'33169', 'kluyveromyceslactis':'28985'}
     if opt.species.lower() not in avaSpecDict.keys():
         sys.exit("The species can only be 'human' or 'mouse' for now.")
     else:
@@ -480,8 +480,8 @@ if __name__ == '__main__':
     #check signalType
     if not os.path.exists(opt.signalType):
         sys.exit("The folder of interaction database does not exist.")
-    if not os.path.exists('%s/pairsM.xlsx' % opt.signalType):
-        sys.exit("Cannot find the 'pairsM.xlsx' file in the speicified folder of interaction database.")
+    if not os.path.exists('%s/pairsM.csv' % opt.signalType):
+        sys.exit("Cannot find the 'pairsM.csv' file in the speicified folder of interaction database.")
     else:
         signalType = os.path.basename(opt.signalType)
     

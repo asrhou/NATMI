@@ -1,0 +1,2 @@
+Sending cluster,Ligand symbol,Receptor symbol,Target cluster,Ligand detection rate,Ligand average expression value,Ligand derived specificity of average expression value,Receptor detection rate,Receptor average expression value,Receptor derived specificity of average expression value,Edge average expression weight,Edge average expression derived specificity
+Endothelial Cells,Efnb2,Pecam1,Endothelial Cells,0.5,0.638843,0.8967524474022993,1.0,2.4948924999999997,1.0,1.5938446093775,0.8967524474022993

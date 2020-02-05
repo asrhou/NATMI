@@ -54,7 +54,7 @@ By deaful NATMI uses official gene symbols. For human and mouse, additional gene
 
 ### Supported Species
 
-For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a particular specified by using '--species [species_name]' argument. 
+For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a supported species can specified by using '--species [species_name]' argument. 
 
 '--species list' [guess it might be good to add that if possible]
 

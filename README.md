@@ -6,6 +6,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
 - [Required Data and Formats](#required-data-and-formats)
+  * [Supported IDs](#supported-IDs)
   * [Supported Species](#supported-species)
   * [Expression Data](#expression-data)
   * [Ligand-Receptor Interactions (connectomeDB2020 or user-specified)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied)
@@ -28,11 +29,12 @@ In order to use NATMI, please make sure you match the following pre-requisites:
 
 - Python 2.X or Python3.X
 
-- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/)  are required for general data processing issues. 
+- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) are required for general data processing. -> When I
+
 
 - Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. 
 
-NATMI was tested using python 2.7 and 3.7 versions and seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5 versions.
+NATMI was tested using python 2.7 and 3.7 versions with pandas X.Y, XlsxWriter X.Y, xlrd X.Y, seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5.
 
 From the directory in which you wish to install NATMI, run the following command:
 ```bat
@@ -43,19 +45,19 @@ This tool currently provides command line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protein abundance data**, (2) **ligand-receptor interaction**s (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing **mapping between each cell in the dataset and a cell-type label**. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)).
+To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protein abundance data**, (2) **ligand-receptor interaction**s (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing **mapping between each cell and a cell-type label** across the whole dataset. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)).
 
 
 ### Supported IDs
 
-By deaful NATMI uses official gene symbols. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data or ligand-receptors lists) are suppoted: HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID. For that, NATMI first converts these IDs to gene symbols using [HGNC](ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files and proceeds to extracting ligand-receptor-mediated edges. In all output files, ligands and receptors are shown as input (original) IDs (??).
+By deaful NATMI uses official gene symbols. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data or ligand-receptors lists) are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](http://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files and proceeds to extracting ligand-receptor-mediated edges. In all output files, originl (input) ligands and receptors IDs are preserved.
 
 
 ### Supported Species
 
-For data using official gene symbols, NATMI can support 21 species (**python ExtractEdges.py -species supported**) including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). The species of input data is specified by the argument '--species' in ExtractEdges.py.
+For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then specified by using '--species [species_name]' argument. 
 
-**Note**: The ligand-receptor interactions provided in connectomeDB2020 are based on human ligands and receptors. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. Since some reported ligand-receptor pairs might be only human specific, always check the literature to verify if a reported edge is valid for other analyzed species.
+**Note**: The ligand-receptor interactions provided in connectomeDB2020 are based on human ligands and receptors. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. Since some reported ligand-receptor pairs might be human specific only, always check the literature to verify if a reported edge is valid for other analyzed species.
 
 ### Expression Data 
 
@@ -67,11 +69,6 @@ Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Mur
 In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary litarture support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020.
 
 Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similar to the pre-compiled in the repository connectomeDB2020 datasets, an interaction data file 'pairsM.csv' must be stored in a folder at the same location as ExtractEdges.py (the script will search for the file named 'pairsM.csv' based on the folder name). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
-
-connectomeDB2020 --> it starts feeling like the name is real close to ConnectomeDB (we knew that...)
-
-    In this FANTOM5 paper [Update of the FANTOM web resource: high resolution transcriptome of diverse cell types in mammals](https://academic.oup.com/nar/article/45/D1/D737/2333885), connectomeDB2015 was referred as 'Ligand Receptor Connectome'.
-
                         
 ||Receptor1|Receptor2|Receptor3|...|
 |-:|:-:|:-:|:-:|:-|

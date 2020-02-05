@@ -29,8 +29,7 @@ In order to use NATMI, please make sure you match the following pre-requisites:
 
 - Python 2.X or Python3.X
 
-- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) are required for general data processing. -> When I
-
+- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) are required for general data processing.
 
 - Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) are required to visualise the cell-to-cell communication network at three distinct levels. 
 
@@ -55,16 +54,28 @@ By deaful NATMI uses official gene symbols. For human and mouse, additional gene
 
 ### Supported Species
 
-For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then specified by using '--species [species_name]' argument. 
+For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a particular specified by using '--species [species_name]' argument. 
+
+'--species list' [guess it might be good to add that if possible]
 
 **Note**: The ligand-receptor interactions provided in connectomeDB2020 are based on human ligands and receptors. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. Since some reported ligand-receptor pairs might be human specific only, always check the literature to verify if a reported edge is valid for other analyzed species.
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [required data and formats](#required-data-and-formats)). 
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-IDs)). 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)
+
+[can user-supplied ligand-receptors list for human and mouse be in the form of other ids?]
+
+[do user-supplied ligand-receptors IDs for human and mouse must match teh IDs the expression data?]
+
+[for "pairsM.csv", what happens if user wants to run it on different files? can he/she just create multiple directories and specify them to run? (of course one at the time). If so, that coud allow trying pairs from many sources.
+other option would be to just add this argument as a name. For example you could make an empty directory 'lrc2u' (u - user-supplied) and allow user to put mutltiple pair files in there: cellPhoneDB.xlsx, jordan_pairs.tsv (could even support other formats but you can keep .csv only of course)
+  --signalType SIGNALTYPE --->>> lrc2p (default) | lrc2p .... or [name]
+so --signalType jordan_pairs: would run /lrc2u/jordan_pairs.xlsx pairs]
+
 
 In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary litarture support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020.
 
@@ -79,7 +90,7 @@ Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-r
 
 ### Metafile (single cell analysis only)
 
-For single-cell gene expression data, the user needs to provide a metafile with the mapping between each cell in the dataset and a cell-type label. Following table displays the format of a metafile.
+For single-cell gene expression data, the user needs to provide a metafile with the mapping between each cell in the dataset and a cell-type label. Following table displays the required format of a metafile.
 
 |Cell|Annotation|
 |-:|:-|
@@ -90,7 +101,7 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 
 ## Command Line Utilities
 
-NATMI is a python-based tool (see [software requirements](#software-requirements)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
+NATMI is a python-based tool (see [software requirements](#download and installation)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis] and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
 Path to NATMI scripts has to be specified or the following commands can be run from the instalation directory:
 

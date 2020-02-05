@@ -43,13 +43,19 @@ This tool currently provides command line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-to-cell communication NATMI uses (1) user-supplied gene/protein abundance data, (2) ligand-receptor interactions (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing mapping between each cell in the dataset and a cell-type label. By deaful NATMI uses official gene symbols from 21 species including human, mouse, rat, zebrafish etc. in [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/). However, if gene identifiers provided in the user-supplied gene/protein abundance data are HGNC IDs, MGI IDs, Entrez gene IDs, Ensembl gene IDs, and UniProt IDs from human or mouse, NATMI first converts them to gene symbols using [HGNC](ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files before extracting ligand-receptor-mediated edges. In all output files, ligands and receptors are represented by their symbols.
+To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protein abundance data**, (2) **ligand-receptor interaction**s (precomplied connectomeDB2020 or user-supplied interactions) and for the single cell data analysis it requires (3) the metafile describing **mapping between each cell in the dataset and a cell-type label**. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)).
+
+
+### Supported IDs
+
+By deaful NATMI uses official gene symbols. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data or ligand-receptors lists) are suppoted: HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID. For that, NATMI first converts these IDs to gene symbols using [HGNC](ftp://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files and proceeds to extracting ligand-receptor-mediated edges. In all output files, ligands and receptors are shown as input (original) IDs (??).
+
 
 ### Supported Species
 
-Currently, NATMI can process expression data from 21 species including human, mouse, rat, zebrafish etc. However, if the gene identifiers are not gene symbols, only human and mouse gene identifiers can be converted to gene symbols. The species of input data is specified by the argument '--species' in ExtractEdges.py.
+For data using official gene symbols, NATMI can support 21 species (**python ExtractEdges.py -species supported**) including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). The species of input data is specified by the argument '--species' in ExtractEdges.py.
 
-**Note**: The ligand-receptor interactions provided in connectomeDB2020 are based on human ligands and receptors. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. Since there are reported ligand-receptor pairs that are species specific, please always check the literature to verify if a reported edge is only seen in humans.
+**Note**: The ligand-receptor interactions provided in connectomeDB2020 are based on human ligands and receptors. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. Since some reported ligand-receptor pairs might be only human specific, always check the literature to verify if a reported edge is valid for other analyzed species.
 
 ### Expression Data 
 

@@ -9,7 +9,7 @@ Created on Sat Sep  7 23:17:45 2019
 import warnings
 warnings.filterwarnings("ignore")
 import pandas as pd
-import argparse, os, sys
+import argparse, os, sys, glob
 import multiprocessing
 from functools import partial
     
@@ -368,7 +368,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     elif emFileExtention == 'xls' or emFileExtention == 'xlsx':
         em = pd.read_excel(emFile, index_col=0, header=0)
     else:
-        sys.exit("Cannot process the expression matrix file, please check the format of the expression matrix file.")
+        sys.exit("Cannot process the expression matrix file, please check the format of the expression matrix file, which can only be csv, tsv, txt, xls or xlsx.")
 
     em = em.ix[em.max(axis=1)>0,]
     
@@ -392,7 +392,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
         elif annFileExtention == 'xls' or emFileExtention == 'xlsx':
             ann = pd.read_excel(annFile, index_col=0, header=0)
         else:
-            sys.exit("Cannot process the metafile, please check the format of the metafile.")
+            sys.exit("Cannot process the metafile, please check the format of the metafile, which can only be csv, tsv, txt, xls or xlsx.")
         
         #check annotation
         ann.columns = ['cluster']
@@ -411,7 +411,16 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
         ann = pd.DataFrame({'cluster':list(em.columns)},index=em.columns)
             
     #load interaction list
-    lrM = pd.read_csv('%s/pairsM.csv' % signalType, index_col=0, header=0)
+    signalTypeExtention = signalType.split('.')[-1]
+    if signalTypeExtention == 'csv':
+        lrM = pd.read_csv(os.path.join('lrdbs', signalType), index_col=0, header=0)
+    elif signalTypeExtention == 'tsv' or signalTypeExtention == 'txt':
+        lrM = pd.read_csv(os.path.join('lrdbs', signalType), index_col=0, header=0, sep='\t')
+    elif signalTypeExtention == 'xls' or signalTypeExtention == 'xlsx':
+        lrM = pd.read_excel(os.path.join('lrdbs', signalType), index_col=0, header=0)
+    else:
+        sys.exit("Cannot process the ligand-receptor interaction database file, please check the format of the file, which can only be csv, tsv, txt, xls or xlsx.")
+    signalType = signalType.split('.')[0]
     
     # change gene symbols if necessary
     if species != '9606':
@@ -453,7 +462,7 @@ if __name__ == '__main__':
     parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene identifiers) and column names (single-cell/cell-type identifiers)')
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
     parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi, gene identifier used in the expression matrix')
-    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a, folder name of the interaction database')
+    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a | name of the user-supplied interaction database file without extension')
     parser.add_argument('--coreNum', type=int, default=1, help='the number of CPU cores used, default is one')
     parser.add_argument('--out', default='', help='the path to save the analysis results')
     
@@ -478,12 +487,13 @@ if __name__ == '__main__':
         idType = opt.idType.lower()
     
     #check signalType
-    if not os.path.exists(opt.signalType):
-        sys.exit("The folder of interaction database does not exist.")
-    if not os.path.exists('%s/pairsM.csv' % opt.signalType):
-        sys.exit("Cannot find the 'pairsM.csv' file in the speicified folder of interaction database.")
+    stflist = glob.glob('lrdbs/%s.*' % opt.signalType)
+    if len(stflist) == 0:
+        sys.exit("Cannot find the ligand-receptor interaction database named '%s'." % opt.signalType)
+    elif len(stflist) > 1:
+        sys.exit("There are multiple ligand-receptor interaction databases with the same name '%s'." % opt.signalType)
     else:
-        signalType = os.path.basename(opt.signalType)
+        signalType = os.path.basename(stflist[0])
     
     #check emFile
     if not os.path.exists(opt.emFile):
@@ -507,7 +517,7 @@ if __name__ == '__main__':
         print('The metafile: %s' % opt.annFile)
     else:
         print('The metafile is not provided')
-    print('The cell-to-cell signaling type: %s' % signalType)
+    print('The ligand-receptor interaction database: %s' % signalType)
     print('The number of cores to use: %s' % opt.coreNum)
     if opt.out != '':
         print('The folder to save all results: %s' % os.path.abspath(opt.out))

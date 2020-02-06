@@ -302,14 +302,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--refFolder', required=True, help='the path to the folder of the reference dataset')
     parser.add_argument('--targetFolder', required=True, help='the path to the folder of the target dataset')
-    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a, folder name of the interaction database')
+    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a | the name of the ligand-receptor interaction database file without extension')
     parser.add_argument('--weightType', default='mean', help="mean (default) | sum")
     parser.add_argument('--out', default='', help='the path to save the analysis results')
     
     opt = parser.parse_args()
     
     #check signalType
-    signalType = os.path.basename(opt.signalType)
+    signalType = opt.signalType
         
     #check weightType
     avaWeightTypeList = ['mean', 'sum']
@@ -339,7 +339,7 @@ if __name__ == '__main__':
     print('Input data:')
     print('The reference dataset: %s' % opt.refFolder)
     print('The target dataset: %s' % opt.targetFolder)
-    print('The cell-to-cell signaling type: %s' % signalType)
+    print('The ligand-receptor interaction database: %s' % signalType)
     print('The weight type of cell-to-cell signaling: %s' % weightType)
     if opt.out != '':
         print('The folder to save all results: %s' % os.path.abspath(opt.out))

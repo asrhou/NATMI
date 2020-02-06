@@ -54,7 +54,7 @@ By deaful NATMI uses official gene symbols. For human and mouse, additional gene
 
 ### Supported Species
 
-For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a supported species can specified by using '--species [species_name]' argument. 
+For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a supported species can be specified by using '--species [species_name]' argument. 
 
 '--species list' [guess it might be good to add that if possible]
 
@@ -65,11 +65,27 @@ For data using official gene symbols, NATMI can support 21 species including hum
 User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-IDs)). 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 
+[for the ID conversion, what do you do with muti-matchers? so you will likely have quite a few cases:
+
+1. geneID_1 - Uniprot_1 easy, OK
+
+2. geneID_1 - Uniprot_1 
+2. geneID_1 - Uniprot_2
+(that you can probably sum)
+
+3. geneID_1 - Uniprot_1 
+3. geneID_2 - Uniprot_1 
+(that you can assign to both)
+ 
+ 4. you can also have a mix of 2 and 3.
+ 
+ we need to handle that and explain.]
+
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)
 
 [can user-supplied ligand-receptors list for human and mouse be in the form of other ids?]
 
-[do user-supplied ligand-receptors IDs for human and mouse must match teh IDs the expression data?]
+[do user-supplied ligand-receptors IDs for human and mouse must match the IDs the expression data?]
 
 [for "pairsM.csv", what happens if user wants to run it on different files? can he/she just create multiple directories and specify them to run? (of course one at the time). If so, that coud allow trying pairs from many sources.
 other option would be to just add this argument as a name. For example you could make an empty directory 'lrc2u' (u - user-supplied) and allow user to put mutltiple pair files in there: cellPhoneDB.xlsx, jordan_pairs.tsv (could even support other formats but you can keep .csv only of course)

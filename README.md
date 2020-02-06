@@ -25,7 +25,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## Download and Installation
 
-In order to use NATMI, please make sure you match the following pre-requisites:
+To use NATMI, following software is required: 
 
 - Python 2.X or Python3.X
 
@@ -35,12 +35,12 @@ In order to use NATMI, please make sure you match the following pre-requisites:
 
 NATMI was tested using python 2.7 and 3.7 versions with pandas X.Y, XlsxWriter X.Y, xlrd X.Y, seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5.
 
-From the directory in which you wish to install NATMI, run the following command:
+To install NATMI, run the following command in the desired instalation directory:
 ```bat
    git clone https://github.com/asrhou/NATMI.git
 ```
 
-This tool currently provides command line utilities only.
+This tool currently provides command-line utilities only.
 
 ## Required Data and Formats
 
@@ -49,12 +49,12 @@ To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protei
 
 ### Supported IDs
 
-By deaful NATMI uses official gene symbols. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data or ligand-receptors lists) are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](http://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files and proceeds to extracting ligand-receptor-mediated edges. In all output files, originl (input) ligands and receptors IDs are preserved.
+By deafult, NATMI uses official gene symbols. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data or ligand-receptors lists) are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](http://ftp.ebi.ac.uk/pub/databases/genenames/new/tsv/hgnc_complete_set.txt) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files and proceeds to extracting ligand-receptor-mediated edges. In all output files, originl (input) ligands and receptors IDs are preserved.
 
 
 ### Supported Species
 
-For data using official gene symbols, NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) and for human and mouse it can work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a supported species can be specified by using '--species [species_name]' argument. 
+NATMI can support 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) for data using official gene symbols. For human and mouse it can also work with additional IDs (see [supported IDs](#supported-ids)). All supported species can be listed running ExtractEdges.py with '--species list' argument and then a supported species can be specified by using '--species [species_name]' argument. 
 
 '--species list' [guess it might be good to add that if possible]
 
@@ -67,17 +67,21 @@ Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Mur
 
 [for the ID conversion, what do you do with muti-matchers? so you will likely have quite a few cases:
 
-1. geneID_1 - Uniprot_1 easy, OK
+caase_1. 
+geneID_1 - Uniprot_1 easy, OK
 
-2. geneID_1 - Uniprot_1 
-2. geneID_1 - Uniprot_2
-(that you can probably sum)
+case_2. 
+geneID_1 - Uniprot_1 
+geneID_1 - Uniprot_2
+(that you can probably sum: geneID_1=Uniprot_1 + Uniprot_2)
 
-3. geneID_1 - Uniprot_1 
-3. geneID_2 - Uniprot_1 
-(that you can assign to both)
+case_3.
+geneID_1 - Uniprot_1 
+geneID_2 - Uniprot_1 
+
+(that you can assign to both, but that will amplify the count)
  
- 4. you can also have a mix of 2 and 3.
+ 4. you can also have a mix of case_2 and case_3.
  
  we need to handle that and explain.]
 

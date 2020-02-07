@@ -25,7 +25,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## Download and Installation
 
-In order to use NATMI, please make sure you match the following pre-requisites:
+Running NATMI requires following software to be installed:
 
 - Python 2.X or Python3.X
 
@@ -35,7 +35,7 @@ In order to use NATMI, please make sure you match the following pre-requisites:
 
 NATMI was tested using python 2.7 and 3.7 versions with pandas 0.24.2, XlsxWriter 1.1.0, xlrd 1.2.0, seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5.
 
-From the directory in which you wish to install NATMI, run the following command:
+NATMI can be installed running the following command in the desired instalation directory:
 ```bat
    git clone https://github.com/asrhou/NATMI.git
 ```
@@ -62,6 +62,20 @@ When gene/protein abundance data are labelled with official gene symbols, NATMI 
 
 User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-IDs)). 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
+
+[for the ID conversion, what do you do with muti-matchers? so you will likely have quite a few cases:
+
+caase_1. geneID_1 - Uniprot_1 easy, OK
+
+case_2. geneID_1 - Uniprot_1 geneID_1 - Uniprot_2 (that you can probably sum: geneID_1=Uniprot_1 + Uniprot_2)
+
+case_3. geneID_1 - Uniprot_1 geneID_2 - Uniprot_1
+
+(that you can assign to both, but that will amplify the count)
+
+case_4. you can also have a mix of case_2 and case_3.
+
+think we need to handle that and explain.]
 
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)
 

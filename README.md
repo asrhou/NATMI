@@ -49,7 +49,7 @@ To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protei
 
 ### Supported IDs
 
-NATMI uses official gene symbols to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data and specified by the argument '--idType') are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files before extracting ligand-receptor-mediated edges.
+NATMI uses official gene symbols to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data and specified by the argument '--idType') are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files. If multiple IDs are associated with the same symbol, the expression levels of these IDs are summed up as the total expression level of the corresponding gene symbol.
 
 ### Supported Species
 
@@ -62,7 +62,7 @@ When gene/protein abundance data are labelled with official gene symbols, NATMI 
 User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-IDs)). 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 
-[for the ID conversion, what do you do with muti-matchers? so you will likely have quite a few cases:
+[q: for the ID conversion, what do you do with muti-matchers? so you will likely have quite a few cases:
 
 caase_1. 
 geneID_1 - Uniprot_1 easy, OK
@@ -81,6 +81,8 @@ geneID_2 - Uniprot_1
  4. you can also have a mix of case_2 and case_3.
  
  we need to handle that and explain.]
+ 
+ [a: Currently, NATMI processes multi-matchers in Case 2's way. In 'ids' folder, you can see other gene ids can only be mapped to one gene symbol, so we only need to consider case 1 and 2. For case 2, I thought expression levels of malti-matchers are all the gene products from the same gene, so NATMI simply sum them up as the total expression level of the corresponding gene symbol. Please have a look at the updated [Supported IDs](#supported-IDs) section]
 
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)
 

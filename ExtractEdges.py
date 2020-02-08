@@ -413,13 +413,18 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     #load interaction list
     signalTypeExtention = signalType.split('.')[-1]
     if signalTypeExtention == 'csv':
-        lrM = pd.read_csv(os.path.join('lrdbs', signalType), index_col=0, header=0)
+        lrL = pd.read_csv(os.path.join('lrdbs', signalType), index_col=None, header=0)
     elif signalTypeExtention == 'tsv' or signalTypeExtention == 'txt':
-        lrM = pd.read_csv(os.path.join('lrdbs', signalType), index_col=0, header=0, sep='\t')
+        lrL = pd.read_csv(os.path.join('lrdbs', signalType), index_col=None, header=0, sep='\t')
     elif signalTypeExtention == 'xls' or signalTypeExtention == 'xlsx':
-        lrM = pd.read_excel(os.path.join('lrdbs', signalType), index_col=0, header=0)
+        lrL = pd.read_excel(os.path.join('lrdbs', signalType), index_col=None, header=0)
     else:
         sys.exit("Cannot process the ligand-receptor interaction database file, please check the format of the file, which can only be csv, tsv, txt, xls or xlsx.")
+    lset = sorted(list(set(lrL['Ligand'])))
+    rset = sorted(list(set(lrL['Receptor'])))
+    lrM = pd.DataFrame(0,index=lset,columns=rset)
+    for idx in lrL.index:
+        lrM.ix[lrL.ix[idx,'Ligand'], lrL.ix[idx,'Receptor']] = 1
     signalType = signalType.split('.')[0]
     
     # change gene symbols if necessary

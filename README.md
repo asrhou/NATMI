@@ -104,14 +104,16 @@ so --signalType jordan_pairs: would run /lrc2u/jordan_pairs.xlsx pairs]
 
 In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary litarture support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020.
 
-Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similar to the pre-compiled connectomeDB2020 datasets (lrdbs/lrc2p.csv and lrdbs/lrc2a.txt), an interaction data file must be stored in the folder 'lrdbs' at the same location as ExtractEdges.py (the script will search for the file in the following formats: csv, tsv, txt, xls or xlsx by the name specified using argument '--signalType'). More, the data file should be in a binary matrix form with row names denoting ligands and column names receptors (all represented by the appropriate human gene symbol). For an interacting ligand-receptor pair, the corresponding matrix element is 1, otherwise, it is 0. Following table provides a toy example of the correct interaction matrix.
+Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType'), we briefly describe requirements and the format of this dataset. Similar to the pre-compiled connectomeDB2020 datasets (lrdbs/lrc2p.csv and lrdbs/lrc2a.txt), an interaction data file must be stored in the folder 'lrdbs' at the same location as ExtractEdges.py (the script will search for the file in the following formats: csv, tsv, txt, xls or xlsx by the name specified using argument '--signalType'). More, the data file should be in a two-column form with rows denoting ligand-receptor pairs. Ligands and  receptors are represented by the appropriate human gene symbols. For an interacting ligand-receptor pair, the first column records the ligand symbol, the other column stores the receptor symbol. Following table provides a toy example of the correct interaction database file.
                         
-||Receptor1|Receptor2|Receptor3|...|
-|-:|:-:|:-:|:-:|:-|
-|**Ligand1**|1|0|0|...|
-|**Ligand2**|0|0|1|...|
-|**Ligand3**|1|1|0|...|
-|**...**|...|...|...|...|
+|Ligand|Receptor|
+|-:|:-|
+|LIGAND1|RECEPTOR1|
+|LIGAND2|RECEPTOR2|
+|LIGAND3|RECEPTOR2|
+|LIGAND4|RECEPTOR3|
+|LIGAND4|RECEPTOR4|
+|...|...|...|
 
 ### Metafile (single cell analysis only)
 

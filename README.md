@@ -6,8 +6,8 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 - [Download and Installation](#download-and-installation)
 - [Required Data and Formats](#required-data-and-formats)
-  * [Supported IDs](#supported-IDs)
   * [Supported Species](#supported-species)
+  * [Supported IDs](#supported-IDs)
   * [Expression Data](#expression-data)
   * [Ligand-Receptor Interactions (connectomeDB2020 or user-supplied)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied-interactions)
   * [Cell Labels Metafile (single cell analysis only)](#cell-labels-metafile-single-cell-analysis-only)
@@ -48,15 +48,16 @@ To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protei
 
 ### Supported Species
 
-ConnectomeDB2020 ligand-receptor interactions are primarily human-specific, but besides human NATMI can support an additional 20 species including mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database: Release 68 Statistics](https://www.ncbi.nlm.nih.gov/homologene/statistics/). To run NATMI on other species, the homologs of interacting pairs from NCBI HomoloGene Database are extracted. All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument.
+ConnectomeDB2020 ligand-receptor interactions are primarily human-specific, but NATMI can also support the usage of our database for an additional 20 species including mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/). To run NATMI on other species using ConnectomeDB202, the homologs of interacting pairs from the HomoloGene Database are extracted. All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument.
+
+For user-supplied interactions, NATMI has no species restrictions and can process and visualize any data in the appropriate format. 
+
 
 **Note**: Since some reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always check the literature to verify if a reported edge is valid for other analyzed species.
 
-
 ### Supported IDs
 
-NATMI uses official gene symbols to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data and specified by the argument '--idType') are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files. If multiple IDs are associated with the same symbol, the expression levels of these IDs are summed up as the total expression level of the corresponding gene symbol.
-
+NATMI uses official gene symbols to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data and specified by the argument '--idType') are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI (http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files. If multiple IDs are associated with the same symbol, the expression levels of these IDs are summed up as the total expression level of the corresponding gene symbol.
 
 ### Expression Data 
 
@@ -83,7 +84,7 @@ geneID_2 - Uniprot_1
  
  we need to handle that and explain.]
  
- [a: Currently, NATMI processes multi-matchers in Case 2's way. In 'ids' folder, you can see other gene ids can only be mapped to one gene symbol, so we only need to consider case 1 and 2. For case 2, I thought expression levels of malti-matchers are all the gene products from the same gene, so NATMI simply sum them up as the total expression level of the corresponding gene symbol. Please have a look at the updated [Supported IDs](#supported-IDs) section]
+[a: Currently, NATMI processes multi-matchers in Case 2's way. In 'ids' folder, you can see other gene ids can only be mapped to one gene symbol, so we only need to consider case 1 and 2. For case 2, I thought expression levels of malti-matchers are all the gene products from the same gene, so NATMI simply sum them up as the total expression level of the corresponding gene symbol. Please have a look at the updated [Supported IDs](#supported-IDs) section]
 
 ### Ligand-Receptor Interactions (connectomeDB2020 or user-supplied interactions)
 
@@ -91,16 +92,11 @@ geneID_2 - Uniprot_1
 
 [a: the list can only uses human gene symbols]
 
+
+
 [q: do user-supplied ligand-receptors IDs for human and mouse must match teh IDs the expression data?]
 
 [a: No. Currently, NATMI converts both gene ids in expression data and human symbols in the ligand-receptor pair list to gene symbols of user-supplied species seprately (see [supported IDs](#supported-ids) and [supported species](#supported-species)). Hence expression data can use supported ids and ligand-receptors list has to use human gene symbols. NATMI automatically converts them to proper gene symbols before extracting edges.]
-
-[q: for "pairsM.csv", what happens if user wants to run it on different files? can he/she just create multiple directories and specify them to run? (of course one at the time). If so, that coud allow trying pairs from many sources.
-other option would be to just add this argument as a name. For example you could make an empty directory 'lrc2u' (u - user-supplied) and allow user to put mutltiple pair files in there: cellPhoneDB.xlsx, jordan_pairs.tsv (could even support other formats but you can keep .csv only of course)
-  --signalType SIGNALTYPE --->>> lrc2p (default) | lrc2p .... or [name]
-so --signalType jordan_pairs: would run /lrc2u/jordan_pairs.xlsx pairs]
-
-[a: Before, users can run NATMI on "pairsM.csv" in different folders to try different pair lists. As you suggested, I reconstructed my code. Now all interaction database files are all in the 'lrdbs' folder. Users can put mutltiple pair files in this folder and call them by their file names without extension. For example, 'cellPhoneDB.xlsx', 'jordan_pairs.tsv' in 'lrdbs' folder can be called by '--signalType cellPhoneDB' and '--signalType jordan_pairs'.]
 
 
 In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary litarture support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020.

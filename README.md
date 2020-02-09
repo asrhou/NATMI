@@ -45,9 +45,9 @@ This tool currently provides command-line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protein abundance data**, (2) **ligand-receptor interactions** (precomplied connectomeDB2020 by deafult) and for the single-cell data analysis it requires (3) **the metafile describing mapping between each cell and a cell-type label** across the whole dataset. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)). 
+To explore cell-to-cell communication NATMI uses: 1) **precompiled connectomeDB2020 ligand-receptor interactions** (deafult), (2) **user-supplied gene/protein abundance data**, and for the single-cell data analysis it requires (3) **the metafile describing mapping between each cell and a cell-type label** across the whole dataset. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)). 
 
-**Note:** Please also refer to [other-usage](#other-usage-of-NATMI) for user-supplied interactions. 
+**Note:** Please also refer to [other-usage](#other-usage-of-NATMI) for the workflow based on user-supplied interactions. 
 
 ### Supported Species
 
@@ -113,11 +113,11 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 
 ## Other usage of NATMI
 
-Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') it allows NATMI to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for the users who wish to explore cell-cell communication in other than the 21 default species (see [supported species](#supported-species)). Here, we briefly describe **required data and formats**. 
+Since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') it allows NATMI to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for users who wish to explore specific to their species interactions or cell-cell communication in other than the 21 default species (see [supported species](#supported-species)). Here, we briefly describe **required data and formats**. 
 
-Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx and using the name specified using argument '--signalType'. More, the data file should be in a two-column with the first column representing ligands and the second column representing receptors. User-specified count matrix files should be in the following formats: csv, tsv, txt, xls or xlsx. As NATMI directly proceeds to constructing and visualizing interacting networks from these data, **any matching IDs** between the count and interaction files are supported.
+Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx and using the name specified using argument '--signalType'. More, the data file should be in a two-column with the **first column** representing **ligands** and the **second column** representing **receptors**. User-specified count matrix files should be in one of the following formats: csv, tsv, txt, xls or xlsx. NATMI directly proceeds to constructing and visualizing interacting networks from these data, so **any matching IDs** between the count and interaction files are supported.
 
-**Note** As NATMI skips gene homology matching for the interacting pairs, users should provide the interaction specific to the species the wish to explore or. Alternatively, if they used other ligand-receptor interactions (connectomeDB2020 interactions could be stored under a different name and provided as a user-supplied database), they should be aware of the limitations.   
+**Note:** As with this workflow NATMI skips gene homology matching for the interacting pairs, users should aim to provide interactions specific to the species they wish to explore. If such interactions are not avaialable, for the 21 supported species users should use a deafult workflow, as previously described. To expolre unsupported species, ligand-receptor interactions from a non-matching species can still be used (for example, connectomeDB2020 interactions could be stored in lrdbs folder under a different name and provided as a user-supplied database), yet users should understand the limmitations.
 
 Further, this functionality could be also potentially applied to construct and visualize networks of any type of binary interaction data (**NOT tested**).
 

@@ -9,8 +9,8 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Supported IDs](#supported-IDs)
   * [Supported Species](#supported-species)
   * [Expression Data](#expression-data)
-  * [Ligand-Receptor Interactions (connectomeDB2020 or user-specified)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied)
-  * [Metafile (single cell analysis only)](#metafile-single-cell-analysis-only)
+  * [Ligand-Receptor Interactions (connectomeDB2020 or user-supplied)](#ligand-receptor-interactions-connectomeDB2020-or-user-supplied-interactions)
+  * [Cell Labels Metafile (single cell analysis only)](#cell-labels-metafile-single-cell-analysis-only)
 - [Command Line Utilities](#command-line-utilities)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
@@ -44,18 +44,19 @@ This tool currently provides command-line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protein abundance data**, (2) **ligand-receptor interactions** (precomplied connectomeDB2020 or user-supplied interactions) and for the single-cell data analysis it requires (3) **the metafile describing mapping between each cell and a cell-type label** across the whole dataset. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)).
+To explore cell-to-cell communication NATMI uses (1) **user-supplied gene/protein abundance data**, (2) **ligand-receptor interactions** (precomplied connectomeDB2020 or user-supplied interactions) and for the single-cell data analysis it requires (3) **the metafile describing mapping between each cell and a cell-type label** across the whole dataset. By deaful NATMI uses official gene symbols from 21 species (see [supported species](#supported-species)) and can support additional gene/protein IDs for human and mouse (see [supported IDs](#supported-ids)). 
+
+### Supported Species
+
+ConnectomeDB2020 ligand-receptor interactions are primarily human-specific, but besides human NATMI can support an additional 20 species including mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database: Release 68 Statistics](https://www.ncbi.nlm.nih.gov/homologene/statistics/). To run NATMI on other species, the homologs of interacting pairs from NCBI HomoloGene Database are extracted. All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument.
+
+**Note**: Since some reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always check the literature to verify if a reported edge is valid for other analyzed species.
 
 
 ### Supported IDs
 
 NATMI uses official gene symbols to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data and specified by the argument '--idType') are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**. For that, NATMI first converts these IDs to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files. If multiple IDs are associated with the same symbol, the expression levels of these IDs are summed up as the total expression level of the corresponding gene symbol.
 
-### Supported Species
-
-When gene/protein abundance data are labelled with official gene symbols, NATMI will identify ligands and receptors in the interaction database using thses symbols. The ligand-receptor interactions provided in the database file are represented by human gene symbols. To run NATMI on other species, the homologs of interacting pairs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/) are extracted. NCBI HomoloGene Database records homolog genes of 21 species including human, mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database: Release 68 Statistics](https://www.ncbi.nlm.nih.gov/homologene/statistics/). Therefore, NATMI can identify homologs of human ligands and receptors in 20 spscies. All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument. 
-
-**Note**: Since some reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always check the literature to verify if a reported edge is valid for other analyzed species.
 
 ### Expression Data 
 
@@ -115,7 +116,7 @@ Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-r
 |LIGAND4|RECEPTOR4|
 |...|...|...|
 
-### Metafile (single cell analysis only)
+###  Cell Labels Metafile (single cell analysis only)
 
 For single-cell gene expression data, the user needs to provide a metafile with the mapping between each cell in the dataset and a cell-type label. Following table displays the required format of a metafile.
 

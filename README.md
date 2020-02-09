@@ -113,11 +113,13 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 
 ## Other usage of NATMI
 
-Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') it allows NATMI to construct and visualize any desired interaction networks without data and species restrictions. This is  particualrly usefull for users who wish to explore more than 21 supported species and/or are interested in visualizing other ligand-receptor pairs.  Here we briefly describe required data and formats formats. 
+Alternatively, since ExtractEdges.py can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') it allows NATMI to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for the users who wish to explore cell-cell communication in other than the 21 default species (see [supported species](#supported-species)). Here, we briefly describe **required data and formats**. 
 
-Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx and using the name specified using argument '--signalType'. More, the data file should be in a two-column with the first column representing ligand and the second column reprsesenting receptors. User-specified count matrix files should be in the following formats: csv, tsv, txt, xls or xlsx. As NATMI direclty proceeds to constructinng and visualizing interacitng networks from these data **any matching IDs** between the count and inyteraction files are suppored.
+Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx and using the name specified using argument '--signalType'. More, the data file should be in a two-column with the first column representing ligands and the second column representing receptors. User-specified count matrix files should be in the following formats: csv, tsv, txt, xls or xlsx. As NATMI directly proceeds to constructing and visualizing interacting networks from these data, **any matching IDs** between the count and interaction files are supported.
 
-**Note** That functionality can, in general, be applied to constructing and visualizing any type of interaction data (provided in the required formats). 
+**Note** As NATMI skips gene homology matching for the interacting pairs, users should provide the interaction specific to the species the wish to explore or. Alternatively, if they used other ligand-receptor interactions (connectomeDB2020 interactions could be stored under a different name and provided as a user-supplied database), they should be aware of the limitations.   
+
+Further, this functionality could be also potentially applied to construct and visualize networks of any type of binary interaction data (**NOT tested**).
 
 
 ## Command Line Utilities

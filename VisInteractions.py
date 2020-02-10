@@ -1333,6 +1333,8 @@ def MainLRNetwork(sourceFolder, signalType, weightType, specificityThreshold, we
         edgeDF = edgeDF.ix[:,selectCols]
         edgeDF.columns = ["sending cluster name", "ligand", "receptor", "target cluster name", "frequency ligand", "original ligand", "specified ligand", "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
         edgeDF = edgeDF.ix[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
+        edgeDF['ligand'] = edgeDF['ligand'].astype(str)
+        edgeDF['receptor'] = edgeDF['receptor'].astype(str)
         edgeDF = edgeDF.ix[(edgeDF['ligand']==ls) & (edgeDF['receptor']==rs),]
         # process node properties for single dataset
         clusterMapFilename = os.path.join(sourceFolder, 'ClusterMapping.csv')
@@ -1357,6 +1359,8 @@ def MainLRNetwork(sourceFolder, signalType, weightType, specificityThreshold, we
 def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
     
     # prepare lr edges.
+    curDF['ligand'] = curDF['ligand'].astype(str)
+    curDF['receptor'] = curDF['receptor'].astype(str)
     curDF['cellligand'] = curDF['sending cluster name'] + curDF['target cluster name'] + "->" + curDF['ligand']
     curDF['cellreceptor'] = curDF['sending cluster name'] + curDF['target cluster name'] + "->" + curDF['receptor']
     curDF['cellpair'] = curDF['sending cluster name'] + curDF['target cluster name']
@@ -1905,6 +1909,8 @@ if __name__ == '__main__':
             #check if symbols are legal
             if os.path.exists(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (signalType))):
                 edgeDF = pd.read_csv(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (signalType)), index_col=None, header=0)
+                edgeDF['Ligand symbol'] = edgeDF['Ligand symbol'].astype(str)
+                edgeDF['Receptor symbol'] = edgeDF['Receptor symbol'].astype(str)
                 if len(edgeDF.ix[(edgeDF['Ligand symbol'] == opt.drawLRNetwork[0])&(edgeDF['Receptor symbol'] == opt.drawLRNetwork[1]),])>0:
                     ls = opt.drawLRNetwork[0]
                     rs = opt.drawLRNetwork[1]
@@ -1912,7 +1918,7 @@ if __name__ == '__main__':
                     ls = opt.drawLRNetwork[1]
                     rs = opt.drawLRNetwork[0]
                 else:
-                    sys.exit("Cannot find %s-%s pair or %s-%s pair  in the dataset." % (opt.drawLRNetwork[0], opt.drawLRNetwork[1], opt.drawLRNetwork[1], opt.drawLRNetwork[0]))
+                    sys.exit("Cannot find %s-%s pair or %s-%s pair in the dataset." % (opt.drawLRNetwork[0], opt.drawLRNetwork[1], opt.drawLRNetwork[1], opt.drawLRNetwork[0]))
             
             #pass argument check, show input data
             print('===================================================')

@@ -50,7 +50,7 @@ To explore cell-to-cell communication NATMI uses: 1) **ligand-receptor interacti
 
 By **deafult** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs from the HomoloGene Database it can support a total of **21 different species** including not only human, but also mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument. 
 
-NATMI also uses **official gene symbols** to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers (provided in the user-supplied gene/protein abundance data and specified by the argument '--idType') are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**, which are converted to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files.
+NATMI also uses **official gene symbols** to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers **provided in the user-supplied gene/protein abundance data and specified by the argument '--idType'** are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**, which are converted to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files.
 
 For **user-supplied interactions**, NATMI can, in principle, work with **any species** and **any IDs** [(as described)](#ligand-receptor-interactions-user-supplied-interactions).  
 
@@ -87,7 +87,7 @@ For these cases, by setting the argument '--idType' to 'customized', NATMI direc
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-species-and-ids)). (For multiple human/mouse IDs associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol). Each column in the matrix records a normalised gene/protein expression profile of a cell type or an individual cell. A snapshot of a gene/protein abundance matrix is shown below.
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and for the deafult usage with [connectomeDB](#ligand-receptor-interactions-connectomeDB2020) require that the gene/protein IDs are in one of the following formats: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-species-and-ids)). (For multiple human/mouse IDs associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol). Each column in the matrix records a normalised gene/protein expression profile of a cell type or an individual cell. A snapshot of a gene/protein abundance matrix is shown below.
 
 ||Sample1|Sample2|Sample3|...|
 |-:|:-:|:-:|:-:|:-|
@@ -95,6 +95,8 @@ User-specified gene/protein abundance matrix files are supported in the followin
 |**Gene2**|1555|1.2|9.9|...|
 |**Gene3**|0|658.01|0|...|
 |...|...|...|...|...|
+
+For [user-supplied interactions](#ligand-receptor-interactions-user-supplied-interactions), the IDs in gene/protein abundance matrix can be of any format matching the interactions.   
 
 Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 

@@ -77,7 +77,7 @@ Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data fil
 
 #### connectomeDB2020-like Format
 
-If ligands and receptors are represented by human gene symbols in the interaction data file and the user-specified expression data are collected from [supported species](##supported-species-and-ids) using [supported IDs](##supported-species-and-ids), NATMI will extract edges in the same way as connectomeDB2020. 
+If ligands and receptors are represented by human gene symbols in the interaction data file and the user-specified expression data are collected from [supported species](#supported-species-and-ids) using [supported IDs](#supported-species-and-ids), NATMI will extract edges in the same way as connectomeDB2020. 
 
 #### Customized Format
 
@@ -87,7 +87,7 @@ For these cases, by setting the argument '--idType' to 'customized', NATMI direc
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](##supported-species-and-ids)). (If multiple human/mouse IDs are associated with the same symbol, the expression levels of these IDs are summed up as the total expression level of the corresponding gene symbol.)Each column in the matrix records a normalised gene/protein expression profile of a cell type or an individual cell. A snapshot of a gene/protein abundance matrix is shown below.
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and require the gene/protein IDs to be one of the following: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-species-and-ids)). (For multiple human/mouse IDs associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol). Each column in the matrix records a normalised gene/protein expression profile of a cell type or an individual cell. A snapshot of a gene/protein abundance matrix is shown below.
 
 ||Sample1|Sample2|Sample3|...|
 |-:|:-:|:-:|:-:|:-|

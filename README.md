@@ -27,7 +27,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
 To use NATMI, following software is required: 
 
-- Python 2.X or Python3.X
+- Python 2.X or Python 3.X
 
 - Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) are required for general data processing.
 
@@ -35,7 +35,7 @@ To use NATMI, following software is required:
 
 NATMI was tested using python 2.7 and 3.7 versions with pandas 0.24.2, XlsxWriter 1.1.0, xlrd 1.2.0, seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5.
 
-To install NATMI, run the following command in the desired instalation directory:
+To install NATMI, run the following command in the desired installation directory:
 ```bat
    git clone https://github.com/asrhou/NATMI.git
 ```
@@ -44,19 +44,19 @@ This tool currently provides command-line utilities only.
 
 ## Required Data and Formats
 
-To explore cell-to-cell communication NATMI uses: 1) **ligand-receptor interactions** ([precompiled connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) or [user-supplied pairs](#ligand-receptor-interactions-user-supplied-interactions)), (2) [**user-supplied gene/protein abundance data**](#expression-data), and for the single-cell data analysis it requires (3) [**the metafile describing mapping between each cell and a cell-type label**](#cell-labels-metafile-single-cell-analysis-only) across the whole dataset. Detailed requirements are described as follows. 
+To explore cell-to-cell communication NATMI uses: (1) **ligand-receptor interactions** ([precompiled connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) or [user-supplied pairs](#ligand-receptor-interactions-user-supplied-interactions)), (2) [**user-supplied gene/protein abundance data**](#expression-data), and for the single-cell data analysis it requires (3) [**the metafile describing mapping between each cell and a cell-type label**](#cell-labels-metafile-single-cell-analysis-only) across the whole dataset. Detailed requirements are described as follows. 
 
 ### Supported Species and IDs
 
-By **deafult** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs from the HomoloGene Database it can support a total of **21 different species** including not only human, but also mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument. 
+By **default** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs from the HomoloGene Database it can support a total of **21 different species** including not only human, but also mouse, rat, zebrafish, etc. as listed at: [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a supported species can be specified by using '--species [species_name]' argument. 
 
-NATMI also uses **official gene symbols** to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers **provided in the user-supplied gene/protein abundance data and specified by the argument '--idType'** are supported: **HGNC ID, MGI ID, Entrez gene ID, Ensembl gene ID, UniProt ID**, which are converted to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files.
+NATMI also uses **official gene symbols** to represent ligands and receptors in all output files. For human and mouse, additional gene identifiers **provided in the user-supplied gene/protein abundance data and specified by the argument '--idType'** are supported: **[HGNC ID](https://www.genenames.org/), [MGI ID](http://www.informatics.jax.org/mgihome/nomen/index.shtml), [Entrez gene ID](https://www.ncbi.nlm.nih.gov/gene), [Ensembl gene ID](https://www.ensembl.org/), [UniProt ID](https://www.uniprot.org/)**, which are converted to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files.
 
 For **user-supplied interactions**, NATMI can, in principle, work with **any species** and **any IDs** [(as described)](#ligand-receptor-interactions-user-supplied-interactions).  
 
 ### Ligand-Receptor Interactions (connectomeDB2020)
 
-In 2015, we publised a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary litarture support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020 and for other than human supported species, it uses their homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/statistics/).
+In 2015, we published a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary literature support and additional 1,791 putative pairs and named it **connectomeDB2020** [\reference to the paper]. By default, ExtractEdges.py of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from connectomeDB2020 and for other than human supported species, it uses their homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/).
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always check the literature to verify if a given edge is valid for other analyzed species.
 
@@ -64,7 +64,7 @@ In 2015, we publised a first draft of human cell interactions and a database of 
 
 NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for users who wish to explore specific to their species interactions or cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats**. 
 
-Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx and using the name specified by the argument '--signalType'. The interaction data file should be a two-column table with the **first column** representing **ligands** and the **second column** representing **receptors** (see following example). 
+Similarly to the precompiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx and using the name specified by the argument '--signalType'. The interaction data file should be a two-column table with the **first column** representing **ligands** and the **second column** representing **receptors** (see following example). 
 
 |Ligand|Receptor|
 |-:|:-|
@@ -79,15 +79,15 @@ Similarly to the pre-compiled connectomeDB2020 datasets, an interaction data fil
 
 If ligands and receptors are represented by human gene symbols in the interaction data file and the user-specified expression data are collected from [supported species](#supported-species-and-ids) using [supported IDs](#supported-species-and-ids), NATMI will extract edges in the same way as connectomeDB2020. 
 
-#### Customized Format
+#### Customised Format
 
 Further, NATMI could be also potentially applied to construct and visualize networks of any type of binary interaction data. If the users wish to explore 1) the expression data with **unsupported IDs**, 2) the expression data collected from **unsupported species**, or 3) ligand-receptor interactions using **gene IDs other than human gene symbols**, NATMI cannot do gene ID conversion for the expression data and gene homology matching for the interacting pairs. 
 
-For these cases, by setting the argument '--idType' to 'customized', NATMI directly proceeds to constructing and visualizing cell-to-cell communication networks of binary interactions from user-supplied expression data. Users should make sure the customized interaction file and the expression data share the common gene ID system. In all output files, **original gene IDs** are preserved. 
+For these cases, by setting the argument '--idType' to 'customised', NATMI directly proceeds to constructing and visualizing cell-to-cell communication networks of binary interactions from user-supplied expression data. Users should make sure the customised interaction file and the expression data share the common gene ID system. In all output files, **original gene IDs** are preserved. 
 
 ### Expression Data 
 
-User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and for the deafult usage with [connectomeDB](#ligand-receptor-interactions-connectomeDB2020) require that the gene/protein IDs are in one of the following formats: official gene symbols (deafult) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-species-and-ids)). (For multiple human/mouse IDs associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol). Each column in the matrix records a normalised gene/protein expression profile of a cell type or an individual cell. A snapshot of a gene/protein abundance matrix is shown below.
+User-specified gene/protein abundance matrix files are supported in the following formats: csv, tsv, txt, xls or xlsx and for the default usage with [connectomeDB](#ligand-receptor-interactions-connectomeDB2020) require that the gene/protein IDs are in one of the following formats: official gene symbols (default) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-species-and-ids)). (For multiple human/mouse IDs associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol). Each column in the matrix records a normalised gene/protein expression profile of a cell type or an individual cell. A snapshot of a gene/protein abundance matrix is shown below.
 
 ||Sample1|Sample2|Sample3|...|
 |-:|:-:|:-:|:-:|:-|
@@ -116,7 +116,7 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 
 NATMI is a python-based tool (see [software requirements](#download-and-installation)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
-Path to NATMI scripts has to be specified or the following commands can be run from the instalation directory:
+Path to NATMI scripts has to be specified or the following commands can be run from the installation directory:
 
 ### ExtractEdges: Extracting ligand-receptor-mediated interactions between cell types in the input transcriptome data.
 [transcriptome data--> once we agree on how we will word this in the paper, we can modify this]
@@ -133,9 +133,9 @@ Arguments:
   --emFile EMFILE       the path to the normalised expression matrix file with row names (gene identifiers) and column names (cell-type/single-cell identifiers)
   --annFile ANNFILE     the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file 'toy.sc.ann.txt' as an example)
   --species SPECIES     human (default) | mouse | rat | zebrafish | fruitfly | chimpanzee | dog | monkey | cattle | chicken | frog | mosquito | nematode | thalecress | rice | riceblastfungus | bakeryeast | neurosporacrassa | fissionyeast | eremotheciumgossypii | kluyveromyceslactis, 21 species are supported
-  --idType IDTYPE       symbol (default) | entrez(https://www.ncbi.nlm.nih.gov/gene) | ensembl(https://www.ensembl.org/) | uniprot(https://www.uniprot.org/) | hgnc(https://www.genenames.org/) | mgi(http://www.informatics.jax.org/mgihome/nomen/index.shtml) | customized(gene identifier used in the expression matrix)
+  --idType IDTYPE       symbol (default) | entrez(https://www.ncbi.nlm.nih.gov/gene) | ensembl(https://www.ensembl.org/) | uniprot(https://www.uniprot.org/) | hgnc(https://www.genenames.org/) | mgi(http://www.informatics.jax.org/mgihome/nomen/index.shtml) | customised(gene identifier used in the expression matrix)
   --coreNum CORENUM     the number of CPU cores used, default is one
-  --out OUT             the path to save the analysis results [q: is this optonal or required?][a: it is optional]
+  --out OUT             the path to save the analysis results
 ```
 
 **Note**: Normalised expression matrix, metafile and ligand-receptor interaction database files are supported in csv, tsv, txt, xls or xlsx format.
@@ -201,7 +201,7 @@ Arguments:
   --weightType WEIGHTTYPE
                         mean (default) | sum, method to calculate the expression level of a ligand/receptor in a cell type
   --specificityThreshold SPECIFICITYTHRESHOLD
-                        do not draw the edges whose specicificities are not greater than the threshold (default 0).
+                        do not draw the edges whose specificities are not greater than the threshold (default 0).
   --expressionThreshold EXPRESSIONTHRESHOLD
                         do not draw the edges in which expression levels of the ligand and the receptor are not greater than the threshold (default 0).
   --detectionThreshold DETECTIONTHRESHOLD

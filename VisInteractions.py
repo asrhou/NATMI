@@ -1747,7 +1747,7 @@ if __name__ == '__main__':
     parser.add_argument('--sourceFolder', required=True, help="the path to the folder of extracted edges from ExtractEdges.py or DiffEdges.py")
     parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2as | the name of the ligand-receptor interaction database file without extension')
     parser.add_argument('--weightType', default='mean', help="mean (default) | sum, method to calculate the expression level of a ligand/receptor in a cell type")
-    parser.add_argument('--specificityThreshold', type=float, default=0, help='do not draw the edges whose specicificities are not greater than the threshold (default 0).')
+    parser.add_argument('--specificityThreshold', type=float, default=0, help='do not draw the edges whose specificities are not greater than the threshold (default 0).')
     parser.add_argument('--expressionThreshold', type=float, default=0, help='do not draw the edges in which expression levels of the ligand and the receptor are not greater than the threshold (default 0).')
     parser.add_argument('--detectionThreshold', type=float, default=0.2, help='do not draw the interactions in which detection rates of the ligand and the receptor are lower than the threshold (default 0.2).')
     parser.add_argument('--keepTopEdge', type=int, default=0, help='only draw top n interactions that passed the thresholds (default 0 means all interactions that passed the thresholds will be drawn).')

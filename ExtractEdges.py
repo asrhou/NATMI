@@ -373,7 +373,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     em = em.ix[em.max(axis=1)>0,]
     
     #id conversion
-    if idType != 'symbol' and idType != 'customized':
+    if idType != 'symbol' and idType != 'customised':
         if idType == 'hgnc' or idType == 'mgi':
             idType = 'ID'
         idT = pd.read_csv('ids/' + species + '_' + idType + '.csv', dtype=object, index_col=0, header=0)
@@ -428,7 +428,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     signalType = signalType.split('.')[0]
     
     # change gene symbols if necessary
-    if species != '9606' and idType != 'customized':
+    if species != '9606' and idType != 'customised':
         #find taxonomy file
         ## HID (HomoloGene group id)[0] - Taxonomy ID[1] - Gene ID[2] - Gene Symbol[3] - Protein gi[4] - Protein accession[5]
         homoMapDir = 'homology/homologene.data'
@@ -467,7 +467,7 @@ if __name__ == '__main__':
     parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene identifiers) and column names (single-cell/cell-type identifiers)')
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
     parser.add_argument('--species', default='human', help='human (default) | mouse | rat | zebrafish | fruitfly | chimpanzee | dog | monkey | cattle | chicken | frog | mosquito | nematode | thalecress | rice | riceblastfungus | bakeryeast | neurosporacrassa | fissionyeast | eremotheciumgossypii | kluyveromyceslactis') 
-    parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi | customized (gene identifier used in the expression matrix)')
+    parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi | customised (gene identifier used in the expression matrix)')
     parser.add_argument('--coreNum', type=int, default=1, help='the number of CPU cores used, default is one')
     parser.add_argument('--out', default='', help='the path to save the analysis results')
     
@@ -475,13 +475,13 @@ if __name__ == '__main__':
     
     #check species
     avaSpecDict = {'human':'9606', 'mouse':'10090', 'chimpanzee':'9598', 'dog':'9615', 'monkey':'9544', 'cattle':'9913', 'rat':'10116', 'chicken':'9031', 'frog':'8364', 'zebrafish':'7955', 'fruitfly':'7227', 'mosquito':'7165', 'nematode':'6239', 'thalecress':'3702', 'rice':'4530', 'riceblastfungus':'318829', 'bakeryeast':'4932', 'neurosporacrassa':'5141', 'fissionyeast':'4896', 'eremotheciumgossypii':'33169', 'kluyveromyceslactis':'28985'}
-    if opt.species.lower() not in avaSpecDict.keys() and opt.idType.lower() != 'customized':
+    if opt.species.lower() not in avaSpecDict.keys() and opt.idType.lower() != 'customised':
         sys.exit("The species can only be 'human' or 'mouse' for now.")
     else:
         species = avaSpecDict[opt.species.lower()]
     
     #check gene ids
-    avaIDList = ['symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', 'mgi', 'customized']
+    avaIDList = ['symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', 'mgi', 'customised']
     if opt.idType.lower() not in avaIDList:
         sys.exit("The gene identifiers can only be 'symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', or 'mgi' for now.")
     elif species == '9606' and opt.idType.lower() == 'mgi':
@@ -516,7 +516,7 @@ if __name__ == '__main__':
     #pass argument check, show input data
     print('===================================================')
     print('Input data:')
-    if idType != 'customized':
+    if idType != 'customised':
         print('Species: %s' % opt.species.lower())
     print('The expression matrix file: %s' % opt.emFile)
     if os.path.exists(opt.annFile):

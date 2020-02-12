@@ -106,6 +106,9 @@ venv.bak/
 # test results
 /ne
 /pne
+/pne2
+/pneDiff
 /ann.t.xlsx
+/ann.t2.xlsx
 /em.t.xlsx
 /lrdbs/lrc2t.xls

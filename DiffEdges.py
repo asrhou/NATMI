@@ -53,7 +53,10 @@ def IdentifyPopulationChanges(refClusterMapDF, testClusterMapDF, resultFolder, r
     
     # find all clusters
     allClusters = set(sumClusterDF['Cluster'])
-    plotHeight = len(allClusters) * 2 / 5
+    if len(allClusters) < 5:
+        plotHeight = len(allClusters) 
+    else:
+        plotHeight = len(allClusters) * 2 / 5
     plotWidth = 2 * plotHeight
     
     # sort clusters based on the fold changes

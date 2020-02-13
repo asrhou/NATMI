@@ -48,7 +48,7 @@ To explore cell-to-cell communication NATMI uses: (1) **ligand-receptor interact
 
 ### Supported Species and IDs
 
-By **default** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs from the HomoloGene Database it can support a total of **21 different species** including additional species such as mouse, rat, zebrafish, etc. ([NCBI HomoloGene Database])(https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a species of interest can be specified by using '--species [species_name]' argument. 
+By **default** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs from the HomoloGene Database it can support a total of **21 different species** including additional species such as mouse, rat, zebrafish, etc. [(NCBI HomoloGene Database)](https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a species of interest can be specified by using '--species [species_name]' argument. 
 
 For the supported species, NATMI generally requires to provide **official gene symbols** in the **user-supplied gene/protein abundance data**. For human and mouse, additional identifiers are supported: **[HGNC ID](https://www.genenames.org/), [MGI ID](http://www.informatics.jax.org/mgihome/nomen/index.shtml), [Entrez gene ID](https://www.ncbi.nlm.nih.gov/gene), [Ensembl gene ID](https://www.ensembl.org/), [UniProt ID](https://www.uniprot.org/)**, which are then converted to gene symbols using [HGNC](https://www.genenames.org/download/statistics-and-files/) and [MGI](http://www.informatics.jax.org/downloads/reports/index.html) ID mapping files.
 
@@ -64,9 +64,9 @@ By default, ExtractEdges.py of NATMI extracts edges from input expression data b
 
 ### Ligand-Receptor Interactions (user-supplied interactions)
 
-To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for users who wish to expand the list of current connectomeDB2020 interactions, explore specific to their species (own) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats**. 
+To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for users who wish to expand the list of our deafult interactions, explore specific to their species (own) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats**. 
 
-Similarly to the precompiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder under a desired file name (used by the argument '--signalType') and in one of the following formats: csv, tsv, txt, xls or xlsx. The interaction data should be represented as a two-column table, with the **first column** containing **ligands** and the **second column** containing **receptors** (see the following example). 
+Similarly to the precompiled connectomeDB2020 datasets, an interaction data file must be stored in the 'lrdbs' folder in one of the following formats: csv, tsv, txt, xls or xlsx under a desired name (used to specify the argument '--signalType'). The interaction data should be represented as a two-column table, with the **first column** containing **ligands** and the **second column** containing **receptors** (as in the following example). 
 
 |Ligand|Receptor|
 |-:|:-|
@@ -77,17 +77,17 @@ Similarly to the precompiled connectomeDB2020 datasets, an interaction data file
 |LIGAND4|RECEPTOR4|
 |...|...|...|
 
-The **IDs** of these ligand-receptor pairs can be of **any format** depending on the uasge scenario as we will further describe.
+The **IDs** of these ligand-receptor pairs can be of **any format** depending on the uasge scenario as will be further describe.
 
 #### connectomeDB2020-like Format
 
-If provided ligands and receptors are represented by human gene symbols and the user-specified expression data are collected from [supported species](#supported-species-and-ids) using [supported IDs](#supported-species-and-ids), NATMI will extract edges in the same way as connectomeDB2020. This could be potentially useful for the users who want to add additional human interactions to the existing connectomeDB ligannd-receptor pairs and epxlore the supported species. 
+If provided ligands and receptors are represented by human gene symbols and the user-specified expression data are collected from [supported species](#supported-species-and-ids) using [supported IDs](#supported-species-and-ids), NATMI will extract edges in the same way as connectomeDB2020. This could be potentially useful for the users who want to add additional human interactions to the existing connectomeDB ligand-receptor pairs and epxlore the supported species. 
 
 #### Customised Format
 
 Further, NATMI could be also potentially applied to construct and visualize networks of any type of binary interaction data. If users wish to explore 1) the expression data with **unsupported IDs**, 2) the expression data collected from **unsupported species**, or 3) ligand-receptor interactions using **gene IDs other than human gene symbols**.  
 
-For these cases, by setting the argument '--idType' to 'customised', NATMI  would skip gene ID conversion for the expression data and gene homology matching and directly proceed to constructing and visualizing cell-to-cell communication networks of binary interactions from the user-supplied data. Users should make sure the customised interaction file and the expression data share the common gene ID system. In all output files, **original gene IDs** are preserved. 
+For these cases, by setting the argument '--idType' to 'customised', NATMI  would skip gene ID conversion for the expression data and gene homology matching and directly proceed to constructing and visualizing cell-to-cell communication networks of binary interactions from the user-supplied data. Users should make assure that customised interaction file and the expression data share the common ID type. In all output files, **original IDs** are preserved. 
 
 
 ### Expression Data 

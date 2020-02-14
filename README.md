@@ -331,6 +331,6 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
 
 ## Frequently Asked Questions [(top)](#table-of-content)
-Not sure how to best use NATMI? Please read through our FAQ sections and if you are still not finding your answers, send us an email: [email]
+Not sure how to best use NATMI? Please check our manual above and/or read through our FAQ section. If you are still not finding your answers, send us an email: [email]
 
 **This section will be expanded when NATMI becomes publicly available.**

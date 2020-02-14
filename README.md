@@ -4,6 +4,7 @@ Recent development of high throughput single-cell sequencing technologies has ma
 
 NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
 
+# TOC
 - [Download and Installation](#download-and-installation)
 - [Required Data and Formats](#required-data-and-formats)
   * [Supported Species and IDs](#supported-species-and-ids)
@@ -23,7 +24,7 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
   * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-visinteractionspy-as-in-figure-6-of-the-manuscript)
 
-## Download and Installation
+## Download and Installation 
 
 To use NATMI, following software is required: 
 
@@ -115,7 +116,7 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 |...|...|
 
 
-## Command Line Utilities
+## Command Line Utilities [top](#toc)
 
 NATMI is a python-based tool (see [software requirements](#download-and-installation)) to construct cell-to-cell ligand-receptor communication networks from multiomics data. It works with user-specified gene/protein abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas (see [required data](#expression-data)). 
 

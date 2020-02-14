@@ -2,9 +2,10 @@
 
 Recent development of high throughput single-cell sequencing technologies has made it cost-effective to profile thousands of cells from a complex sample. Examining ligand and receptor expression patterns in the cell types identified from these datasets allows prediction of cell-to-cell communication at the level of niches, tissues and organism-wide. Here, we developed NATMI (Network Analysis Toolkit for Multicellular Interactions), a Python-based toolkit for multi-cellular communication network construction and network analysis of multispecies single-cell and bulk gene expression and proteomic data. NATMI uses connectomeDB2020 (the most up-to-date manually curated ligand-receptor interaction list) and user supplied gene expression tables with cell type labels to predict and visualize cell-to-cell communication networks. By interrogating the Tabula Muris cell atlas we demonstrate the utility of NATMI to identify cellular communities and the key ligands and receptors involved. Notably, we confirm our previous predictions from bulk data that autocrine signalling is a major feature of cell-to-cell communication networks and for the first time ever show a substantial potential for self-signalling of individual cells through hundreds of co-expressed ligand-receptor pairs. Lastly, we identify age related changes in intercellular communication between the mammary gland of 3 and 18-month-old mice in the Tabula Muris dataset. NATMI and our updated ligand-receptor lists are freely available to the research community.
 
-NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
+Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## Table of Content
+- [About NATMI](#about-natmi)
 - [Download and Installation](#download-and-installation)
 - [Required Data and Formats](#required-data-and-formats)
   * [Supported Species and IDs](#supported-species-and-ids)
@@ -24,6 +25,12 @@ NATMI is maintained by Rui Hou [rui.hou@research.uwa.edu.au]
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3-month-old-and-18-month-old-murine-mammary-gland-are-then-identified-by-diffedgespy)
   * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-visinteractionspy-as-in-figure-6-of-the-manuscript)
 - [Frequently Asked Questions](#frequently-asked-questions)
+
+## About NATMI
+
+NATMI is a fast, flexible and easy to use python-based tool (see [software requirements](#download-and-installation)) to construct cell-to-cell ligand- receptor communication networks from multiomics data. By default, NATMI uses connecotmeDB20202 (link, bla bla currated ligand-receptor lists) and works with user-specified gene/protein abundance matrix files. It also allows users to easily interogate their own interactions or can be used to explore precompiled Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas. [links]
+
+NATMI was developed and is maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest at the Harry Perkins Institute of Medical Research.
 
 ## Download and Installation [(top)](#table-of-content)
 
@@ -322,4 +329,6 @@ To demonstrate the usage of delta network analysis, we show the analysis on Tabu
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
 
 ## Frequently Asked Questions [(top)](#table-of-content)
-This section will be expanded when NATMI becomes publicly available.
+Not sure how to best use NATMI? Please read through our FAQ sections and if you are still not finding your answers, send us an email: [email]
+
+**This section will be expanded when NATMI becomes publicly available.**

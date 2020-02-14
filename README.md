@@ -56,7 +56,7 @@ For the supported species, NATMI generally requires to provide **official gene s
 
 For **user-supplied interactions**, NATMI can work with **any species** and **any IDs** [(as described)](#ligand-receptor-interactions-user-supplied-interactions).  
 
-### Ligand-Receptor Interactions (connectomeDB2020)
+### Ligand-Receptor Interactions (connectomeDB2020) [(top)](#required-data-and-formats)
 
 In 2015, we published a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary literature support and additional 1,791 putative pairs named **connectomeDB2020**. 
 

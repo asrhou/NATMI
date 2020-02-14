@@ -56,7 +56,7 @@ For the supported species, NATMI generally requires to provide **official gene s
 
 For **user-supplied interactions**, NATMI can work with **any species** and **any IDs** [(as described)](#ligand-receptor-interactions-user-supplied-interactions).  
 
-### Ligand-Receptor Interactions (connectomeDB2020) [(top)](#required-data-and-formats)
+### Ligand-Receptor Interactions (connectomeDB2020)
 
 In 2015, we published a first draft of human cell interactions and a database of human ligand-receptor pairs ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). This database compiled 708 ligands and 691 receptors into 2,422 human ligand-receptor interacting pairs (1,894 pairs with primary literature support, and an additional 528 putative pairs with high-throughput protein-protein interaction evidence). In 2020, we made an updated and expanded database of 2,187 human ligand-receptor pairs with primary literature support and additional 1,791 putative pairs named **connectomeDB2020**. 
 
@@ -64,7 +64,7 @@ By default, ExtractEdges.py of NATMI extracts edges from input expression data b
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 
-### Ligand-Receptor Interactions (user-supplied interactions)
+### Ligand-Receptor Interactions (user-supplied interactions) [(top)](#required-data-and-formats-top)
 
 To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions other than those in connectomeDB2020. This option can also be particularly useful for users who wish to expand the list of our deafult interactions, explore specific to their species (own) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats**. 
 

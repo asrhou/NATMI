@@ -35,7 +35,7 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 NATMI is: **python-based** ([software requirements](#download-and-installation)) and uses [**connectomeDB2020**](#ligand-receptor-interactions-connectomeDB2020) (default). Users can also add and interrogate their **own interactions** in **any species** or explore precompiled Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas datastets. [links]
 
-*Developed and maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest at the Harry Perkins Institute of Medical Research.
+*Developed and maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest at the Harry Perkins Institute of Medical Research.*
 
 ## Download and Installation [(top)](#table-of-content)
 
@@ -75,9 +75,7 @@ For **user-supplied interactions**, NATMI can work with **any species** and **an
 
 ### Ligand-Receptor Interactions (connectomeDB2020)
 
-**connectomeDB2020**  is most-up-to date curated database of 2,187 human ligand-receptor interactions with primary literature support and additional 1,791 putative pairs, which builds on our previous draft and a database of human cell interactions ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)).
-
-By default, *ExtractEdges.py* of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from **connectomeDB2020**. For non-human supported species it further extracts their human homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/).
+As of 2020, **connectomeDB2020**  is most-up-to date curated database of 2,187 human ligand-receptor interactions with primary literature support and additional 1,791 putative pairs, which builds on our previous draft and a database of human cell interactions ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). By default, *ExtractEdges.py* of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from **connectomeDB2020**. For non-human supported species it further extracts their human homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/).
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 
@@ -100,9 +98,7 @@ The **IDs** of these ligand-receptor pairs can be of **any format** depending on
 
 #### connectomeDB2020-like Format
 
-If provided ligands and receptors are represented by **human gene symbols** and the user-specified expression data are collected from [supported species](#supported-species-and-ids) using [supported IDs](#supported-species-and-ids), NATMI will extract edges in the same way as [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020). 
-
-This functionality could be potentially useful for the users who want to add additional human interactions to the existing connectomeDB ligand-receptor pairs and epxlore the supported species. 
+If provided ligands and receptors are represented by **human gene symbols** and the user-specified expression data are collected from [supported species](#supported-species-and-ids) using [supported IDs](#supported-species-and-ids), NATMI will extract edges in the same way as [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020). This functionality could be potentially useful for the users who want to add additional human interactions to the existing connectomeDB ligand-receptor pairs and epxlore the supported species. 
 
 [that merge function in cellphoneDB. I think you know what I want to suggest here :) (last on the priority list)]
 
@@ -289,7 +285,7 @@ This workflow shows how to extract and visualize intercellular communication usi
 **Note**: All results of following commands can be found in 'example' folder.
 
 ### Extract ligand-receptor-mediated interactions in 'toy.sc.em.txt' and save results to 'example' folder using ExtractEdges.py. 
-For each analysis, NATMI always starts from predicting potential ligand-receptor-mediated interactions between cells using the user-specified ligand-receptor pairs. Here, we use *ExtractEdges.py* to extract interactions in the toy single-cell dataset (with three cell types) and using literature supported ligand-receptor pairs from the precompiled connectomeDB2020.
+For each analysis, NATMI always starts from predicting potential ligand-receptor-mediated interactions between cells using the user-specified ligand-receptor pairs. Here, we use *ExtractEdges.py* to extract interactions in the toy single-cell dataset (with three cell types) and using literature supported ligand-receptor pairs from the **connectomeDB2020**.
 
 ```bat
    python ExtractEdges.py --species mouse --emFile toy.sc.em.txt --annFile toy.sc.ann.txt --signalType lrc2p --coreNum 4 --out example
@@ -324,7 +320,7 @@ Network in *example/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2
 
 To demonstrate the usage of NATMI in delta network analysis, we show the analysis on Tabula Muris Senis (as in our manuscript). **Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' was first downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982)**. We then extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by dividing it by the total number of unique molecular identifiers and multiplying by 1,000,000. Such normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 
-### We first extract edges between cells of the 3 and 18-month-old mammary glands in mice using ExtractEdges.py. 
+### We first extract edges between cells of the 3- and 18-month-old mammary glands in mice using ExtractEdges.py. 
 ```bat
    python ExtractEdges.py --species mouse --emFile /path/to/3m.upm.em.csv --annFile /path/to/3m.ann.csv --signalType lrc2p --coreNum 4 --out 3m.mg
 

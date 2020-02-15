@@ -1,11 +1,12 @@
 # NATMI: A network analysis toolkit for multicellular interactions in single-cell transcriptome data
 
+Recent development of high throughput single-cell sequencing technologies has made it cost-effective to profile thousands of cells from a complex sample. Examining ligand and receptor expression patterns in the cell types identified from these datasets allows prediction of cell-to-cell communication at the level of niches, tissues and organism-wide. Here, we developed NATMI (Network Analysis Toolkit for Multicellular Interactions), a Python-based toolkit for multi-cellular communication network construction and network analysis of multispecies single-cell and bulk gene expression and proteomic data. NATMI uses connectomeDB2020 (the most up-to-date manually curated ligand-receptor interaction list) and user supplied gene expression tables with cell type labels to predict and visualize cell-to-cell communication networks.
 <details open>
 <summary>Read more...</summary>
-Recent development of high throughput single-cell sequencing technologies has made it cost-effective to profile thousands of cells from a complex sample. Examining ligand and receptor expression patterns in the cell types identified from these datasets allows prediction of cell-to-cell communication at the level of niches, tissues and organism-wide. Here, we developed NATMI (Network Analysis Toolkit for Multicellular Interactions), a Python-based toolkit for multi-cellular communication network construction and network analysis of multispecies single-cell and bulk gene expression and proteomic data. NATMI uses connectomeDB2020 (the most up-to-date manually curated ligand-receptor interaction list) and user supplied gene expression tables with cell type labels to predict and visualize cell-to-cell communication networks.
+By interrogating the Tabula Muris cell atlas we demonstrate the utility of NATMI to identify cellular communities and the key ligands and receptors involved. Notably, we confirm our previous predictions from bulk data that autocrine signalling is a major feature of cell-to-cell communication networks and for the first time ever show a substantial potential for self-signalling of individual cells through hundreds of co-expressed ligand-receptor pairs. Lastly, we identify age related changes in intercellular communication between the mammary gland of 3 and 18-month-old mice in the Tabula Muris dataset. NATMI and our updated ligand-receptor lists are freely available to the research community.
 <p>...</p>
 </details>  
-By interrogating the Tabula Muris cell atlas we demonstrate the utility of NATMI to identify cellular communities and the key ligands and receptors involved. Notably, we confirm our previous predictions from bulk data that autocrine signalling is a major feature of cell-to-cell communication networks and for the first time ever show a substantial potential for self-signalling of individual cells through hundreds of co-expressed ligand-receptor pairs. Lastly, we identify age related changes in intercellular communication between the mammary gland of 3 and 18-month-old mice in the Tabula Muris dataset. NATMI and our updated ligand-receptor lists are freely available to the research community.
+
 
 Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
@@ -33,9 +34,9 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## About NATMI
 
-**NATMI** is fast, flexible and easy to use tool to construct **cell-to-cell communication networks** from user-supplied **multiomics data** (single cell and bulk) in a **variety of species**. 
+**NATMI** is fast, flexible and easy-to-use tool to construct **cell-to-cell communication networks** from user-supplied **multiomics data** (single cell and bulk) in a **variety of species**. 
 
-NATMI is: **python-based** ([software requirements](#download-and-installation)) and uses [**connectomeDB2020**](#ligand-receptor-interactions-connectomeDB2020) (default). Users can also easily add and interrogate their **own interactions** in **any species** or explore precompiled Tabula Muri, Tabula Muris Senis and FANTOM5 cell atlas datastets. [links]
+NATMI is: **python-based** ([software requirements](#download-and-installation)) and uses [**connectomeDB2020**](#ligand-receptor-interactions-connectomeDB2020) (default). Users can also add and interrogate their **own interactions** in **any species** or explore precompiled Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas datastets. [links]
 
 NATMI was developed and is maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest at the Harry Perkins Institute of Medical Research.
 

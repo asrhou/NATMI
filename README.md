@@ -10,6 +10,10 @@ By interrogating the Tabula Muris cell atlas we demonstrate the utility of NATMI
 
 Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
+[Was thinking about the numbering to make the manual and navigation even clearer. Of course we wouldn't do: - 1. Download .. but more like: 1 Download.. (I am not sure how to do that to be honest). The inferior layer could stay as * Supported Species or 2.1 Supported Species.]
+[This would also allow to also better navigate within the section: like "Ligand-Receptor Interactions (user-supplied interactions)[2]" link would send the user to "2. Required Data and Formats". Btw, that was just one of the example, but if you like that we can implenet that across.]
+[The above seem like gliding the lilly but the manual grew quite a lot in the last month or so I wanna make sure it is very easy to use :)]
+
 ## Table of Content
 - [About NATMI](#about-natmi)
 - [1 Download and Installation](#download-and-installation-top)
@@ -85,7 +89,7 @@ As of 2020, **connectomeDB2020** is the most up-to-date curated database of 2,18
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 
-### Ligand-Receptor Interactions (user-supplied interactions) [(2)](#required-data-and-formats-top)
+### Ligand-Receptor Interactions (user-supplied interactions) [[2]](#required-data-and-formats-top)
 
 To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions including but not limited to connectomeDB2020. This option can be particularly useful for users who wish to expand the list of our default interactions, explore their own (species-specific) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats** for an interaction data file. 
 
@@ -355,7 +359,11 @@ Not sure how to best use NATMI? Please check our manual above and/or read throug
 
 **This section will be expanded when NATMI becomes publicly available.**
 
+(Nice touch!)
+
 :question:   I have some mouse-specific interactions, can I adopt NATMI to explore a mouse dataset using these mouse-specific interactions?
 
-:a:: Yes. Please prepare your interaction data in the [required way](#customised-format) and make sure gene IDs in the interaction file and expression file are matching. Then run [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data) by setting argument '--idType' to 'customised'. A complete analysis workflow can be found [here](#example-workflow-simple-single-cell-toy-dataset-top).
+:a:: Yes. Please prepare your interaction data in the [required format](#customised-format) and ensure that gene IDs in the interaction file and expression file are matching (if gene ID conversion conversion is required you can refer to: ). Then run [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data) by setting argument '--idType' to 'customised'. A complete analysis workflow can be found [here](#example-workflow-simple-single-cell-toy-dataset-top).
+
+'customised' -> 'custom' (would that be beter? it is specific enough but shorter and avoids the problem of the alternative spelling "customized")
 

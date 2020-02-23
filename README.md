@@ -11,8 +11,8 @@ By interrogating the Tabula Muris cell atlas we demonstrate the utility of NATMI
 Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## Table of Content
-- [**1 About NATMI**](#about-natmi)
-- [**2. Download and Installation**](#2-download-and-installation-top)
+- [**1. About NATMI**](#1.-about-natmi)
+- [**2. Download and Installation**](#2-.-download-and-installation-top)
 - [**3. Required Data and Formats**](#3-required-data-and-formats-top)
   * [3.1 Supported Species and IDs](#3-1-supported-species-and-ids)
   * [3.2 Ligand-Receptor Interactions (connectomeDB2020)](#3-2-ligand-receptor-interactions-connectomedb2020)

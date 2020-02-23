@@ -19,7 +19,7 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 * 3.3 [Ligand-Receptor Interactions (user-supplied interactions)](#3.3)
 * 3.4 [Expression Data](#3.4)
 * 3.5 [Cell Labels Metafile (single-cell analysis only)](#3.5)
-4. [Command Line Utilities](#4)
+4. [**Command Line Utilities**](#4)
 * 4.1 [ExtractEdges.py](#4.1)
 * 4.2 [DiffEdges.py](#4.2)
 * 4.3 [VisInteractions.py](#4.3)
@@ -30,7 +30,7 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 * 6.1 [Extract ligand-receptor-mediated interactions at two time-points.](#6.1)
 * 6.2 [Identify variations in cell-to-cell signaling networks](#6.2)
 * 6.3 [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#6.3)
-- [**Frequently Asked Questions**](#faq)
+-[**Frequently Asked Questions**](#faq)
 
 <a name="1"></a>
 ## 1. About NATMI
@@ -368,6 +368,7 @@ To demonstrate the usage of NATMI in delta network analysis, we show the analysi
 
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
 
+<a name="faq"></a>
 ## Frequently Asked Questions [(top)](#table-of-content)
 Not sure how to best use NATMI? Please check our manual above and/or read through this FAQ section. If you are still not finding your answers, send us an email: [rui.hou@research.uwa.edu.au]
 

@@ -36,7 +36,7 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 **NATMI** is fast, flexible and easy-to-use tool to construct **cell-to-cell communication networks** from user-supplied **multi-omics data** (single-cell and bulk) in a **variety of species**. 
 
-NATMI is: **python-based** ([software requirements](#download-and-installation-top)) built on [**connectomeDB2020**](#ligand-receptor-interactions-connectomeDB2020) (default). Users can also add and interrogate their **own interactions** in **any species** or explore existing [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) datastets. 
+NATMI is: **python-based** ([software requirements](#download-and-installation-top)) and is built on [**connectomeDB2020**](#ligand-receptor-interactions-connectomeDB2020) (default). Users can also add and interrogate their **own interactions** in **any species** or explore existing [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) datastets. 
 
 *Developed and maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest [alistair.forrest@perkins.uwa.edu.au] at the Harry Perkins Institute of Medical Research.*
 
@@ -47,9 +47,9 @@ To use NATMI, following software is required:
 
 - Python 2 or Python 3
 
-- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) for general data processing.
+- Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) (for general data processing).
 
-- Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) to visualise the cell-to-cell communication network at three distinct levels. 
+- Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) (for cell-to-cell communication network visualization).
 
 *NATMI was tested using python 2.7 and 3.7 versions with pandas 0.24.2, XlsxWriter 1.1.0, xlrd 1.2.0, seaborn 0.8.1, igraph 0.7.1, NetworkX 2.1 and PyGraphviz 1.5.*
 

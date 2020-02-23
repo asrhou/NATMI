@@ -11,18 +11,24 @@ By interrogating the Tabula Muris cell atlas we demonstrate the utility of NATMI
 Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 [Was thinking about the numbering to make the manual and navigation even clearer. Of course we wouldn't do: - 1. Download .. but more like: 1 Download.. (I am not sure how to do that to be honest). The inferior layer could stay as * Supported Species or 2.1 Supported Species.]
-[This would also allow to also better navigate within the section: like "Ligand-Receptor Interactions (user-supplied interactions)[2]" link would send the user to "2. Required Data and Formats". Btw, that was just one of the example, but if you like that we can implenet that across.]
+
+[**Actually was just thinking if we go for 2 Required Data and Formats and 2.1 Ligand-Receptor Interactions (user-supplied interactions) then we can perhaps skip within section navigation, as the user should easily see where they are**]
+
+I think that would be good enough: 
+**2 Required Data and Formats** (#required-data-and-formats-top)
+2.1 Ligand-Receptor Interactions (user-supplied interactions) 
+
 [The above seem like gliding the lilly but the manual grew quite a lot in the last month or so I wanna make sure it is very easy to use :)]
 
 ## Table of Content
 - [About NATMI](#about-natmi)
-- [1 Download and Installation](#download-and-installation-top)
-- [2 Required Data and Formats](#required-data-and-formats-top)
-  * [Supported Species and IDs](#supported-species-and-ids)
-  * [Ligand-Receptor Interactions (connectomeDB2020)](#ligand-receptor-interactions-connectomedb2020)
-  * [Ligand-Receptor Interactions (user-supplied interactions)](#ligand-receptor-interactions-user-supplied-interactions-top)
-  * [Expression Data](#expression-data)
-  * [Cell Labels Metafile (single-cell analysis only)](#cell-labels-metafile-single-cell-analysis-only)
+- [**1 Download and Installation**](#download-and-installation-top)
+- [**2 Required Data and Formats**](#required-data-and-formats-top)
+  * [2.1 Supported Species and IDs](#supported-species-and-ids)
+  * [2.2 Ligand-Receptor Interactions (connectomeDB2020)](#ligand-receptor-interactions-connectomedb2020)
+  * [2.3 Ligand-Receptor Interactions (user-supplied interactions)](#ligand-receptor-interactions-user-supplied-interactions-top)
+  * [2.4 Expression Data](#expression-data)
+  * [2.4 Cell Labels Metafile (single-cell analysis only)](#cell-labels-metafile-single-cell-analysis-only)
 - [3 Command Line Utilities](#command-line-utilities-top)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
@@ -63,7 +69,7 @@ To install NATMI, run the following command in the desired installation director
 
 This tool currently provides command-line utilities only.
 
-## Required Data and Formats [(top)](#table-of-content)
+## **Required Data and Formats** [(top)](#table-of-content)
 
 To explore cell-to-cell communication NATMI uses: 
 
@@ -89,7 +95,7 @@ As of 2020, **connectomeDB2020** is the most up-to-date curated database of 2,18
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 
-### Ligand-Receptor Interactions (user-supplied interactions) [[2]](#required-data-and-formats-top)
+### Ligand-Receptor Interactions (user-supplied interactions)
 
 To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions including but not limited to connectomeDB2020. This option can be particularly useful for users who wish to expand the list of our default interactions, explore their own (species-specific) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats** for an interaction data file. 
 

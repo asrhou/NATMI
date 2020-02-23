@@ -12,21 +12,21 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## Table of Content
 - [About NATMI](#about-natmi)
-- [Download and Installation](#download-and-installation-top)
-- [Required Data and Formats](#required-data-and-formats-top)
+- [1 Download and Installation](#download-and-installation-top)
+- [2 Required Data and Formats](#required-data-and-formats-top)
   * [Supported Species and IDs](#supported-species-and-ids)
   * [Ligand-Receptor Interactions (connectomeDB2020)](#ligand-receptor-interactions-connectomedb2020)
   * [Ligand-Receptor Interactions (user-supplied interactions)](#ligand-receptor-interactions-user-supplied-interactions-top)
   * [Expression Data](#expression-data)
   * [Cell Labels Metafile (single-cell analysis only)](#cell-labels-metafile-single-cell-analysis-only)
-- [Command Line Utilities](#command-line-utilities-top)
+- [3 Command Line Utilities](#command-line-utilities-top)
   * [ExtractEdges.py](#extractedges-extracting-ligand-receptor-mediated-interactions-between-cell-types-in-the-input-transcriptome-data)
   * [DiffEdges.py](#diffedges-identification-of-changes-in-ligand-receptor-edge-weights-between-a-cell-type-pair-in-two-conditions)
   * [VisInteractions.py](#visinteractionspy-visualisation-of-the-network-analysis-results-from-extractedgespy-and-diffedgespy)
-- [Example Workflow Simple (single-cell toy dataset)](#example-workflow-simple-single-cell-toy-dataset-top)
+- [4 Example Workflow Simple (single-cell toy dataset)](#example-workflow-simple-single-cell-toy-dataset-top)
   * [Extract ligand-receptor-mediated interactions](#extract-ligand-receptor-mediated-interactions-in-toyscemtxt-and-save-results-to-example-folder-using-extractedgespy)
   * [Visualise cell-to-cell communication networks](#visualise-ligand-receptor-mediated-interaction-network-of-in-toyscemtxt-in-three-different-ways)
-- [Example Workflow Advanced (Tabula Muris Senis dataset)](#example-workflow-advanced-tabula-muris-senis-dataset-top)
+- [5 Example Workflow Advanced (Tabula Muris Senis dataset)](#example-workflow-advanced-tabula-muris-senis-dataset-top)
   * [Extract ligand-receptor-mediated interactions at two time-points.](#we-first-extract-edges-between-cells-of-the-3--and-18-month-old-mammary-glands-in-mice-using-extractedgespy)
   * [Identify variations in cell-to-cell signaling networks](#the-variations-in-cell-to-cell-signaling-between-3--and-18-month-old-murine-mammary-glands-are-then-identified-by-diffedgespy)
   * [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#we-visualize-up--and-down-regulated-edges-between-3-months-and-18-months-using-visinteractionspy-as-in-figure-6-of-the-manuscript)
@@ -85,7 +85,7 @@ As of 2020, **connectomeDB2020** is the most up-to-date curated database of 2,18
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 
-### Ligand-Receptor Interactions (user-supplied interactions) [(top)](#required-data-and-formats-top)
+### Ligand-Receptor Interactions (user-supplied interactions) [(2)](#required-data-and-formats-top)
 
 To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions including but not limited to connectomeDB2020. This option can be particularly useful for users who wish to expand the list of our default interactions, explore their own (species-specific) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats** for an interaction data file. 
 

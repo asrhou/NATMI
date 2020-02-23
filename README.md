@@ -23,8 +23,8 @@ I think that would be good enough:
 ## Table of Content
 - [About NATMI](#about-natmi)
 - [**1 Download and Installation**](#download-and-installation-top)
-- [**2 Required Data and Formats**](#required-data-and-formats-top)
-  * [2.1 Supported Species and IDs](#supported-species-and-ids)
+- [**2 Required Data and Formats**](#2-required-data-and-formats-top)
+  * [2.1 Supported Species and IDs](#2-1-supported-species-and-ids)
   * [2.2 Ligand-Receptor Interactions (connectomeDB2020)](#ligand-receptor-interactions-connectomedb2020)
   * [2.3 Ligand-Receptor Interactions (user-supplied interactions)](#ligand-receptor-interactions-user-supplied-interactions-top)
   * [2.4 Expression Data](#expression-data)
@@ -69,7 +69,7 @@ To install NATMI, run the following command in the desired installation director
 
 This tool currently provides command-line utilities only.
 
-## **Required Data and Formats** [(top)](#table-of-content)
+## **2 Required Data and Formats** [(top)](#table-of-content)
 
 To explore cell-to-cell communication NATMI uses: 
 
@@ -81,7 +81,7 @@ To explore cell-to-cell communication NATMI uses:
 
 Detailed requirements are described as follows. 
 
-### Supported Species and IDs
+### 2.1 Supported Species and IDs
 
 By **default** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs it can support a total of **21 different species** including additional species such as mouse, rat, zebrafish, etc. [(NCBI HomoloGene Database)](https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a species of interest can be specified by using '--species [species_name]' argument. 
 

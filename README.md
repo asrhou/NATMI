@@ -30,7 +30,7 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 * 6.1 [Extract ligand-receptor-mediated interactions at two time-points.](#6.1)
 * 6.2 [Identify variations in cell-to-cell signaling networks](#6.2)
 * 6.3 [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#6.3)
--[**Frequently Asked Questions**](#faq)
+7. [**Frequently Asked Questions**](#faq)
 
 <a name="1"></a>
 ## 1. About NATMI
@@ -62,7 +62,7 @@ To install NATMI, run the following command in the desired installation director
 This tool currently provides command-line utilities only.
 
 <a name="3"></a>
-## **3 Required Data and Formats** [(top)](#table-of-content)
+## **3. Required Data and Formats** [(top)](#table-of-content)
 
 To explore cell-to-cell communication NATMI uses: 
 
@@ -154,7 +154,7 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 |...|...|
 
 <a name="4"></a>
-## 4 Command Line Utilities [(top)](#table-of-content)
+## 4. Command Line Utilities [(top)](#table-of-content)
 
 NATMI is a python-based tool (see [software requirements](#required-data-and-formats-top)) to construct cell-to-cell ligand-receptor-mediated communication networks from multi-omics data. It works with user-specified (gene/protein) abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
@@ -301,7 +301,7 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
 <a name="5"></a>
-## 5 Example Workflow Simple (single-cell toy dataset) [(top)](#table-of-content)
+## 5. Example Workflow Simple (single-cell toy dataset) [(top)](#table-of-content)
 This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt') and literature supported ligand-receptor pairs from connectomeDB2020. 
 
 **Note**: All results of following commands can be found in 'example' folder.
@@ -341,7 +341,7 @@ We thus visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
 Network in *example/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
 
 <a name="6"></a>
-## 6 Example Workflow Advanced (Tabula Muris Senis dataset) [(top)](#table-of-content)
+## 6. Example Workflow Advanced (Tabula Muris Senis dataset) [(top)](#table-of-content)
 
 To demonstrate the usage of NATMI in delta network analysis, we show the analysis on Tabula Muris Senis (as in our manuscript). **Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' was first downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982)**. We then extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by dividing it by the total number of unique molecular identifiers and multiplying by 1,000,000. Such normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 

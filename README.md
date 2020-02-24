@@ -13,26 +13,25 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 1. [**About NATMI**](#1)
 2. [**Download and Installation**](#2)
 3. [**Required Data and Formats**](#3)
-* 3.1 [Supported Species and IDs](#3.1)
-* 3.2 [Ligand-Receptor Interactions (connectomeDB2020)](#3.2)
-* 3.3 [Ligand-Receptor Interactions (user-supplied interactions)](#3.3)
-* 3.4 [Expression Data](#3.4)
-* 3.5 [Cell Labels Metafile (single-cell analysis only)](#3.5)
+   1 [Supported Species and IDs](#3.1)
+   2 [Ligand-Receptor Interactions (connectomeDB2020)](#3.2)
+   3 [Ligand-Receptor Interactions (user-supplied interactions)](#3.3)
+   4 [Expression Data](#3.4)
+   5 [Cell Labels Metafile (single-cell analysis only)](#3.5)
 4. [**Command Line Utilities**](#4)
-* 4.1 [ExtractEdges.py](#4.1)
-* 4.2 [DiffEdges.py](#4.2)
-* 4.3 [VisInteractions.py](#4.3)
+   1 [ExtractEdges.py](#4.1)
+   2 [DiffEdges.py](#4.2)
+   3 [VisInteractions.py](#4.3)
 5. [**Example Workflow Simple (single-cell toy dataset)**](#5)
-* 5.1 [Extract ligand-receptor-mediated interactions](#5.1)
-* 5.2 [Visualise cell-to-cell communication networks](#5.2)
+   1 [Extract ligand-receptor-mediated interactions](#5.1)
+   2 [Visualise cell-to-cell communication networks](#5.2)
 6. [**Example Workflow Advanced (Tabula Muris Senis dataset)**](#6)
-* 6.1 [Extract ligand-receptor-mediated interactions at two time-points.](#6.1)
-* 6.2 [Identify variations in cell-to-cell signaling networks](#6.2)
-* 6.3 [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#6.3)
+   1 [Extract ligand-receptor-mediated interactions at two time-points.](#6.1)
+   2 [Identify variations in cell-to-cell signaling networks](#6.2)
+   3 [Visualize the cell-to-cell communication networks (Figure 6 of the manuscript)](#6.3)
 7. [**Frequently Asked Questions**](#faq)
 
-<a name="1"></a>
-## 1. About NATMI
+## 1. About NATMI <a name="1"></a>
 
 **NATMI** is fast, flexible and easy-to-use tool to construct **cell-to-cell communication networks** from user-supplied **multi-omics data** (single-cell and bulk) in a **variety of species**. 
 
@@ -40,8 +39,7 @@ NATMI is: **python-based** ([software requirements](#download-and-installation-t
 
 *Developed and maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest [alistair.forrest@perkins.uwa.edu.au] at the Harry Perkins Institute of Medical Research.*
 
-<a name="2"></a>
-## 2. Download and Installation [(top)](#table-of-content)
+## 2. Download and Installation [(top)](#table-of-content) <a name="2"></a>
 
 To use NATMI, following software is required: 
 
@@ -60,8 +58,7 @@ To install NATMI, run the following command in the desired installation director
 
 This tool currently provides command-line utilities only.
 
-<a name="3"></a>
-## **3. Required Data and Formats** [(top)](#table-of-content)
+## **3. Required Data and Formats** [(top)](#table-of-content) <a name="3"></a>
 
 To explore cell-to-cell communication NATMI uses: 
 
@@ -73,8 +70,7 @@ To explore cell-to-cell communication NATMI uses:
 
 Detailed requirements are described as follows. 
 
-<a name="3.1"></a>
-### 3.1 Supported Species and IDs
+### 3.1 Supported Species and IDs <a name="3.1"></a>
 
 By **default** NATMI uses [connectomeDB2020](#ligand-receptor-interactions-connectomeDB2020) human ligand-receptor interactions, but using homologs of interacting pairs it can support a total of **21 different species** including additional species such as mouse, rat, zebrafish, etc. [(NCBI HomoloGene Database)](https://www.ncbi.nlm.nih.gov/homologene/statistics/). All supported species can be listed by running ExtractEdges.py with '-h' argument and then a species of interest can be specified by using '--species [species_name]' argument. 
 
@@ -82,15 +78,13 @@ For the supported species, NATMI generally requires to provide **official gene s
 
 For **user-supplied interactions**, NATMI can work with **any species** and **any IDs** ([as described](#ligand-receptor-interactions-user-supplied-interactions-top)).  
 
-<a name="3.2"></a>
-### 3.2 Ligand-Receptor Interactions (connectomeDB2020)
+### 3.2 Ligand-Receptor Interactions (connectomeDB2020) <a name="3.2"></a>
 
 As of 2020, **connectomeDB2020** is the most up-to-date curated database of 2,187 human ligand-receptor interactions with primary literature support and additional 1,791 putative pairs, which builds on our previous draft and a database of human cell interactions ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). By default, *ExtractEdges.py* of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from **connectomeDB2020**. For non-human supported species, NATIM only extracts their human homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/).
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 
-<a name="3.3"></a>
-### 3.3 Ligand-Receptor Interactions (user-supplied interactions)
+### 3.3 Ligand-Receptor Interactions (user-supplied interactions) <a name="3.3"></a>
 
 To allow flexibility, NATMI can also work with **user-supplied ligand-receptor interactions** (argument '--signalType') to construct and visualize network of interactions including but not limited to connectomeDB2020. This option can be particularly useful for users who wish to expand the list of our default interactions, explore their own (species-specific) interactions and/or explore cell-to-cell communication in other than [the 21 default species](#supported-species-and-ids). Here, we briefly describe **required formats** for an interaction data file. 
 
@@ -126,8 +120,7 @@ This can be achieved by setting the argument **'--idType'** to **'customised'**.
 
 Users should make sure that, when the argument **'--idType'** is set to **'customised'**, input **customised interaction file** and **expression data** share the **common ID type**. In all output files, **original IDs** are preserved. 
 
-<a name="3.4"></a>
-### 3.4 Expression Data 
+### 3.4 Expression Data <a name="3.4"></a>
 
 User-specified (gene/protein) abundance matrix files should be in the following formats: csv, tsv, txt, xls or xlsx. And for the default usage with [connectomeDB](#ligand-receptor-interactions-connectomedb2020), it is required that the gene/protein IDs are in one of the following formats: official gene symbols (default) or human HGNC IDs, mouse MGI IDs, or human and mouse Entrez gene IDs, Ensembl gene IDs, and UniProt IDs (see [Supported IDs](#supported-species-and-ids)). **For multiple human/mouse IDs associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol**. Each column is a normalised gene/protein expression profile of a cell type or an individual cell. An example snapshot of the abundance matrix is shown below.
 
@@ -140,8 +133,7 @@ User-specified (gene/protein) abundance matrix files should be in the following 
 
 For [user-supplied interactions](#customised-format), the IDs in gene/protein abundance matrix can be of any format matching the interactions. Additionally, [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) can also be explored. 
 
-<a name="3.5"></a>
-### 3.5 Cell Labels Metafile (single-cell analysis only)
+### 3.5 Cell Labels Metafile (single-cell analysis only) <a name="3.5"></a>
 
 For single-cell gene expression data, the user needs to provide a metafile with the mapping between each cell in the dataset and a cell-type label. It also should be saved in the following formats: csv, tsv, txt, xls or xlsx. Following table displays an example metafile.
 
@@ -152,8 +144,7 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 |Barcode3|Cell-type2|
 |...|...|
 
-<a name="4"></a>
-## 4. Command Line Utilities [(top)](#table-of-content)
+## 4. Command Line Utilities [(top)](#table-of-content) <a name="4"></a>
 
 NATMI is a python-based tool (see [software requirements](#required-data-and-formats-top)) to construct cell-to-cell ligand-receptor-mediated communication networks from multi-omics data. It works with user-specified (gene/protein) abundance matrix files or can be used to explore Tabula Muris, Tabula Muris Senis and FANTOM5 cell atlas (see [required data](#expression-data)). 
 
@@ -299,8 +290,7 @@ Visualise cell-to-cell communication networks via a ligand-receptor pair from th
 
 If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing the simple graph and hypergraph for the given ligand-receptor pair in the dataset. 
 
-<a name="5"></a>
-## 5. Example Workflow Simple (single-cell toy dataset) [(top)](#table-of-content)
+## 5. Example Workflow Simple (single-cell toy dataset) [(top)](#table-of-content) <a name="5"></a>
 This workflow shows how to extract and visualize intercellular communication using mouse single-cell RNA-seq dataset ('toy.sc.em.txt') and the corresponding annotation file ('toy.sc.ann.txt') and literature supported ligand-receptor pairs from connectomeDB2020. 
 
 **Note**: All results of following commands can be found in 'example' folder.
@@ -339,8 +329,7 @@ We thus visualise the cell-to-cell communication network via Efnb2-Pecam1 pair.
 
 Network in *example/LRNetwork_Efnb2-Pecam1_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean/network_Efnb2-Pecam1_layout_circle.pdf* only has one edge. This means although other cell-type pairs are connected by edges of Efnb2-Pecam1 pair, only for endothelial cell, Efnb2 and Pecam1 are detected in > 20 % cells. Therefore, Efnb2-Pecam1 pair is only reliably detected in endothelial cell.
 
-<a name="6"></a>
-## 6. Example Workflow Advanced (Tabula Muris Senis dataset) [(top)](#table-of-content)
+## 6. Example Workflow Advanced (Tabula Muris Senis dataset) [(top)](#table-of-content) <a name="6"></a>
 
 To demonstrate the usage of NATMI in delta network analysis, we show the analysis on Tabula Muris Senis (as in our manuscript). **Processed Tabula Muris Senis data 'Mammary_Gland_droplet.h5ad' was first downloaded from figshare (https://figshare.com/projects/Tabula_Muris_Senis/64982)**. We then extracted 3 and 18-month-old mammary gland cells and normalized each expression profile by dividing it by the total number of unique molecular identifiers and multiplying by 1,000,000. Such normalized gene expression data and annotations are available in figshare: https://figshare.com/s/7f45bf6352da453b3266.
 
@@ -367,8 +356,7 @@ To demonstrate the usage of NATMI in delta network analysis, we show the analysi
 
 *Resulting networks are in the folder '/path/to/3m-18m/Delta_Network_exp_0_spe_0_det_0.2_top_0_signal_lrc2p_weight_mean'*
 
-<a name="faq"></a>
-## 7. Frequently Asked Questions [(top)](#table-of-content)
+## 7. Frequently Asked Questions [(top)](#table-of-content)v<a name="faq"></a>
 Not sure how to best use NATMI? Please check our manual above and/or read through this FAQ section. If you are still not finding your answers, send us an email: [rui.hou@research.uwa.edu.au]
 
 **This section will be expanded when NATMI becomes publicly available.**

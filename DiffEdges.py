@@ -90,8 +90,8 @@ def IdentifyPopulationChanges(refClusterMapDF, testClusterMapDF, resultFolder, r
     return sumClusterDF
 
 # calculate changes in the cell-to-cell communications 
-def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weightType, resultFolder, rmf):
-    resultEdgeF = os.path.join(resultFolder, 'Delta_edges_%s' % (signalType))
+def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightType, resultFolder, rmf):
+    resultEdgeF = os.path.join(resultFolder, 'Delta_edges_%s' % (interDB))
     if not os.path.exists(resultEdgeF):
         os.mkdir(resultEdgeF)
     with open(rmf, 'a') as file_object:
@@ -248,13 +248,13 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weig
     return aperEdgeDF, disaperEdgeDF, upEdgeDF, downEdgeDF, eqEdgeDF
 
 #start to construct the delta network
-def main(refFolder, targetFolder, signalType, weightType, outFolder):
+def main(refFolder, targetFolder, interDB, weightType, outFolder):
     #load data
     try:
         testClusterMapDF = pd.read_csv(os.path.join(targetFolder, 'ClusterMapping.csv'), index_col=None, header=0)
         refClusterMapDF = pd.read_csv(os.path.join(refFolder, 'ClusterMapping.csv'), index_col=None, header=0)
-        testEdgeDF = pd.read_csv(os.path.join(targetFolder, 'Edges_%s.csv' % (signalType)), index_col=None, header=0)
-        refEdgeDF = pd.read_csv(os.path.join(refFolder, 'Edges_%s.csv' % (signalType)), index_col=None, header=0)
+        testEdgeDF = pd.read_csv(os.path.join(targetFolder, 'Edges_%s.csv' % (interDB)), index_col=None, header=0)
+        refEdgeDF = pd.read_csv(os.path.join(refFolder, 'Edges_%s.csv' % (interDB)), index_col=None, header=0)
         
         # only keep edges of interest
         if weightType == 'mean':
@@ -291,7 +291,7 @@ def main(refFolder, targetFolder, signalType, weightType, outFolder):
     print('#### all population changes have been identified')
     
     # calculate changes in the cell-to-cell communications 
-    aperEdgeDF, disaperEdgeDF, upEdgeDF, downEdgeDF, eqEdgeDF = IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, signalType, weightType, resultFolder, rmf)
+    aperEdgeDF, disaperEdgeDF, upEdgeDF, downEdgeDF, eqEdgeDF = IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightType, resultFolder, rmf)
     print('#### all signaling changes have been identified')
 
     print('#### DONE')
@@ -305,14 +305,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--refFolder', required=True, help='the path to the folder of the reference dataset')
     parser.add_argument('--targetFolder', required=True, help='the path to the folder of the target dataset')
-    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a | the name of the ligand-receptor interaction database file without extension')
+    parser.add_argument('--interDB', default='lrc2p', help='lrc2p (default) | lrc2a | the name of the ligand-receptor interaction database file without extension')
     parser.add_argument('--weightType', default='mean', help="mean (default) | sum")
     parser.add_argument('--out', default='', help='the path to save the analysis results')
     
     opt = parser.parse_args()
     
-    #check signalType
-    signalType = opt.signalType
+    #check interDB
+    interDB = opt.interDB
         
     #check weightType
     avaWeightTypeList = ['mean', 'sum']
@@ -324,16 +324,16 @@ if __name__ == '__main__':
     #check refFolder
     if not os.path.exists(opt.refFolder):
         sys.exit("The folder of the reference dataset does not exist.")
-    if not os.path.exists('%s/Edges_%s.csv' % (opt.refFolder,opt.signalType)):
-        sys.exit("Cannot find the 'Edges_%s.csv' file in the reference dataset folder." % opt.signalType)
+    if not os.path.exists('%s/Edges_%s.csv' % (opt.refFolder,opt.interDB)):
+        sys.exit("Cannot find the 'Edges_%s.csv' file in the reference dataset folder." % opt.interDB)
     if not os.path.exists(os.path.join(opt.refFolder,'ClusterMapping.csv')):
         sys.exit("Cannot find the 'ClusterMapping.csv' file in the reference dataset folder.")
     
     #check targetFolder
     if not os.path.exists(opt.targetFolder):
         sys.exit("The folder of the target dataset does not exist.")
-    if not os.path.exists('%s/Edges_%s.csv' % (opt.targetFolder,opt.signalType)):
-        sys.exit("Cannot find the 'Edges_%s.csv' file in the target dataset folder." % opt.signalType)
+    if not os.path.exists('%s/Edges_%s.csv' % (opt.targetFolder,opt.interDB)):
+        sys.exit("Cannot find the 'Edges_%s.csv' file in the target dataset folder." % opt.interDB)
     if not os.path.exists(os.path.join(opt.targetFolder,'ClusterMapping.csv')):
         sys.exit("Cannot find the 'ClusterMapping.csv' file in the target dataset folder.")
     
@@ -342,11 +342,11 @@ if __name__ == '__main__':
     print('Input data:')
     print('The reference dataset: %s' % opt.refFolder)
     print('The target dataset: %s' % opt.targetFolder)
-    print('The ligand-receptor interaction database: %s' % signalType)
+    print('The ligand-receptor interaction database: %s' % interDB)
     print('The weight type of cell-to-cell signaling: %s' % weightType)
     if opt.out != '':
         print('The folder to save all results: %s' % os.path.abspath(opt.out))
     print('===================================================')
     
     #start to construct the delta network
-    main(opt.refFolder, opt.targetFolder, signalType, weightType, opt.out)
+    main(opt.refFolder, opt.targetFolder, interDB, weightType, opt.out)

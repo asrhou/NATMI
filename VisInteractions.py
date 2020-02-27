@@ -272,7 +272,7 @@ def IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance):
     posArray = np.array(posAryList)
     return posArray, posDict
 
-def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, signalType, weightType, layout, plotFormat):
+def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, layout, plotFormat):
     # draw networks of both datasets
     
     # convert to a graphviz graph
@@ -633,7 +633,7 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
                     adjSpecMF.ix[idx, col] = adjSpecM2.ix[idx, col] / adjSpecM1.ix[idx, col]
     return readmeStr, adjSpecMF
 
-def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, signalType, weightType, layout, plotFormat):
+def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, layout, plotFormat):
     
     # convert to a graphviz graph
     nxgS = nx.nx_agraph.to_agraph(nxgS)
@@ -718,7 +718,7 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
     warnings.simplefilter("ignore")
     return readmeStr
     
-def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
+def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
     readmeStr = '\n'
     
     # color scheme
@@ -739,13 +739,13 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specific
     
     ## draw use graphviz
     #============edge count
-    readmeStr, adjCountMF = DrawDeltaGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC1, adjCountM1, nxgC2, adjCountM2, nxgCD, adjCountMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,signalType,weightType,layout,plotFormat)
+    readmeStr, adjCountMF = DrawDeltaGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC1, adjCountM1, nxgC2, adjCountM2, nxgCD, adjCountMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============average weight
-    readmeStr, adjMF = DrawDeltaGraphvizPlot(readmeStr, 'average-expression', 'float', nxgW1, adjM1, nxgW2, adjM2, nxgWD, adjMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,signalType,weightType,layout,plotFormat)
+    readmeStr, adjMF = DrawDeltaGraphvizPlot(readmeStr, 'average-expression', 'float', nxgW1, adjM1, nxgW2, adjM2, nxgWD, adjMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============total specificity
-    readmeStr, adjSpecMF = DrawDeltaGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,signalType,weightType,layout,plotFormat)
+    readmeStr, adjSpecMF = DrawDeltaGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     adjMFileName = os.path.join(resultDir, '%s_Mtx.xlsx' % dataType)
     readmeStr += 'xxx_Mtx.xlsx: all adjacency matrices of the dynamic networks.\n'
@@ -795,7 +795,7 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specific
     with open(os.path.join(resultDir,'README.txt'), 'w') as file_object:
         file_object.write('README\n')
         file_object.write('\n')
-        file_object.write('The cell-to-cell signaling database: %s\n' % signalType)
+        file_object.write('The cell-to-cell signaling database: %s\n' % interDB)
         file_object.write('The weight type of cell-to-cell signaling: %s\n' % weightType)
         if keepTopEdge != 0:
             file_object.write('Top edges to draw: %s\n' % keepTopEdge)
@@ -808,7 +808,7 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specific
         file_object.write('\n')
         file_object.write(readmeStr)
 
-def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
+def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
     readmeStr = '\n'
     
     # color scheme
@@ -829,13 +829,13 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
     
     ## draw use graphviz
     #============edge count
-    readmeStr = DrawGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC, adjCountM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,signalType,weightType,layout,plotFormat)
+    readmeStr = DrawGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC, adjCountM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============total weight
-    readmeStr = DrawGraphvizPlot(readmeStr, 'total-expression', 'float', nxgW, adjM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,signalType,weightType,layout,plotFormat)
+    readmeStr = DrawGraphvizPlot(readmeStr, 'total-expression', 'float', nxgW, adjM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============total specificity
-    readmeStr = DrawGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,signalType,weightType,layout,plotFormat)
+    readmeStr = DrawGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     if dataType == '':
         edgeDFFileName = os.path.join(resultDir, 'Edges.csv')
@@ -903,7 +903,7 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
     with open(os.path.join(resultDir,'README.txt'), 'w') as file_object:
         file_object.write('README\n')
         file_object.write('\n')
-        file_object.write('The cell-to-cell signaling database: %s\n' % signalType)
+        file_object.write('The cell-to-cell signaling database: %s\n' % interDB)
         file_object.write('The weight type of cell-to-cell signaling: %s\n' % weightType)
         if keepTopEdge != 0:
             file_object.write('Top edges to draw: %s\n' % keepTopEdge)
@@ -916,11 +916,11 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
         file_object.write('\n')
         file_object.write(readmeStr)
 
-def FilterDeltaEdges(sourceFolder, signalType, weightType, frequencyThreshold):
+def FilterDeltaEdges(sourceFolder, interDB, weightType, frequencyThreshold):
     olddapcols = ['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'delta ligand frequency', 'delta ligand expression', 'delta ligand specificity', 'delta receptor frequency', 'delta receptor expression', 'delta receptor specificity', 'delta weight', 'delta specificity']
     refinedOldcols = ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']
     
-    uredgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+signalType, 'UP-regulated_%s.csv' % (weightType)), index_col=None, header=0)
+    uredgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'UP-regulated_%s.csv' % (weightType)), index_col=None, header=0)
     realuredgeDF = uredgeDF.ix[(uredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
     realuredgeDF['Delta ligand detection rate'] = realuredgeDF['Ligand detection rate in condition 2'] - realuredgeDF['Ligand detection rate in condition 1']
     realuredgeDF['Delta receptor detection rate'] = realuredgeDF['Receptor detection rate in condition 2'] - realuredgeDF['Receptor detection rate in condition 1']
@@ -935,7 +935,7 @@ def FilterDeltaEdges(sourceFolder, signalType, weightType, frequencyThreshold):
     urdpedgeDF = urdpedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
     urdpedgeDF.columns = olddapcols
     
-    dredgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+signalType, 'DOWN-regulated_%s.csv' % (weightType)), index_col=None, header=0)
+    dredgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'DOWN-regulated_%s.csv' % (weightType)), index_col=None, header=0)
     realdredgeDF = dredgeDF.ix[(dredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
     realdredgeDF['Delta ligand detection rate'] = realdredgeDF['Ligand detection rate in condition 1'] - realdredgeDF['Ligand detection rate in condition 2']
     realdredgeDF['Delta receptor detection rate'] = realdredgeDF['Receptor detection rate in condition 1'] - realdredgeDF['Receptor detection rate in condition 2']
@@ -950,15 +950,15 @@ def FilterDeltaEdges(sourceFolder, signalType, weightType, frequencyThreshold):
     drdpedgeDF = drdpedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
     drdpedgeDF.columns = olddapcols
     
-    apedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+signalType, 'Appeared_%s.csv' % (weightType)), index_col=None, header=0)
+    apedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'Appeared_%s.csv' % (weightType)), index_col=None, header=0)
     realapedgeDF = apedgeDF.ix[(apedgeDF['Delta ligand detection rate']>frequencyThreshold)&(apedgeDF['Delta receptor detection rate']>frequencyThreshold),refinedOldcols]
     realapedgeDF.columns = olddapcols
     
-    dpedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+signalType, 'Disappeared_%s.csv' % (weightType)), index_col=None, header=0)
+    dpedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'Disappeared_%s.csv' % (weightType)), index_col=None, header=0)
     realdpedgeDF = dpedgeDF.ix[(dpedgeDF['Delta ligand detection rate']>frequencyThreshold)&(dpedgeDF['Delta receptor detection rate']>frequencyThreshold),refinedOldcols]
     realdpedgeDF.columns = olddapcols
     
-    stedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+signalType, 'Stable_%s.csv' % (weightType)), index_col=None, header=0)
+    stedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'Stable_%s.csv' % (weightType)), index_col=None, header=0)
     stapedgeDF = stedgeDF.ix[((stedgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(stedgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(stedgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(stedgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
     stapedgeDF = stapedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
     stapedgeDF.columns = olddapcols
@@ -971,12 +971,12 @@ def FilterDeltaEdges(sourceFolder, signalType, weightType, frequencyThreshold):
     realdpedgeDF = pd.concat([realdpedgeDF, urdpedgeDF, drdpedgeDF, stdpedgeDF]).reset_index()
     realdpedgeDF = realdpedgeDF.ix[:,realdpedgeDF.columns[1:]]
     
-    alledgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+signalType, 'All_edges_%s.csv' % (weightType)), index_col=None, header=0)
+    alledgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'All_edges_%s.csv' % (weightType)), index_col=None, header=0)
     
     kindDict = {'all':alledgeDF,'appeared':realapedgeDF, 'disappeared':realdpedgeDF, 'up_regulated':realuredgeDF, 'down_regulated':realdredgeDF}
     return kindDict
     
-def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, layout, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance):
+def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, layout, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance):
     # load data
     clusterMapFilename = os.path.join(sourceFolder, 'ClusterMapping.csv')
     if os.path.exists(clusterMapFilename):
@@ -988,7 +988,7 @@ def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weig
         cltSizes = [float(clusterSizeDF.ix[i,'cell']) for i in clusterSizeDF.index]
         
         # load edge properties
-        edgeDF = pd.read_csv(os.path.join(opt.sourceFolder,'Edges_%s.csv' % signalType), index_col=None, header=0)
+        edgeDF = pd.read_csv(os.path.join(opt.sourceFolder,'Edges_%s.csv' % interDB), index_col=None, header=0)
         
         # only keep edges of interest
         if weightType == 'mean':
@@ -1009,11 +1009,11 @@ def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weig
         
         #cluster to cluster weighted directed network
         print('#### plotting the weighted directed cell-to-cell communication network')
-        resultDir = os.path.join(sourceFolder,'Network_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,signalType, weightType))
+        resultDir = os.path.join(sourceFolder,'Network_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,interDB, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
-        BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
+        BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
     else:
         # process node properties for delta dataset
         sumClusterDF = pd.read_excel(os.path.join(sourceFolder, 'cluster_comparison.xlsx'), index_col=None, header=0)
@@ -1040,8 +1040,8 @@ def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weig
                 cltSizes.append(int(-1*deltaSize))
         
         # load edge data and filter them based on the detection threshold
-        dynamDict = FilterDeltaEdges(sourceFolder, signalType, weightType, frequencyThreshold)
-        resultDir = os.path.join(sourceFolder,'Delta_Network_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold,keepTopEdge,signalType, weightType))
+        dynamDict = FilterDeltaEdges(sourceFolder, interDB, weightType, frequencyThreshold)
+        resultDir = os.path.join(sourceFolder,'Delta_Network_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold,keepTopEdge,interDB, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
@@ -1051,11 +1051,11 @@ def MainNetwork(sourceFolder, signalType, weightType, specificityThreshold, weig
             tempedgeDF = dynamDict[kind]
             #cluster to cluster weighted directed network
             print ('#### plotting the weighted directed cell-to-cell communication network for delta interactions')
-            BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, tempedgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, kind)
+            BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, tempedgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, kind)
     
     print('#### DONE')
             
-def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType = ''):
+def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType = ''):
     readmeStr = '\n'
     
     # color scheme
@@ -1305,7 +1305,7 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
     with open(os.path.join(resultDir,'README.txt'), 'w') as file_object:
         file_object.write('README\n')
         file_object.write('\n')
-        file_object.write('The cell-to-cell signaling database: %s\n' % signalType)
+        file_object.write('The cell-to-cell signaling database: %s\n' % interDB)
         file_object.write('The weight type of cell-to-cell signaling: %s\n' % weightType)
         file_object.write('Top edges to draw: %s\n' % keepTopEdge)
         file_object.write('\n')
@@ -1315,12 +1315,12 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
         file_object.write('\n')
         file_object.write(readmeStr)
 
-def MainLRNetwork(sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, plotFormat, layout, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance):
+def MainLRNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, plotFormat, layout, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance):
     # check if it is delta network
-    originalFileName = os.path.join(sourceFolder, 'Edges_%s.csv' % (signalType))
+    originalFileName = os.path.join(sourceFolder, 'Edges_%s.csv' % (interDB))
     if os.path.exists(originalFileName):
         # load edge info
-        edgeDF = pd.read_csv(os.path.join(sourceFolder, 'Edges_%s.csv' % (signalType)), index_col=None, header=0)
+        edgeDF = pd.read_csv(os.path.join(sourceFolder, 'Edges_%s.csv' % (interDB)), index_col=None, header=0)
         # only keep edges of interest
         if weightType == 'mean':
             selectCols= ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate', 'Ligand average expression value', 
@@ -1349,14 +1349,14 @@ def MainLRNetwork(sourceFolder, signalType, weightType, specificityThreshold, we
             return
         
         #single-LR-based cluster to cluster weighted directed network
-        resultDir = os.path.join(sourceFolder,'LRNetwork_%s-%s_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (ls,rs,weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,signalType, weightType))
+        resultDir = os.path.join(sourceFolder,'LRNetwork_%s-%s_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (ls,rs,weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,interDB, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
-        BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, signalType, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
+        BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
     print('#### DONE')
           
-def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
+def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
     
     # prepare lr edges.
     curDF['ligand'] = curDF['ligand'].astype(str)
@@ -1624,7 +1624,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
     
     return readmeStr
     
-def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, dataType = ''):
+def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB, dataType = ''):
     readmeStr = '\n'
     
     for sendClt in origlabels:
@@ -1637,12 +1637,12 @@ def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificity
                 curDF = curDF.sort_values(by=['delta specificity'], ascending=False)
             if len(curDF) > 0:
                 print('#### plotting ligand-receptor pairs from "%s" to "%s"' % (sendClt, targetClt))
-                readmeStr = DrawBipartieGraph(flag, readmeStr, curDF, labelDict[sendClt], labelDict[targetClt], plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType)
+                readmeStr = DrawBipartieGraph(flag, readmeStr, curDF, labelDict[sendClt], labelDict[targetClt], plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType)
             
     with open(os.path.join(resultDir,'README.txt'), 'w') as file_object:
         file_object.write('README\n')
         file_object.write('\n')
-        file_object.write('The cell-to-cell signaling database: %s\n' % signalType)
+        file_object.write('The cell-to-cell signaling database: %s\n' % interDB)
         file_object.write('The weight type of cell-to-cell signaling: %s\n' % weightType)
         if keepTopEdge != 0:
             file_object.write('Top edges to draw: %s\n' % keepTopEdge)
@@ -1655,12 +1655,12 @@ def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificity
         file_object.write('\n')
         file_object.write(readmeStr)
     
-def MainCltPair(sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance):
+def MainCltPair(sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance):
     # check if it is delta network
-    originalFileName = os.path.join(sourceFolder, 'Edges_%s.csv' % (signalType))
+    originalFileName = os.path.join(sourceFolder, 'Edges_%s.csv' % (interDB))
     if os.path.exists(originalFileName):
         # load edge info
-        edgeDF = pd.read_csv(os.path.join(sourceFolder, 'Edges_%s.csv' % (signalType)), index_col=None, header=0)
+        edgeDF = pd.read_csv(os.path.join(sourceFolder, 'Edges_%s.csv' % (interDB)), index_col=None, header=0)
         # process node properties for single dataset
         clusterMapDF = pd.read_csv(os.path.join(sourceFolder, 'ClusterMapping.csv'), index_col=None, header=0)
         clusterSizeDF = clusterMapDF.groupby('cluster').count()
@@ -1687,11 +1687,11 @@ def MainCltPair(sourceFolder, signalType, weightType, specificityThreshold, weig
             return
         
         #cluster to cluster edges
-        resultDir = os.path.join(sourceFolder,'CltPair_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,signalType, weightType))
+        resultDir = os.path.join(sourceFolder,'CltPair_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold, keepTopEdge,interDB, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
-        BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType)
+        BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB)
         
     else:
         # process node properties for delta dataset
@@ -1721,8 +1721,8 @@ def MainCltPair(sourceFolder, signalType, weightType, specificityThreshold, weig
                 labelDict[clt] = clt+'\n(%s cells)' % deltaSize
         
         # load edge data and filter them based on the detection threshold
-        dynamDict = FilterDeltaEdges(sourceFolder, signalType, weightType, frequencyThreshold)
-        resultDir = os.path.join(sourceFolder,'Delta_CltPair_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold,keepTopEdge,signalType, weightType))
+        dynamDict = FilterDeltaEdges(sourceFolder, interDB, weightType, frequencyThreshold)
+        resultDir = os.path.join(sourceFolder,'Delta_CltPair_exp_%s_spe_%s_det_%s_top_%s_signal_%s_weight_%s' % (weightThreshold,specificityThreshold,frequencyThreshold,keepTopEdge,interDB, weightType))
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
@@ -1732,7 +1732,7 @@ def MainCltPair(sourceFolder, signalType, weightType, specificityThreshold, weig
             tempedgeDF = dynamDict[kind]
             #cluster to cluster edges
             print('#### plotting %s cluster-to-cluster interactions' % kind)
-            BuildInterClusterPlot(origlabels, labelDict, tempedgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, signalType, kind)
+            BuildInterClusterPlot(origlabels, labelDict, tempedgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB, kind)
     
     print('#### DONE')
         
@@ -1745,7 +1745,7 @@ if __name__ == '__main__':
     #process arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('--sourceFolder', required=True, help="the path to the folder of extracted edges from ExtractEdges.py or DiffEdges.py")
-    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2as | the name of the ligand-receptor interaction database file without extension')
+    parser.add_argument('--interDB', default='lrc2p', help='lrc2p (default) | lrc2as | the name of the ligand-receptor interaction database file without extension')
     parser.add_argument('--weightType', default='mean', help="mean (default) | sum, method to calculate the expression level of a ligand/receptor in a cell type")
     parser.add_argument('--specificityThreshold', type=float, default=0, help='do not draw the edges whose specificities are not greater than the threshold (default 0).')
     parser.add_argument('--expressionThreshold', type=float, default=0, help='do not draw the edges in which expression levels of the ligand and the receptor are not greater than the threshold (default 0).')
@@ -1774,13 +1774,13 @@ if __name__ == '__main__':
     if not os.path.exists(opt.sourceFolder):
         sys.exit("The source dataset's folder does not exist.")
         
-    #check signalType
-    signalType = os.path.basename(opt.signalType)
+    #check interDB
+    interDB = os.path.basename(opt.interDB)
     if os.path.exists(os.path.join(opt.sourceFolder,'ClusterMapping.csv')):
-        if not os.path.exists(os.path.join(opt.sourceFolder,'Edges_%s.csv' % opt.signalType)):
-            sys.exit("Cannot find 'Edges_%s.csv' file in the speicified folder." % opt.signalType)
-    elif not os.path.exists(os.path.join(opt.sourceFolder,'Delta_edges_%s' % opt.signalType)):
-        sys.exit("Cannot find 'Delta_edges_%s' folder in the speicified folder." % opt.signalType)
+        if not os.path.exists(os.path.join(opt.sourceFolder,'Edges_%s.csv' % opt.interDB)):
+            sys.exit("Cannot find 'Edges_%s.csv' file in the speicified folder." % opt.interDB)
+    elif not os.path.exists(os.path.join(opt.sourceFolder,'Delta_edges_%s' % opt.interDB)):
+        sys.exit("Cannot find 'Delta_edges_%s' folder in the speicified folder." % opt.interDB)
         
     #check weightType
     avaWeightTypeList = ['mean', 'sum']
@@ -1868,7 +1868,7 @@ if __name__ == '__main__':
         print('===================================================')
         print('Input data:')
         print('The source dataset folder: %s' % opt.sourceFolder)
-        print('The ligand-receptor interaction database: %s' % signalType)
+        print('The ligand-receptor interaction database: %s' % interDB)
         print('The weight type of cell-to-cell signaling: %s' % weightType)
         print('The detection threshold for interactions to draw is: %s' % detectionThreshold)
         print('The specicificity threshold for interactions to draw is: %s' % specificityThreshold)
@@ -1885,7 +1885,7 @@ if __name__ == '__main__':
         print('#### start to construct ligand-receptor pairs between clusters')
         
         #start to construct ligand-receptor pairs between clusters
-        MainCltPair(opt.sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance)
+        MainCltPair(opt.sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance)
     else:
             
         #check layout
@@ -1907,8 +1907,8 @@ if __name__ == '__main__':
                 sys.exit("drawLRNetwork can only accept one ligand-receptor pair.")
                 
             #check if symbols are legal
-            if os.path.exists(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (signalType))):
-                edgeDF = pd.read_csv(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (signalType)), index_col=None, header=0)
+            if os.path.exists(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (interDB))):
+                edgeDF = pd.read_csv(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (interDB)), index_col=None, header=0)
                 edgeDF['Ligand symbol'] = edgeDF['Ligand symbol'].astype(str)
                 edgeDF['Receptor symbol'] = edgeDF['Receptor symbol'].astype(str)
                 if len(edgeDF.ix[(edgeDF['Ligand symbol'] == opt.drawLRNetwork[0])&(edgeDF['Receptor symbol'] == opt.drawLRNetwork[1]),])>0:
@@ -1926,7 +1926,7 @@ if __name__ == '__main__':
             print('Ligand: %s' % ls)
             print('Receptor: %s' % rs)
             print('The source dataset folder: %s' % opt.sourceFolder)
-            print('The ligand-receptor interaction database: %s' % signalType)
+            print('The ligand-receptor interaction database: %s' % interDB)
             print('The weight type of cell-to-cell signaling: %s' % weightType)
             print('The detection threshold for interactions to draw is: %s' % detectionThreshold)
             print('The specicificity threshold for interactions to draw is: %s' % specificityThreshold)
@@ -1945,14 +1945,14 @@ if __name__ == '__main__':
             print('#### start to construct the %s-%s-mediated cell-to-cell communication network' % (ls,rs))
         
             #start to draw single-LR network
-            MainLRNetwork(opt.sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, ls, rs, plotFormat, layout, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance)
+            MainLRNetwork(opt.sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, ls, rs, plotFormat, layout, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance)
             
         elif drawNetworkPlot:
             #pass argument check, show input data
             print('===================================================')
             print('Input data:')
             print('The source dataset folder: %s' % opt.sourceFolder)
-            print('The ligand-receptor interaction database: %s' % signalType)
+            print('The ligand-receptor interaction database: %s' % interDB)
             print('The weight type of cell-to-cell signaling: %s' % weightType)
             print('The detection threshold for interactions to draw is: %s' % detectionThreshold)
             print('The specicificity threshold for interactions to draw is: %s' % specificityThreshold)
@@ -1971,7 +1971,7 @@ if __name__ == '__main__':
             print('#### start to construct the cell-to-cell communication network')
             
             #start to construct the cell-to-cell communication network
-            MainNetwork(opt.sourceFolder, signalType, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, layout, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance)
+            MainNetwork(opt.sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, detectionThreshold, keepTopEdge, layout, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance)
         else:
             sys.exit('Please check your equation parameters.')
             

@@ -14,11 +14,11 @@ import multiprocessing
 from functools import partial
     
 # transfer hid to gene symbols of the certain species
-def TransferToGeneSymbol(homoMapDir, speciestype, taxidCol, geneSymbolCol, hidCol, lrM):
+def TransferToGeneSymbol(homoMapDir, speciestype, interSpeciestype, taxidCol, geneSymbolCol, hidCol, lrM):
     # load data
     homoDF = pd.read_csv(homoMapDir, sep='\t', index_col=None, header=None)
     # reduce the list to genes of the given species
-    humanDF = homoDF.ix[homoDF[taxidCol] == 9606,]
+    humanDF = homoDF.ix[homoDF[taxidCol] == int(interSpeciestype),]
     homoDF = homoDF.ix[homoDF[taxidCol] == int(speciestype),]
 
     ligandGIDList = list(lrM.index.values)
@@ -261,9 +261,9 @@ def GenSingleCell2CellEdge(ligandApprovedSymbolDict, receptorApprovedSymbolDict,
         edgeListDF.to_excel(fn, header=True,index=False,columns=newCols)
     return
 
-def GenCell2CellEdges(signalType, pairListDF, ligandApprovedSymbolDict, receptorApprovedSymbolDict, coreNum, resultDir):
+def GenCell2CellEdges(interDB, pairListDF, ligandApprovedSymbolDict, receptorApprovedSymbolDict, coreNum, resultDir):
     pairList = [tuple(x) for x in pairListDF.values]
-    fn = os.path.join(resultDir,'LR-pairs_'+signalType)
+    fn = os.path.join(resultDir,'LR-pairs_'+interDB)
     if not os.path.exists(fn):
         os.mkdir(fn)
     
@@ -285,7 +285,7 @@ def GenCell2CellEdges(signalType, pairListDF, ligandApprovedSymbolDict, receptor
     
     return edgeListDF
 
-def GenerateCell2CellTable(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeString, pairsDF, ann, resultDir, coreNum):
+def GenerateCell2CellTable(interDB, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeString, pairsDF, ann, resultDir, coreNum):
     # generate ligand-receptor pair list
     pairListDF = GenLigandReceptorList(pairsDF)
     ligandApprovedSymbolList = list(pairsDF.index.values)
@@ -308,7 +308,7 @@ def GenerateCell2CellTable(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, t
     print('#### construct signaling interactions')
     
     # construct and save cell-to-cell edge
-    edgeListDF = GenCell2CellEdges(signalType, pairListDF, ligandApprovedSymbolDict, receptorApprovedSymbolDict, coreNum, resultDir)
+    edgeListDF = GenCell2CellEdges(interDB, pairListDF, ligandApprovedSymbolDict, receptorApprovedSymbolDict, coreNum, resultDir)
     
     if len(edgeListDF) > 0:
         return edgeListDF
@@ -316,9 +316,9 @@ def GenerateCell2CellTable(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, t
         return []
         print('#### No signaling interactions found')
 
-def GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeString, lrM, ann, resultDir, coreNum):
+def GenerateDataFiles(interDB, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeString, lrM, ann, resultDir, coreNum):
     # generate cell-ligand-receptor-cell table
-    edgeListDF = GenerateCell2CellTable(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeString, lrM, ann, resultDir, coreNum)
+    edgeListDF = GenerateCell2CellTable(interDB, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeString, lrM, ann, resultDir, coreNum)
     
     #save result
     if len(edgeListDF) > 0:
@@ -358,7 +358,7 @@ def GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, typeSt
             file_object.write('\n')
             file_object.write('No signaling interactions found')
 
-def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
+def main(species, emFile, annFile, idType, interDB, interSpecies, coreNum, outFolder):
     #load data
     emFileExtention = emFile.split('.')[-1]
     if emFileExtention == 'csv':
@@ -373,7 +373,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     em = em.ix[em.max(axis=1)>0,]
     
     #id conversion
-    if idType != 'symbol' and idType != 'customised':
+    if idType != 'symbol' and idType != 'custom':
         if idType == 'hgnc' or idType == 'mgi':
             idType = 'ID'
         idT = pd.read_csv('ids/' + species + '_' + idType + '.csv', dtype=object, index_col=0, header=0)
@@ -411,31 +411,44 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
         ann = pd.DataFrame({'cluster':list(em.columns)},index=em.columns)
             
     #load interaction list
-    signalTypeExtention = signalType.split('.')[-1]
-    if signalTypeExtention == 'csv':
-        lrL = pd.read_csv(os.path.join('lrdbs', signalType), dtype=object, index_col=None, header=0)
-    elif signalTypeExtention == 'tsv' or signalTypeExtention == 'txt':
-        lrL = pd.read_csv(os.path.join('lrdbs', signalType), dtype=object, index_col=None, header=0, sep='\t')
-    elif signalTypeExtention == 'xls' or signalTypeExtention == 'xlsx':
-        lrL = pd.read_excel(os.path.join('lrdbs', signalType), dtype=object, index_col=None, header=0)
+    interDBExtention = interDB.split('.')[-1]
+    if interDBExtention == 'csv':
+        lrL = pd.read_csv(os.path.join('lrdbs', interDB), dtype=object, index_col=None, header=0)
+    elif interDBExtention == 'tsv' or interDBExtention == 'txt':
+        lrL = pd.read_csv(os.path.join('lrdbs', interDB), dtype=object, index_col=None, header=0, sep='\t')
+    elif interDBExtention == 'xls' or interDBExtention == 'xlsx':
+        lrL = pd.read_excel(os.path.join('lrdbs', interDB), dtype=object, index_col=None, header=0)
     else:
         sys.exit("Cannot process the ligand-receptor interaction database file, please check the format of the file, which can only be csv, tsv, txt, xls or xlsx.")
+    
+    if interSpecies == 'p':
+        lrE = pd.read_csv(os.path.join('lrdbs', 'lrc2p.csv'), dtype=object, index_col=None, header=0)
+    elif interSpecies == 'a':
+        lrE = pd.read_csv(os.path.join('lrdbs', 'lrc2a.txt'), dtype=object, index_col=None, header=0, sep='\t')
+    if interSpecies == 'p' or interSpecies == 'a':
+        lrL = pd.concat([lrL,lrE],ignore_index=True)
+        
+    #to adj matrix
     lset = sorted(list(set(lrL['Ligand'])))
     rset = sorted(list(set(lrL['Receptor'])))
     lrM = pd.DataFrame(0,index=lset,columns=rset)
     for idx in lrL.index:
         lrM.ix[lrL.ix[idx,'Ligand'], lrL.ix[idx,'Receptor']] = 1
-    signalType = signalType.split('.')[0]
+    interDB = interDB.split('.')[0]
     
     # change gene symbols if necessary
-    if species != '9606' and idType != 'customised':
+    if interSpecies in ['a','p']:
+        interSpeciesType = '9606'
+    else:
+        interSpeciesType = interSpecies
+    if idType != 'custom' and species != interSpeciesType:
         #find taxonomy file
         ## HID (HomoloGene group id)[0] - Taxonomy ID[1] - Gene ID[2] - Gene Symbol[3] - Protein gi[4] - Protein accession[5]
         homoMapDir = 'homology/homologene.data'
         hidCol = 0
         taxidCol = 1
         geneSymbolCol = 3
-        lrM = TransferToGeneSymbol(homoMapDir, species, taxidCol, geneSymbolCol, hidCol, lrM)
+        lrM = TransferToGeneSymbol(homoMapDir, species, interSpeciesType, taxidCol, geneSymbolCol, hidCol, lrM)
     
     #build the folder to save the analysis results
     if outFolder != '':
@@ -452,7 +465,7 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
     
     # generate cell-to-cell interaction files
     print('#### generate cell-to-cell interactions')
-    GenerateDataFiles(signalType, sumEMDF, meanEMDF, countEMDF, cellEMDF, 'Edges_%s' % (os.path.basename(signalType)), lrM, ann, resultDir, coreNum)
+    GenerateDataFiles(interDB, sumEMDF, meanEMDF, countEMDF, cellEMDF, 'Edges_%s' % (os.path.basename(interDB)), lrM, ann, resultDir, coreNum)
     
     print('#### DONE')
     
@@ -463,11 +476,12 @@ def main(species, emFile, annFile, idType, signalType, coreNum, outFolder):
 if __name__ == '__main__':
     #process arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--signalType', default='lrc2p', help='lrc2p (default) | lrc2a | name of the user-supplied interaction database file without extension')
+    parser.add_argument('--interDB', default='lrc2p', help='lrc2p (default) | lrc2a | name of the user-supplied interaction database file without extension')
+    parser.add_argument('--interSpecies', default='human', help='human (default) | mouse | expandp | expanda')
     parser.add_argument('--emFile', required=True, help='the path to the file of the expression matrix with row names (gene identifiers) and column names (single-cell/cell-type identifiers)')
     parser.add_argument('--annFile', default='', help='the path to the metafile in which column one has single-cell identifiers and column two has corresponding cluster IDs (see file "toy.sc.ann.txt" as an example). This file is NOT required for bulk data')
     parser.add_argument('--species', default='human', help='human (default) | mouse | rat | zebrafish | fruitfly | chimpanzee | dog | monkey | cattle | chicken | frog | mosquito | nematode | thalecress | rice | riceblastfungus | bakeryeast | neurosporacrassa | fissionyeast | eremotheciumgossypii | kluyveromyceslactis') 
-    parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi | customised (gene identifier used in the expression matrix)')
+    parser.add_argument('--idType', default='symbol', help='symbol (default) | entrez | ensembl | uniprot | hgnc | mgi | custom (gene identifier used in the expression matrix)')
     parser.add_argument('--coreNum', type=int, default=1, help='the number of CPU cores used, default is one')
     parser.add_argument('--out', default='', help='the path to save the analysis results')
     
@@ -475,13 +489,13 @@ if __name__ == '__main__':
     
     #check species
     avaSpecDict = {'human':'9606', 'mouse':'10090', 'chimpanzee':'9598', 'dog':'9615', 'monkey':'9544', 'cattle':'9913', 'rat':'10116', 'chicken':'9031', 'frog':'8364', 'zebrafish':'7955', 'fruitfly':'7227', 'mosquito':'7165', 'nematode':'6239', 'thalecress':'3702', 'rice':'4530', 'riceblastfungus':'318829', 'bakeryeast':'4932', 'neurosporacrassa':'5141', 'fissionyeast':'4896', 'eremotheciumgossypii':'33169', 'kluyveromyceslactis':'28985'}
-    if opt.species.lower() not in avaSpecDict.keys() and opt.idType.lower() != 'customised':
-        sys.exit("The species can only be 'human' or 'mouse' for now.")
+    if opt.species.lower() not in avaSpecDict.keys() and opt.idType.lower() != 'custom':
+        sys.exit("The species can only be 'human' or other 20 supported species for now.")
     else:
         species = avaSpecDict[opt.species.lower()]
     
     #check gene ids
-    avaIDList = ['symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', 'mgi', 'customised']
+    avaIDList = ['symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', 'mgi', 'custom']
     if opt.idType.lower() not in avaIDList:
         sys.exit("The gene identifiers can only be 'symbol', 'entrez', 'ensembl', 'uniprot', 'hgnc', or 'mgi' for now.")
     elif species == '9606' and opt.idType.lower() == 'mgi':
@@ -491,15 +505,22 @@ if __name__ == '__main__':
     else:
         idType = opt.idType.lower()
     
-    #check signalType
-    stflist = glob.glob('lrdbs/%s.*' % opt.signalType)
+    #check interDB
+    stflist = glob.glob('lrdbs/%s.*' % opt.interDB)
     if len(stflist) == 0:
-        sys.exit("Cannot find the ligand-receptor interaction database named '%s'." % opt.signalType)
+        sys.exit("Cannot find the ligand-receptor interaction database named '%s'." % opt.interDB)
     elif len(stflist) > 1:
-        sys.exit("There are multiple ligand-receptor interaction databases with the same name '%s'." % opt.signalType)
+        sys.exit("There are multiple ligand-receptor interaction databases with the same name '%s'." % opt.interDB)
     else:
-        signalType = os.path.basename(stflist[0])
+        interDB = os.path.basename(stflist[0])
     
+    #check interSpecies
+    avaInterSpecDict = {'human':'9606', 'mouse':'10090', 'expandp':'p', 'expanda':'a'}
+    if opt.interSpecies.lower() not in avaInterSpecDict.keys():
+        sys.exit("'interSpecies' can only be 'human', 'mouse', 'expandp' or 'expanda' for now.")
+    else:
+        interSpecies = avaInterSpecDict[opt.interSpecies.lower()]
+        
     #check emFile
     if not os.path.exists(opt.emFile):
         sys.exit("The expression matrix file does not exist.")
@@ -516,18 +537,22 @@ if __name__ == '__main__':
     #pass argument check, show input data
     print('===================================================')
     print('Input data:')
-    if idType != 'customised':
-        print('Species: %s' % opt.species.lower())
+    if idType != 'custom':
+        print('Species to obtain abundance data: %s' % opt.species.lower())
     print('The expression matrix file: %s' % opt.emFile)
     if os.path.exists(opt.annFile):
         print('The metafile: %s' % opt.annFile)
     else:
         print('The metafile is not provided')
-    print('The ligand-receptor interaction database: %s' % signalType)
+    print('The ligand-receptor interaction database: %s' % interDB)
+    if opt.interSpecies.lower() in ['human', 'mouse']:
+        print('Species to obtain ligand-receptor interactions: %s' % opt.interSpecies.lower())
+    else:
+        print('Ligand-receptor interactions are used to expand: lrc2%s' % interSpecies)
     print('The number of cores to use: %s' % opt.coreNum)
     if opt.out != '':
         print('The folder to save all results: %s' % os.path.abspath(opt.out))
     print('===================================================')
     
     #start to construct cell-to-cell network
-    main(species, opt.emFile, opt.annFile, idType, signalType, opt.coreNum, opt.out)
+    main(species, opt.emFile, opt.annFile, idType, interDB, interSpecies, opt.coreNum, opt.out)

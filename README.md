@@ -1,4 +1,4 @@
-# NATMI: A network analysis toolkit for multicellular interactions in single-cell transcriptome data
+# NATMI: Network Analysis Toolkit for the Multicellular Interactions
 
 Recent development of high throughput single-cell sequencing technologies has made it cost-effective to profile thousands of cells from a complex sample. Examining ligand and receptor expression patterns in the cell types identified from these datasets allows prediction of cell-to-cell communication at the level of niches, tissues and organism-wide. Here, we developed NATMI (Network Analysis Toolkit for Multicellular Interactions), a Python-based toolkit for multi-cellular communication network construction and network analysis of multispecies single-cell and bulk gene expression and proteomic data. 
 <details>

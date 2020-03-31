@@ -236,8 +236,14 @@ def IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance):
     # insert nodes and edges into the graph object
     g = ig.Graph(directed=True)
     g.add_vertices(adjM.shape[0])
-    g.vs["name"] = labels
-    g.vs["weight"] = cltSizes
+    nNameList = []
+    nWeightList = []
+    for nidx in adjM.index:
+        tidx = labels.index(nidx)
+        nNameList.append(labels[tidx])
+        nWeightList.append(cltSizes[tidx])
+    g.vs["name"] = nNameList
+    g.vs["weight"] = nWeightList
     
     edgeList = []
     edgeWeightList = []
@@ -266,11 +272,7 @@ def IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance):
                 pos_list = g.layout(layout).coords
 
     posDict = {n: [p[0]*clusterDistance, -p[1]*clusterDistance] for n, p in enumerate(pos_list)}
-    posAryList = []
-    for i in sorted(posDict.keys()):
-        posAryList.append(posDict[i])
-    posArray = np.array(posAryList)
-    return posArray, posDict
+    return posDict
 
 def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, layout, plotFormat):
     # draw networks of both datasets
@@ -670,7 +672,7 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
     nxgS.node_attr['style']='filled,setlinewidth(0)'
     idx = 0 
     maxCltSize = max(cltSizeDict.values())
-    for lb in labels: 
+    for lb in adjSpecM.index: 
         try:
             nd=nxgS.get_node(lb)
         except:
@@ -735,17 +737,19 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specific
     edgeDF, adjM1, adjSpecM1, adjCountM1, nxgW1, nxgS1, nxgC1, adjM2, adjSpecM2, adjCountM2, nxgW2, nxgS2, nxgC2, adjMD, adjSpecMD, adjCountMD, nxgWD, nxgSD, nxgCD = BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThreshold, frequencyThreshold,keepTopEdge)
     
     # get igraph layout from adjacency matrix
-    wposArray, wposDict = IgraphFromAdjacency(adjMD, layout, labels, cltSizes, clusterDistance)
+    wposDict = IgraphFromAdjacency(adjMD, layout, labels, cltSizes, clusterDistance)
+    wposDictSpec = IgraphFromAdjacency(adjSpecMD, layout, labels, cltSizes, clusterDistance)
+    wposDictCount = IgraphFromAdjacency(adjCountMD, layout, labels, cltSizes, clusterDistance)
     
     ## draw use graphviz
     #============edge count
-    readmeStr, adjCountMF = DrawDeltaGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC1, adjCountM1, nxgC2, adjCountM2, nxgCD, adjCountMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
+    readmeStr, adjCountMF = DrawDeltaGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC1, adjCountM1, nxgC2, adjCountM2, nxgCD, adjCountMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDictCount, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============average weight
     readmeStr, adjMF = DrawDeltaGraphvizPlot(readmeStr, 'average-expression', 'float', nxgW1, adjM1, nxgW2, adjM2, nxgWD, adjMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============total specificity
-    readmeStr, adjSpecMF = DrawDeltaGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
+    readmeStr, adjSpecMF = DrawDeltaGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDictSpec, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     adjMFileName = os.path.join(resultDir, '%s_Mtx.xlsx' % dataType)
     readmeStr += 'xxx_Mtx.xlsx: all adjacency matrices of the dynamic networks.\n'
@@ -825,17 +829,19 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
     edgeDF, adjM, adjSpecM, adjCountM, nxgW, nxgS, nxgC = BuildAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThreshold, keepTopEdge)
     
     # get igraph layout from adjacency matrix
-    wposArray, wposDict = IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance)
+    wposDict = IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance)
+    wposDictSpec = IgraphFromAdjacency(adjSpecM, layout, labels, cltSizes, clusterDistance)
+    wposDictCount = IgraphFromAdjacency(adjCountM, layout, labels, cltSizes, clusterDistance)
     
     ## draw use graphviz
     #============edge count
-    readmeStr = DrawGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC, adjCountM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
+    readmeStr = DrawGraphvizPlot(readmeStr, 'edge-count', 'int', nxgC, adjCountM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDictCount, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============total weight
     readmeStr = DrawGraphvizPlot(readmeStr, 'total-expression', 'float', nxgW, adjM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     #============total specificity
-    readmeStr = DrawGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
+    readmeStr = DrawGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDictSpec, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
     
     if dataType == '':
         edgeDFFileName = os.path.join(resultDir, 'Edges.csv')
@@ -1096,7 +1102,7 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
             targetMaxSpc = targetDict[labelDict[targetClt]][1]
             
     # get igraph layout from adjacency matrix
-    wposArray, wposDict = IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance)
+    wposDict = IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance)
     
     ls=ls+'\nLigand'
     rs=rs+'\nReceptor'
@@ -1513,11 +1519,11 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
         idx += 1
         
     if dataType == '':
-        plotFileName = 'From_%s_to_%s_exp.%s' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('|','_'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('|','_'), plotFormat)
-        readmeStr += 'From_%s_to_%s.%s_exp: the ligand-receptor pairs from "%s" to "%s" whose edge weights are products of expression levels.\n' % (sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')], plotFormat, sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')])
+        plotFileName = 'From_%s_to_%s_exp.%s' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('|','_').replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('|','_').replace('\\','-').replace('/', '-'), plotFormat)
+        readmeStr += 'From_%s_to_%s.%s_exp: the ligand-receptor pairs from "%s" to "%s" whose edge weights are products of expression levels.\n' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), plotFormat, sendCltLabel[0:sendCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'))
     else:
-        plotFileName = '%s_from_%s_to_%s_exp.%s' % (dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0], plotFormat)
-        readmeStr += '%s_from_%s_to_%s_exp.%s: the %s ligand-receptor pairs from "%s" to "%s" whose edge weights are products of expression levels.\n' % (dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0], plotFormat, dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0])
+        plotFileName = '%s_from_%s_to_%s_exp.%s' % (dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), plotFormat)
+        readmeStr += '%s_from_%s_to_%s_exp.%s: the %s ligand-receptor pairs from "%s" to "%s" whose edge weights are products of expression levels.\n' % (dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), plotFormat, dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'))
     
     plotFileName = os.path.join(resultDir, plotFileName)
     nxgW.draw(plotFileName,prog='neato')
@@ -1579,11 +1585,11 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
         idx += 1
         
     if dataType == '':
-        plotFileName = 'From_%s_to_%s_spe.%s' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('|','_'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('|','_'), plotFormat)
-        readmeStr += 'From_%s_to_%s.%s_spe: the ligand-receptor pairs from "%s" to "%s" whose edge weights are products of specificities.\n' % (sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')], plotFormat, sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')])
+        plotFileName = 'From_%s_to_%s_spe.%s' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('|','_').replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('|','_').replace('\\','-').replace('/', '-'), plotFormat)
+        readmeStr += 'From_%s_to_%s.%s_spe: the ligand-receptor pairs from "%s" to "%s" whose edge weights are products of specificities.\n' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), plotFormat, sendCltLabel[0:sendCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'))
     else:
-        plotFileName = '%s_from_%s_to_%s_spe.%s' % (dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0], plotFormat)
-        readmeStr += '%s_from_%s_to_%s_spe.%s: the %s ligand-receptor pairs from "%s" to "%s" whose edge weights are products of specificities.\n' % (dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0], plotFormat, dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0])
+        plotFileName = '%s_from_%s_to_%s_spe.%s' % (dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), plotFormat)
+        readmeStr += '%s_from_%s_to_%s_spe.%s: the %s ligand-receptor pairs from "%s" to "%s" whose edge weights are products of specificities.\n' % (dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), plotFormat, dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'))
     plotFileName = os.path.join(resultDir, plotFileName)
     nxgS.draw(plotFileName,prog='neato')
     
@@ -1591,8 +1597,8 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
     if dataType == '':
         curDF = curDF.sort_values(by=['product of specified'],ascending=[False])
         dataFileName = 'From_%s_to_%s_edges.csv' % (sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')])
-        dataFileName = dataFileName.replace('|','_')
-        readmeStr += 'From_%s_to_%s_edges.csv: all filtered edges from "%s" to "%s".\n' % (sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')], sendCltLabel[0:sendCltLabel.rfind(' (')], targetCltLabel[0:targetCltLabel.rfind(' (')])
+        dataFileName = dataFileName.replace('|','_').replace('\\','-').replace('/', '-')
+        readmeStr += 'From_%s_to_%s_edges.csv: all filtered edges from "%s" to "%s".\n' % (sendCltLabel[0:sendCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), sendCltLabel[0:sendCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'), targetCltLabel[0:targetCltLabel.rfind(' (')].replace('\\','-').replace('/', '-'))
         if weightType == 'mean':
             columns=['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate', 'Ligand average expression value', 
                 'Ligand derived specificity of average expression value', 'Receptor detection rate', 'Receptor average expression value', 
@@ -1605,8 +1611,8 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
                    "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
     else:
         curDF = curDF.sort_values(by=['delta specificity'],ascending=[False])
-        dataFileName = '%s_from_%s_to_%s_edges.csv' % (dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0])
-        readmeStr += '%s_from_%s_to_%s_edges.csv: all filtered %s edges from "%s" to "%s".\n' % (dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0], dataType, sendCltLabel.split('\n')[0], targetCltLabel.split('\n')[0])
+        dataFileName = '%s_from_%s_to_%s_edges.csv' % (dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'))
+        readmeStr += '%s_from_%s_to_%s_edges.csv: all filtered %s edges from "%s" to "%s".\n' % (dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), dataType, sendCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'), targetCltLabel.split('\n')[0].replace('\\','-').replace('/', '-'))
         if weightType == 'mean':
             columns=['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Delta ligand detection rate', 'Delta ligand average expression value', 
                 'Delta ligand derived specificity of average expression value', 'Delta receptor detection rate', 'Delta receptor average expression value', 

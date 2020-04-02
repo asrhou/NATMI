@@ -80,7 +80,7 @@ For **user-supplied interactions**, NATMI can work with **any species** and **an
 
 ### 3.2 Ligand-Receptor Interactions (connectomeDB2020) <a name="3.2"></a>
 
-As of 2020, **connectomeDB2020** is the most up-to-date curated database of 2,187 human ligand-receptor interactions with primary literature support and additional 1,791 putative pairs, which builds on our previous draft and a database of human cell interactions ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). By default, *ExtractEdges.py* of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from **connectomeDB2020**. For non-human supported species, NATIM only extracts their human homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/).
+As of 2020, **connectomeDB2020** is the most up-to-date curated database of **2,187 human ligand-receptor interactions with primary literature support (in the current manuscript)** and additional **1,791 putative pairs (available as a part of NATMI only)**, which builds on our previous draft and a database of human cell interactions ([Ramilowski, J. A., et al.  Nat Commun 6, 7866 (2015)](https://www.nature.com/articles/ncomms8866)). By default, *ExtractEdges.py* of NATMI extracts edges from input expression data based on the literature-supported ligand-receptor pairs from **connectomeDB2020**. For non-human supported species, NATIM only extracts their human homologs from [NCBI HomoloGene Database](https://www.ncbi.nlm.nih.gov/homologene/).
 
 **Note:** Since some of the reported ligand-receptor pairs in connectomeDB2020 might be human specific only, always verify if a given edge is valid for your analysed species.
 

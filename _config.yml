@@ -6,4 +6,4 @@ description: > # this means to ignore newlines until "baseurl:"
 github_username:  asrhou
 # Build settings
 markdown: kramdown
-theme: dinky
+theme: Dinky

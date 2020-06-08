@@ -112,11 +112,6 @@ venv.bak/
 /ann.t2.xlsx
 /em.t.xlsx
 /lrdbs/lrc2t.xls
-_config.yml
-Gemfile
-Gemfile.lock
-index.html
-/_data
 /_site
 images
 

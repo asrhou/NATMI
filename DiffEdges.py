@@ -62,7 +62,7 @@ def IdentifyPopulationChanges(refClusterMapDF, testClusterMapDF, resultFolder, r
     # sort clusters based on the fold changes
     cltOrder = []
     for clt in allClusters:
-        cltDF = sumClusterDF.ix[sumClusterDF['Cluster'] == clt,].sort_values(by=['Source'])
+        cltDF = sumClusterDF.loc[sumClusterDF['Cluster'] == clt,].sort_values(by=['Source'])
         if len(cltDF) == 2:
             cltOrder.append((clt,float(cltDF.iloc[1,2])/cltDF.iloc[0,2]))
         else:
@@ -101,7 +101,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     oldColNames = ['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_x', 'frequency ligand_x', 'original ligand_x', 'specified ligand_x', 'count receptor_x', 'frequency receptor_x', 'original receptor_x', 'specified receptor_x', 'product of original_x', 'product of specified_x', 'count ligand_y', 'frequency ligand_y', 'original ligand_y', 'specified ligand_y', 'count receptor_y', 'frequency receptor_y', 'original receptor_y', 'specified receptor_y', 'product of original_y', 'product of specified_y']
     deltaColNames = ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Delta ligand expressing cells', 'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor expressing cells', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']
 
-    disaperEdgeDF = mergedDF.ix[(mergedDF['product of original_y']==0)&(mergedDF['product of original_x']>0),['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_x', 'frequency ligand_x', 'original ligand_x', 'specified ligand_x', 'count receptor_x', 'frequency receptor_x', 'original receptor_x', 'specified receptor_x', 'product of original_x', 'product of specified_x']]
+    disaperEdgeDF = mergedDF.loc[(mergedDF['product of original_y']==0)&(mergedDF['product of original_x']>0),['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_x', 'frequency ligand_x', 'original ligand_x', 'specified ligand_x', 'count receptor_x', 'frequency receptor_x', 'original receptor_x', 'specified receptor_x', 'product of original_x', 'product of specified_x']]
     disaperEdgeDF.columns = deltaColNames
     disaperEdgeDF = disaperEdgeDF.sort_values(by='Delta edge expression weight', ascending=False)
     disaperEdgeDF.to_csv(os.path.join(resultEdgeF, 'Disappeared_%s.csv' % (weightType)), index=False, header=True, columns=deltaColNames)
@@ -109,7 +109,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->Disappeared_xxx.csv: edges that only detected in the reference dataset\n')
         
-    aperEdgeDF = mergedDF.ix[(mergedDF['product of original_x']==0)&(mergedDF['product of original_y']>0),['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_y', 'frequency ligand_y', 'original ligand_y', 'specified ligand_y', 'count receptor_y', 'frequency receptor_y', 'original receptor_y', 'specified receptor_y', 'product of original_y', 'product of specified_y']]
+    aperEdgeDF = mergedDF.loc[(mergedDF['product of original_x']==0)&(mergedDF['product of original_y']>0),['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_y', 'frequency ligand_y', 'original ligand_y', 'specified ligand_y', 'count receptor_y', 'frequency receptor_y', 'original receptor_y', 'specified receptor_y', 'product of original_y', 'product of specified_y']]
     aperEdgeDF.columns = deltaColNames
     aperEdgeDF = aperEdgeDF.sort_values(by='Delta edge expression weight', ascending=False)
     aperEdgeDF.to_csv(os.path.join(resultEdgeF, 'Appeared_%s.csv' % (weightType)), index=False, header=True, columns=deltaColNames)
@@ -121,7 +121,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     changedColNames = ['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'original ligand count', 'original ligand frequency', 'original ligand expression', 'original ligand specificity', 'original receptor count', 'original receptor frequency', 'original receptor expression', 'original receptor specificity', 'original weight', 'original specificity', 'changed ligand count', 'changed ligand frequency', 'changed ligand expression', 'changed ligand specificity', 'changed receptor count', 'changed receptor frequency', 'changed receptor expression', 'changed receptor specificity', 'changed weight', 'changed specificity', 'delta ligand expression', 'fold change of ligand expression', 'log2 fold change of ligand expression', 'delta ligand specificity', 'fold change of ligand specificity', 'log2 fold change of ligand specificity', 'delta receptor expression', 'fold change of receptor expression', 'log2 fold change of receptor expression', 'delta receptor specificity', 'fold change of receptor specificity', 'log2 fold change of receptor specificity', 'delta edge expression weight', 'delta edge specificity weight', 'fold change of weight', 'log2 fold change of weight', 'fold change of specificity', 'log2 fold change of specificity']
     newdeltaColNames = ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand expressing cells in condition 1', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor expressing cells in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1', 'Ligand expressing cells in condition 2', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor expressing cells in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2', 'Delta ligand expression', 'Fold change of ligand expression', 'Log2-transformed fold change of ligand expression', 'Delta ligand specificity', 'Fold change of ligand specificity', 'Log2-transformed fold change of ligand specificity', 'Delta receptor expression', 'Fold change of receptor expression', 'Log2-transformed fold change of receptor expression', 'Delta receptor specificity', 'Fold change of receptor specificity', 'Log2-transformed fold change of receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight', 'Fold change of edge expression weight', 'Log2-transformed fold change of edge expression weight', 'Fold change of edge specificity weight', 'Log2-transformed fold change of edge specificity weight']
 
-    upEdgeDF = mergedDF.ix[(mergedDF['product of original_x'] < mergedDF['product of original_y'])&(mergedDF['product of original_x']>0),oldColNames]
+    upEdgeDF = mergedDF.loc[(mergedDF['product of original_x'] < mergedDF['product of original_y'])&(mergedDF['product of original_x']>0),oldColNames]
     upEdgeDF.columns = changedColNames[:-18]
     upEdgeDF['delta ligand expression'] = upEdgeDF['changed ligand expression'] - upEdgeDF['original ligand expression']
     upEdgeDF['fold change of ligand expression'] = upEdgeDF['original ligand expression'] / upEdgeDF['changed ligand expression']
@@ -142,14 +142,14 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     upEdgeDF['fold change of specificity'] = upEdgeDF['changed specificity'] / upEdgeDF['original specificity']
     upEdgeDF['log2 fold change of specificity'] = np.log2(upEdgeDF['fold change of specificity'])
     upEdgeDF = upEdgeDF.sort_values(by="fold change of weight", ascending=False)
-    upEdgeDF = upEdgeDF.ix[:,changedColNames]
+    upEdgeDF = upEdgeDF.loc[:,changedColNames]
     upEdgeDF.columns = newdeltaColNames
     upEdgeDF.to_csv(os.path.join(resultEdgeF, 'UP-regulated_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
     print('#### %s edges are up-regulated' % "{:,}".format(len(upEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->UP-regulated_xxx.csv: edges that have higher expression weights in the target dataset\n')
     
-    downEdgeDF = mergedDF.ix[(mergedDF['product of original_x'] > mergedDF['product of original_y'])&(mergedDF['product of original_y']>0),oldColNames]
+    downEdgeDF = mergedDF.loc[(mergedDF['product of original_x'] > mergedDF['product of original_y'])&(mergedDF['product of original_y']>0),oldColNames]
     downEdgeDF.columns = changedColNames[:-18]
     downEdgeDF['delta ligand expression'] = downEdgeDF['original ligand expression'] - downEdgeDF['changed ligand expression']
     downEdgeDF['fold change of ligand expression'] = downEdgeDF['original ligand expression'] / downEdgeDF['changed ligand expression']
@@ -170,14 +170,14 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     downEdgeDF['fold change of specificity'] = downEdgeDF['original specificity'] / downEdgeDF['changed specificity']
     downEdgeDF['log2 fold change of specificity'] = np.log2(downEdgeDF['fold change of specificity'])
     downEdgeDF = downEdgeDF.sort_values(by="fold change of weight", ascending=False)
-    downEdgeDF = downEdgeDF.ix[:,changedColNames]
+    downEdgeDF = downEdgeDF.loc[:,changedColNames]
     downEdgeDF.columns = newdeltaColNames
     downEdgeDF.to_csv(os.path.join(resultEdgeF, 'DOWN-regulated_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
     print('#### %s edges are down-regulated' % "{:,}".format(len(downEdgeDF)))
     with open(rmf, 'a') as file_object:
         file_object.write('\t|->DOWN-regulated_xxx.csv: edges that have lower expression weights in the target dataset\n')
     
-    eqEdgeDF = mergedDF.ix[(mergedDF['product of original_x'] == mergedDF['product of original_y'])&(mergedDF['product of original_x']>0)&(mergedDF['product of original_y']>0),oldColNames]
+    eqEdgeDF = mergedDF.loc[(mergedDF['product of original_x'] == mergedDF['product of original_y'])&(mergedDF['product of original_x']>0)&(mergedDF['product of original_y']>0),oldColNames]
     eqEdgeDF.columns = changedColNames[:-18]
     eqEdgeDF['delta ligand expression'] = eqEdgeDF['original ligand expression'] - eqEdgeDF['changed ligand expression']
     eqEdgeDF['fold change of ligand expression'] = eqEdgeDF['original ligand expression'] / eqEdgeDF['changed ligand expression']
@@ -198,7 +198,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     eqEdgeDF['fold change of specificity'] = eqEdgeDF['original specificity'] / eqEdgeDF['changed specificity']
     eqEdgeDF['log2 fold change of specificity'] = np.log2( eqEdgeDF['fold change of specificity'])
     eqEdgeDF = eqEdgeDF.sort_values(by="fold change of specificity", ascending=False)
-    eqEdgeDF = eqEdgeDF.ix[:,changedColNames]
+    eqEdgeDF = eqEdgeDF.loc[:,changedColNames]
     eqEdgeDF.columns = newdeltaColNames
     eqEdgeDF.to_csv(os.path.join(resultEdgeF, 'Stable_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
     print('#### %s edges are not changed' % "{:,}".format(len(eqEdgeDF)))
@@ -225,7 +225,7 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
     mergedDF['fold change of specificity'] = mergedDF['original specificity'] / mergedDF['changed specificity']
     mergedDF['log2 fold change of specificity'] = np.log2(mergedDF['fold change of specificity'])
     mergedDF = mergedDF.sort_values(by="fold change of specificity", ascending=False)
-    mergedDF = mergedDF.ix[:,changedColNames]
+    mergedDF = mergedDF.loc[:,changedColNames]
     mergedDF.columns = newdeltaColNames
     mergedDF.to_csv(os.path.join(resultEdgeF, 'All_edges_%s.csv' % (weightType)), index=False, header=True, columns=newdeltaColNames)
     print('#### %s edges are detected in at least one dataset' % "{:,}".format(len(mergedDF)))
@@ -267,8 +267,8 @@ def main(refFolder, targetFolder, interDB, weightType, outFolder):
             'Ligand derived specificity of total expression value', 'Receptor-expressing cells', 'Receptor detection rate', 'Receptor total expression value', 
             'Receptor derived specificity of total expression value', 'Edge total expression weight', 'Edge total expression derived specificity']
         
-        refEdgeDF = refEdgeDF.ix[:,selectCols]
-        testEdgeDF = testEdgeDF.ix[:,selectCols]
+        refEdgeDF = refEdgeDF.loc[:,selectCols]
+        testEdgeDF = testEdgeDF.loc[:,selectCols]
         newColNames = ["sending cluster name", "ligand", "receptor", "target cluster name", "count ligand", "frequency ligand", "original ligand", "specified ligand", "count receptor", "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
         refEdgeDF.columns = newColNames
         testEdgeDF.columns = newColNames

@@ -40,17 +40,17 @@ def ChooseTopEdges(adjM, keepTopEdge):
         for col in adjM.columns:
             edgeDict['s'].append(idx)
             edgeDict['t'].append(col)
-            if adjM.ix[idx,col] <=0:
-                edgeDict['v'].append((-1.0) * adjM.ix[idx,col])
+            if adjM.loc[idx,col] <=0:
+                edgeDict['v'].append((-1.0) * adjM.loc[idx,col])
             else:
-                edgeDict['v'].append(adjM.ix[idx,col])
+                edgeDict['v'].append(adjM.loc[idx,col])
                 
     edgeD = pd.DataFrame(edgeDict).sort_values(by=['v'], ascending=False)
     edgeD = edgeD.head(keepTopEdge)
             
     nadjM = pd.DataFrame(0.0, index=adjM.index,columns=adjM.index)
     for idx in edgeD.index:
-        nadjM.ix[edgeD.ix[idx,['s']],edgeD.ix[idx,['t']]] = adjM.ix[edgeD.ix[idx,['s']],edgeD.ix[idx,['t']]]
+        nadjM.loc[edgeD.loc[idx,['s']],edgeD.loc[idx,['t']]] = adjM.loc[edgeD.loc[idx,['s']],edgeD.loc[idx,['t']]]
     return nadjM
 
 # build delta adjacency matrix
@@ -64,14 +64,14 @@ def BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThres
     adjSpecM2 = pd.DataFrame(0.0, index=origlabels, columns=origlabels)
     adjCountM2 = pd.DataFrame(0, index=origlabels, columns=origlabels)
     for idx in edgeDF.index:
-        if (edgeDF.ix[idx, 'Ligand detection rate in condition 1']>frequencyThreshold)&(edgeDF.ix[idx, 'Receptor detection rate in condition 1']>frequencyThreshold):
-            adjM1.ix[str(edgeDF.ix[idx,'Sending cluster']), str(edgeDF.ix[idx,'Target cluster'])] += edgeDF.ix[idx,'Edge expression weight in condition 1']
-            adjSpecM1.ix[str(edgeDF.ix[idx,'Sending cluster']), str(edgeDF.ix[idx,'Target cluster'])] += edgeDF.ix[idx,'Edge specificity weight in condition 1']
-            adjCountM1.ix[str(edgeDF.ix[idx,'Sending cluster']), str(edgeDF.ix[idx,'Target cluster'])] += 1
-        if (edgeDF.ix[idx, 'Ligand detection rate in condition 2']>frequencyThreshold)&(edgeDF.ix[idx, 'Receptor detection rate in condition 2']>frequencyThreshold):
-            adjM2.ix[str(edgeDF.ix[idx,'Sending cluster']), str(edgeDF.ix[idx,'Target cluster'])] += edgeDF.ix[idx,'Edge expression weight in condition 2']
-            adjSpecM2.ix[str(edgeDF.ix[idx,'Sending cluster']), str(edgeDF.ix[idx,'Target cluster'])] += edgeDF.ix[idx,'Edge specificity weight in condition 2']
-            adjCountM2.ix[str(edgeDF.ix[idx,'Sending cluster']), str(edgeDF.ix[idx,'Target cluster'])] += 1
+        if (edgeDF.loc[idx, 'Ligand detection rate in condition 1']>frequencyThreshold)&(edgeDF.loc[idx, 'Receptor detection rate in condition 1']>frequencyThreshold):
+            adjM1.loc[str(edgeDF.loc[idx,'Sending cluster']), str(edgeDF.loc[idx,'Target cluster'])] += edgeDF.loc[idx,'Edge expression weight in condition 1']
+            adjSpecM1.loc[str(edgeDF.loc[idx,'Sending cluster']), str(edgeDF.loc[idx,'Target cluster'])] += edgeDF.loc[idx,'Edge specificity weight in condition 1']
+            adjCountM1.loc[str(edgeDF.loc[idx,'Sending cluster']), str(edgeDF.loc[idx,'Target cluster'])] += 1
+        if (edgeDF.loc[idx, 'Ligand detection rate in condition 2']>frequencyThreshold)&(edgeDF.loc[idx, 'Receptor detection rate in condition 2']>frequencyThreshold):
+            adjM2.loc[str(edgeDF.loc[idx,'Sending cluster']), str(edgeDF.loc[idx,'Target cluster'])] += edgeDF.loc[idx,'Edge expression weight in condition 2']
+            adjSpecM2.loc[str(edgeDF.loc[idx,'Sending cluster']), str(edgeDF.loc[idx,'Target cluster'])] += edgeDF.loc[idx,'Edge specificity weight in condition 2']
+            adjCountM2.loc[str(edgeDF.loc[idx,'Sending cluster']), str(edgeDF.loc[idx,'Target cluster'])] += 1
 
     # remove isolated nodes
     adjM1.index = labels
@@ -95,19 +95,19 @@ def BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThres
     nlist2 = sorted(list(set(ilist2).union(set(clist2))))
     nlist = sorted(list(set(nlist1).union(set(nlist2))))
     
-    adjM1 = adjM1.ix[nlist,nlist]
-    adjSpecM1 = adjSpecM1.ix[nlist,nlist]
-    adjCountM1 = adjCountM1.ix[nlist,nlist]
-    adjM2 = adjM2.ix[nlist,nlist]
-    adjSpecM2 = adjSpecM2.ix[nlist,nlist]
-    adjCountM2 = adjCountM2.ix[nlist,nlist]
+    adjM1 = adjM1.loc[nlist,nlist]
+    adjSpecM1 = adjSpecM1.loc[nlist,nlist]
+    adjCountM1 = adjCountM1.loc[nlist,nlist]
+    adjM2 = adjM2.loc[nlist,nlist]
+    adjSpecM2 = adjSpecM2.loc[nlist,nlist]
+    adjCountM2 = adjCountM2.loc[nlist,nlist]
     #to average expression
     for idx in nlist:
         for col in nlist:
-            if adjCountM1.ix[idx,col] != 0:
-                adjM1.ix[idx,col] = adjM1.ix[idx,col]/adjCountM1.ix[idx,col]
-            if adjCountM2.ix[idx,col] != 0:
-                adjM2.ix[idx,col] = adjM2.ix[idx,col]/adjCountM2.ix[idx,col]
+            if adjCountM1.loc[idx,col] != 0:
+                adjM1.loc[idx,col] = adjM1.loc[idx,col]/adjCountM1.loc[idx,col]
+            if adjCountM2.loc[idx,col] != 0:
+                adjM2.loc[idx,col] = adjM2.loc[idx,col]/adjCountM2.loc[idx,col]
     
     adjMD = adjM1 - adjM2
     adjSpecMD = adjSpecM1 - adjSpecM2
@@ -133,9 +133,9 @@ def BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThres
     clist3 = adjMD.columns[adjMD.max(axis=0)>0]
     nlist3 = sorted(list(set(ilist3).union(set(clist3))))
     nlist = sorted(list(set(nlist1).union(set(nlist2)).union(set(nlist3))))
-    adjM1 = adjM1.ix[nlist,nlist]
-    adjM2 = adjM2.ix[nlist,nlist]
-    adjMD = adjMD.ix[nlist,nlist]
+    adjM1 = adjM1.loc[nlist,nlist]
+    adjM2 = adjM2.loc[nlist,nlist]
+    adjMD = adjMD.loc[nlist,nlist]
     
     ilist1 = adjSpecM1.index[adjSpecM1.max(axis=1)>0]
     clist1 = adjSpecM1.columns[adjSpecM1.max(axis=0)>0]
@@ -147,9 +147,9 @@ def BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThres
     clist3 = adjSpecMD.columns[adjSpecMD.max(axis=0)>0]
     nlist3 = sorted(list(set(ilist3).union(set(clist3))))
     nlist = sorted(list(set(nlist1).union(set(nlist2)).union(set(nlist3))))
-    adjSpecM1 = adjSpecM1.ix[nlist,nlist]
-    adjSpecM2 = adjSpecM2.ix[nlist,nlist]
-    adjSpecMD = adjSpecMD.ix[nlist,nlist]
+    adjSpecM1 = adjSpecM1.loc[nlist,nlist]
+    adjSpecM2 = adjSpecM2.loc[nlist,nlist]
+    adjSpecMD = adjSpecMD.loc[nlist,nlist]
     
     ilist1 = adjCountM1.index[adjCountM1.max(axis=1)>0]
     clist1 = adjCountM1.columns[adjCountM1.max(axis=0)>0]
@@ -161,9 +161,9 @@ def BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThres
     clist3 = adjCountMD.columns[adjCountMD.max(axis=0)>0]
     nlist3 = sorted(list(set(ilist3).union(set(clist3))))
     nlist = sorted(list(set(nlist1).union(set(nlist2)).union(set(nlist3))))
-    adjCountM1 = adjCountM1.ix[nlist,nlist]
-    adjCountM2 = adjCountM2.ix[nlist,nlist]
-    adjCountMD = adjCountMD.ix[nlist,nlist]
+    adjCountM1 = adjCountM1.loc[nlist,nlist]
+    adjCountM2 = adjCountM2.loc[nlist,nlist]
+    adjCountMD = adjCountMD.loc[nlist,nlist]
     
     nxgW1 = nx.MultiDiGraph(adjM1)
     nxgS1 = nx.MultiDiGraph(adjSpecM1)
@@ -180,9 +180,9 @@ def BuildDeltaAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThres
 def BuildAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThreshold, keepTopEdge):
     # only keep edges of interest
     if 'delta specificity' in edgeDF.columns:
-        edgeDF = edgeDF.ix[(edgeDF['delta specificity']>specificityThreshold)&(edgeDF['delta weight']>weightThreshold),]
+        edgeDF = edgeDF.loc[(edgeDF['delta specificity']>specificityThreshold)&(edgeDF['delta weight']>weightThreshold),]
     else:
-        edgeDF = edgeDF.ix[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold),]
+        edgeDF = edgeDF.loc[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold),]
     edgeDF['sending cluster name'] = edgeDF['sending cluster name'].astype(str)
     edgeDF['target cluster name'] = edgeDF['target cluster name'].astype(str)
             
@@ -191,12 +191,12 @@ def BuildAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThreshold,
     adjCountM = pd.DataFrame(0, index=origlabels, columns=origlabels)
     for idx in edgeDF.index:
         if 'delta specificity' in edgeDF.columns:
-            adjM.ix[str(edgeDF.ix[idx,'sending cluster name']), str(edgeDF.ix[idx,'target cluster name'])] += edgeDF.ix[idx,'delta weight']
-            adjSpecM.ix[str(edgeDF.ix[idx,'sending cluster name']), str(edgeDF.ix[idx,'target cluster name'])] += edgeDF.ix[idx,'delta specificity']
+            adjM.loc[str(edgeDF.loc[idx,'sending cluster name']), str(edgeDF.loc[idx,'target cluster name'])] += edgeDF.loc[idx,'delta weight']
+            adjSpecM.loc[str(edgeDF.loc[idx,'sending cluster name']), str(edgeDF.loc[idx,'target cluster name'])] += edgeDF.loc[idx,'delta specificity']
         else:
-            adjM.ix[str(edgeDF.ix[idx,'sending cluster name']), str(edgeDF.ix[idx,'target cluster name'])] += edgeDF.ix[idx,'product of original']
-            adjSpecM.ix[str(edgeDF.ix[idx,'sending cluster name']), str(edgeDF.ix[idx,'target cluster name'])] += edgeDF.ix[idx,'product of specified']
-        adjCountM.ix[str(edgeDF.ix[idx,'sending cluster name']), str(edgeDF.ix[idx,'target cluster name'])] += 1
+            adjM.loc[str(edgeDF.loc[idx,'sending cluster name']), str(edgeDF.loc[idx,'target cluster name'])] += edgeDF.loc[idx,'product of original']
+            adjSpecM.loc[str(edgeDF.loc[idx,'sending cluster name']), str(edgeDF.loc[idx,'target cluster name'])] += edgeDF.loc[idx,'product of specified']
+        adjCountM.loc[str(edgeDF.loc[idx,'sending cluster name']), str(edgeDF.loc[idx,'target cluster name'])] += 1
 
     adjM.index = labels
     adjM.columns = labels
@@ -207,25 +207,25 @@ def BuildAdjM(edgeDF, origlabels, labels, specificityThreshold, weightThreshold,
     ilist = adjM.index[adjM.max(axis=1)>0]
     clist = adjM.columns[adjM.max(axis=0)>0]
     nlist = sorted(list(set(ilist).union(set(clist))))
-    adjM = adjM.ix[nlist,nlist]
-    adjSpecM = adjSpecM.ix[nlist,nlist]
-    adjCountM = adjCountM.ix[nlist,nlist]
+    adjM = adjM.loc[nlist,nlist]
+    adjSpecM = adjSpecM.loc[nlist,nlist]
+    adjCountM = adjCountM.loc[nlist,nlist]
     
     adjM = ChooseTopEdges(adjM, keepTopEdge)
     ilist = adjM.index[adjM.max(axis=1)>0]
     clist = adjM.columns[adjM.max(axis=0)>0]
     nlist = sorted(list(set(ilist).union(set(clist))))
-    adjM = adjM.ix[nlist,nlist]
+    adjM = adjM.loc[nlist,nlist]
     adjSpecM = ChooseTopEdges(adjSpecM, keepTopEdge)
     ilist = adjSpecM.index[adjSpecM.max(axis=1)>0]
     clist = adjSpecM.columns[adjSpecM.max(axis=0)>0]
     nlist = sorted(list(set(ilist).union(set(clist))))
-    adjSpecM = adjSpecM.ix[nlist,nlist]
+    adjSpecM = adjSpecM.loc[nlist,nlist]
     adjCountM = ChooseTopEdges(adjCountM, keepTopEdge)
     ilist = adjCountM.index[adjCountM.max(axis=1)>0]
     clist = adjCountM.columns[adjCountM.max(axis=0)>0]
     nlist = sorted(list(set(ilist).union(set(clist))))
-    adjCountM = adjCountM.ix[nlist,nlist]
+    adjCountM = adjCountM.loc[nlist,nlist]
     
     nxgW = nx.MultiDiGraph(adjM)
     nxgS = nx.MultiDiGraph(adjSpecM)
@@ -295,14 +295,14 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
             if numStr == 'float':
-                ed.attr['label'] = '%.3f' % (adjSpecM1.ix[sn, tn])
+                ed.attr['label'] = '%.3f' % (adjSpecM1.loc[sn, tn])
             elif numStr == 'int':
-                ed.attr['label'] = '%d' % (adjSpecM1.ix[sn, tn])
+                ed.attr['label'] = '%d' % (adjSpecM1.loc[sn, tn])
         else:
-            if adjSpecM1.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjSpecM1.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjSpecM1.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjSpecM1.loc[sn, tn]*edgeWidth/maxVal)
     
     # set node color
     nxgS1.node_attr['style']='filled,setlinewidth(0)'
@@ -367,14 +367,14 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
             if numStr == 'float':
-                ed.attr['label'] = '%.3f' % (adjSpecM2.ix[sn, tn])
+                ed.attr['label'] = '%.3f' % (adjSpecM2.loc[sn, tn])
             elif numStr == 'int':
-                ed.attr['label'] = '%d' % (adjSpecM2.ix[sn, tn])
+                ed.attr['label'] = '%d' % (adjSpecM2.loc[sn, tn])
         else:
-            if adjSpecM2.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjSpecM2.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjSpecM2.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjSpecM2.loc[sn, tn]*edgeWidth/maxVal)
     
     # set node color
     nxgS2.node_attr['style']='filled,setlinewidth(0)'
@@ -440,36 +440,36 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
     for ed in nxgSD.edges():
         sn = ed[0]
         tn = ed[1]
-        if adjSpecMD.ix[sn, tn] > 0 and adjSpecM2.ix[sn, tn] > 0 and float(adjSpecM1.ix[sn, tn])/adjSpecM2.ix[sn, tn] > 2:
+        if adjSpecMD.loc[sn, tn] > 0 and adjSpecM2.loc[sn, tn] > 0 and float(adjSpecM1.loc[sn, tn])/adjSpecM2.loc[sn, tn] > 2:
             ed.attr['color'] = '#FF0000'
-        elif adjSpecMD.ix[sn, tn] < 0 and adjSpecM1.ix[sn, tn] > 0 and float(adjSpecM2.ix[sn, tn])/adjSpecM1.ix[sn, tn] > 2:
+        elif adjSpecMD.loc[sn, tn] < 0 and adjSpecM1.loc[sn, tn] > 0 and float(adjSpecM2.loc[sn, tn])/adjSpecM1.loc[sn, tn] > 2:
             ed.attr['color'] = '#00FF00'
         else:
             ed.attr['color'] = '#FFFF00'
-        if adjSpecMD.ix[sn, tn] > 0 and ed.attr['color'] != '#FFFF00':#to red
-            sclc = float(adjSpecMD.ix[sn, tn])/maxValP*1.0
+        if adjSpecMD.loc[sn, tn] > 0 and ed.attr['color'] != '#FFFF00':#to red
+            sclc = float(adjSpecMD.loc[sn, tn])/maxValP*1.0
             ed.attr['color'] = matplotlib.colors.to_hex([1.0, 1.0-sclc, 0.0])
-        elif adjSpecMD.ix[sn, tn] < 0 and ed.attr['color'] != '#FFFF00':
-            sclc = float(adjSpecMD.ix[sn, tn])/maxValN*1.0
+        elif adjSpecMD.loc[sn, tn] < 0 and ed.attr['color'] != '#FFFF00':
+            sclc = float(adjSpecMD.loc[sn, tn])/maxValN*1.0
             ed.attr['color'] = matplotlib.colors.to_hex([1.0-sclc, 1.0, 0.0])
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
             if numStr == 'float':
-                ed.attr['label'] = '%.3f' % (adjSpecMD.ix[sn, tn])
+                ed.attr['label'] = '%.3f' % (adjSpecMD.loc[sn, tn])
             elif numStr == 'int':
-                ed.attr['label'] = '%d' % (adjSpecMD.ix[sn, tn])
+                ed.attr['label'] = '%d' % (adjSpecMD.loc[sn, tn])
         else:
-            if adjSpecMD.ix[sn, tn] > 0:
-                if adjSpecMD.ix[sn, tn]*edgeWidth/maxValP < 1:
+            if adjSpecMD.loc[sn, tn] > 0:
+                if adjSpecMD.loc[sn, tn]*edgeWidth/maxValP < 1:
                     ed.attr['penwidth'] = 1
                 else:
-                    ed.attr['penwidth'] = int(float(adjSpecMD.ix[sn, tn])*edgeWidth/maxValP)
+                    ed.attr['penwidth'] = int(float(adjSpecMD.loc[sn, tn])*edgeWidth/maxValP)
             else:
-                if adjSpecMD.ix[sn, tn]*edgeWidth/maxValN < 1:
+                if adjSpecMD.loc[sn, tn]*edgeWidth/maxValN < 1:
                     ed.attr['penwidth'] = 1
                 else:
-                    ed.attr['penwidth'] = int(float(adjSpecMD.ix[sn, tn])*edgeWidth/maxValN)
+                    ed.attr['penwidth'] = int(float(adjSpecMD.loc[sn, tn])*edgeWidth/maxValN)
                 
     
     # set node color
@@ -524,22 +524,22 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
     adjSpecMF = pd.DataFrame(0.0, index=adjSpecMD.index, columns=adjSpecMD.columns)
     for idx in adjSpecMD.index:
         for col in adjSpecMD.columns:
-            if adjSpecMD.ix[idx, col] > 0:
-                if adjSpecM2.ix[idx, col] > 0:
-                    adjSpecMF.ix[idx, col] = adjSpecM1.ix[idx, col]/adjSpecM2.ix[idx, col]
+            if adjSpecMD.loc[idx, col] > 0:
+                if adjSpecM2.loc[idx, col] > 0:
+                    adjSpecMF.loc[idx, col] = adjSpecM1.loc[idx, col]/adjSpecM2.loc[idx, col]
             else:
-                if adjSpecM1.ix[idx, col] > 0:
-                    adjSpecMF.ix[idx, col] = adjSpecM2.ix[idx, col]/adjSpecM1.ix[idx, col]
+                if adjSpecM1.loc[idx, col] > 0:
+                    adjSpecMF.loc[idx, col] = adjSpecM2.loc[idx, col]/adjSpecM1.loc[idx, col]
     maxVal = adjSpecMF.max().max()
     #set inf as 2 x max fold change
     for idx in adjSpecMD.index:
         for col in adjSpecMD.columns:
-            if adjSpecMD.ix[idx, col] > 0:
-                if adjSpecM2.ix[idx, col] == 0:
-                    adjSpecMF.ix[idx, col] = maxVal * 2
+            if adjSpecMD.loc[idx, col] > 0:
+                if adjSpecM2.loc[idx, col] == 0:
+                    adjSpecMF.loc[idx, col] = maxVal * 2
             else:
-                if adjSpecM1.ix[idx, col] == 0:
-                    adjSpecMF.ix[idx, col] = maxVal * 2
+                if adjSpecM1.loc[idx, col] == 0:
+                    adjSpecMF.loc[idx, col] = maxVal * 2
     maxVal = adjSpecMF.max().max()
     
     # convert to a graphviz graph
@@ -555,29 +555,29 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
     for ed in nxgSF.edges():
         sn = ed[0]
         tn = ed[1]
-        if adjSpecMD.ix[sn, tn] > 0 and adjSpecM2.ix[sn, tn] > 0 and adjSpecM1.ix[sn, tn]/adjSpecM2.ix[sn, tn] > 2:
+        if adjSpecMD.loc[sn, tn] > 0 and adjSpecM2.loc[sn, tn] > 0 and adjSpecM1.loc[sn, tn]/adjSpecM2.loc[sn, tn] > 2:
             ed.attr['color'] = '#FF0000'
-        elif adjSpecMD.ix[sn, tn] < 0 and adjSpecM1.ix[sn, tn] > 0 and adjSpecM2.ix[sn, tn]/adjSpecM1.ix[sn, tn] > 2:
+        elif adjSpecMD.loc[sn, tn] < 0 and adjSpecM1.loc[sn, tn] > 0 and adjSpecM2.loc[sn, tn]/adjSpecM1.loc[sn, tn] > 2:
             ed.attr['color'] = '#00FF00'
         else:
             ed.attr['color'] = '#FFFF00'
-        sclc = float(adjSpecMF.ix[sn, tn])/maxVal*1.0
-        if adjSpecMD.ix[sn, tn] > 0 and ed.attr['color'] != '#FFFF00':#to red
+        sclc = float(adjSpecMF.loc[sn, tn])/maxVal*1.0
+        if adjSpecMD.loc[sn, tn] > 0 and ed.attr['color'] != '#FFFF00':#to red
             ed.attr['color'] = matplotlib.colors.to_hex([1.0, 1.0-sclc, 0.0])
-        elif adjSpecMD.ix[sn, tn] < 0 and ed.attr['color'] != '#FFFF00':
+        elif adjSpecMD.loc[sn, tn] < 0 and ed.attr['color'] != '#FFFF00':
             ed.attr['color'] = matplotlib.colors.to_hex([1.0-sclc, 1.0, 0.0])
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
-            if adjSpecMD.ix[sn, tn] > 0:
-                ed.attr['label'] = '%.2f' % (adjSpecMF.ix[sn, tn])
+            if adjSpecMD.loc[sn, tn] > 0:
+                ed.attr['label'] = '%.2f' % (adjSpecMF.loc[sn, tn])
             else:
-                ed.attr['label'] = '-%.2f' % (adjSpecMF.ix[sn, tn])
+                ed.attr['label'] = '-%.2f' % (adjSpecMF.loc[sn, tn])
         else:
-            if adjSpecMF.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjSpecMF.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjSpecMF.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjSpecMF.loc[sn, tn]*edgeWidth/maxVal)
             
     # set node color
     nxgSF.node_attr['style']='filled,setlinewidth(0)'
@@ -627,12 +627,12 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
     
     for idx in adjSpecMD.index:
         for col in adjSpecMD.columns:
-            if adjSpecMD.ix[idx, col] > 0:
-                if adjSpecM2.ix[idx, col] == 0:
-                    adjSpecMF.ix[idx, col] = adjSpecM1.ix[idx, col] / adjSpecM2.ix[idx, col]
+            if adjSpecMD.loc[idx, col] > 0:
+                if adjSpecM2.loc[idx, col] == 0:
+                    adjSpecMF.loc[idx, col] = adjSpecM1.loc[idx, col] / adjSpecM2.loc[idx, col]
             else:
-                if adjSpecM1.ix[idx, col] == 0:
-                    adjSpecMF.ix[idx, col] = adjSpecM2.ix[idx, col] / adjSpecM1.ix[idx, col]
+                if adjSpecM1.loc[idx, col] == 0:
+                    adjSpecMF.loc[idx, col] = adjSpecM2.loc[idx, col] / adjSpecM1.loc[idx, col]
     return readmeStr, adjSpecMF
 
 def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, layout, plotFormat):
@@ -659,14 +659,14 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
             if numStr == 'float':
-                ed.attr['label'] = '%.3f' % (adjSpecM.ix[sn, tn])
+                ed.attr['label'] = '%.3f' % (adjSpecM.loc[sn, tn])
             elif numStr == 'int':
-                ed.attr['label'] = '%d' % (adjSpecM.ix[sn, tn])
+                ed.attr['label'] = '%d' % (adjSpecM.loc[sn, tn])
         else:
-            if adjSpecM.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjSpecM.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjSpecM.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjSpecM.loc[sn, tn]*edgeWidth/maxVal)
     
     # set node color
     nxgS.node_attr['style']='filled,setlinewidth(0)'
@@ -885,12 +885,12 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
         edgeDict = {'sending cluster name':[], 'target cluster name':[], 'weight':[], 'count':[], 'specificity':[]}
         for send in adjM.index:
             for target in adjM.columns:
-                if adjM.ix[send, target] > 0:
+                if adjM.loc[send, target] > 0:
                     edgeDict['sending cluster name'].append(send.replace('\n',' '))
                     edgeDict['target cluster name'].append(target.replace('\n',' '))
-                    edgeDict['weight'].append(adjM.ix[send, target])
-                    edgeDict['count'].append(adjCountM.ix[send, target])
-                    edgeDict['specificity'].append(adjSpecM.ix[send, target])
+                    edgeDict['weight'].append(adjM.loc[send, target])
+                    edgeDict['count'].append(adjCountM.loc[send, target])
+                    edgeDict['specificity'].append(adjSpecM.loc[send, target])
         if dataType == '':
             edgeFileName = os.path.join(resultDir, 'network_edges.csv')
             readmeStr += 'network_edges.csv: five weights of each cluster-to-cluster edge in the network.\n'
@@ -901,7 +901,7 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
         edgeDF = pd.DataFrame(edgeDict)
         edgeDF['weight per pair'] = edgeDF['weight']/edgeDF['count']
         edgeDF['specificity per pair'] = edgeDF['specificity']/edgeDF['count']
-        edgeDF = edgeDF.ix[:,['sending cluster name', 'target cluster name', 'weight', 'specificity', 'count', 'weight per pair', 'specificity per pair']]
+        edgeDF = edgeDF.loc[:,['sending cluster name', 'target cluster name', 'weight', 'specificity', 'count', 'weight per pair', 'specificity per pair']]
         newCol = ['Sending cluster name', 'Target cluster name', 'Total expression', 'Total specificity', 'Edge count', 'Average expression', 'Average specificity']
         edgeDF.columns = newCol
         edgeDF.sort_values(by="Total expression", ascending=False).to_csv(edgeFileName,columns=newCol,index=False)
@@ -927,55 +927,55 @@ def FilterDeltaEdges(sourceFolder, interDB, weightType, frequencyThreshold):
     refinedOldcols = ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']
     
     uredgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'UP-regulated_%s.csv' % (weightType)), index_col=None, header=0)
-    realuredgeDF = uredgeDF.ix[(uredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
+    realuredgeDF = uredgeDF.loc[(uredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
     realuredgeDF['Delta ligand detection rate'] = realuredgeDF['Ligand detection rate in condition 2'] - realuredgeDF['Ligand detection rate in condition 1']
     realuredgeDF['Delta receptor detection rate'] = realuredgeDF['Receptor detection rate in condition 2'] - realuredgeDF['Receptor detection rate in condition 1']
-    realuredgeDF = realuredgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster',  'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']]
+    realuredgeDF = realuredgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster',  'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']]
     realuredgeDF.columns = olddapcols
     realuredgeDF = realuredgeDF.reset_index()
-    realuredgeDF = realuredgeDF.ix[:,realuredgeDF.columns[1:]]
-    urapedgeDF = uredgeDF.ix[((uredgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(uredgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(uredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
-    urapedgeDF = urapedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
+    realuredgeDF = realuredgeDF.loc[:,realuredgeDF.columns[1:]]
+    urapedgeDF = uredgeDF.loc[((uredgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(uredgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(uredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
+    urapedgeDF = urapedgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
     urapedgeDF.columns = olddapcols
-    urdpedgeDF = uredgeDF.ix[(uredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&((uredgeDF['Ligand detection rate in condition 2']<=frequencyThreshold)|(uredgeDF['Receptor detection rate in condition 2']<=frequencyThreshold)),]
-    urdpedgeDF = urdpedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
+    urdpedgeDF = uredgeDF.loc[(uredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(uredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&((uredgeDF['Ligand detection rate in condition 2']<=frequencyThreshold)|(uredgeDF['Receptor detection rate in condition 2']<=frequencyThreshold)),]
+    urdpedgeDF = urdpedgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
     urdpedgeDF.columns = olddapcols
     
     dredgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'DOWN-regulated_%s.csv' % (weightType)), index_col=None, header=0)
-    realdredgeDF = dredgeDF.ix[(dredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
+    realdredgeDF = dredgeDF.loc[(dredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
     realdredgeDF['Delta ligand detection rate'] = realdredgeDF['Ligand detection rate in condition 1'] - realdredgeDF['Ligand detection rate in condition 2']
     realdredgeDF['Delta receptor detection rate'] = realdredgeDF['Receptor detection rate in condition 1'] - realdredgeDF['Receptor detection rate in condition 2']
-    realdredgeDF = realdredgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster',  'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']]
+    realdredgeDF = realdredgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster',  'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']]
     realdredgeDF.columns = olddapcols
     realdredgeDF = realdredgeDF.reset_index()
-    realdredgeDF = realdredgeDF.ix[:,realdredgeDF.columns[1:]]
-    drapedgeDF = dredgeDF.ix[((dredgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(dredgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(dredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
-    drapedgeDF = drapedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
+    realdredgeDF = realdredgeDF.loc[:,realdredgeDF.columns[1:]]
+    drapedgeDF = dredgeDF.loc[((dredgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(dredgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(dredgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
+    drapedgeDF = drapedgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
     drapedgeDF.columns = olddapcols
-    drdpedgeDF = dredgeDF.ix[(dredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&((dredgeDF['Ligand detection rate in condition 2']<=frequencyThreshold)|(dredgeDF['Receptor detection rate in condition 2']<=frequencyThreshold)),]
-    drdpedgeDF = drdpedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
+    drdpedgeDF = dredgeDF.loc[(dredgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(dredgeDF['Receptor detection rate in condition 1']>frequencyThreshold)&((dredgeDF['Ligand detection rate in condition 2']<=frequencyThreshold)|(dredgeDF['Receptor detection rate in condition 2']<=frequencyThreshold)),]
+    drdpedgeDF = drdpedgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
     drdpedgeDF.columns = olddapcols
     
     apedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'Appeared_%s.csv' % (weightType)), index_col=None, header=0)
-    realapedgeDF = apedgeDF.ix[(apedgeDF['Delta ligand detection rate']>frequencyThreshold)&(apedgeDF['Delta receptor detection rate']>frequencyThreshold),refinedOldcols]
+    realapedgeDF = apedgeDF.loc[(apedgeDF['Delta ligand detection rate']>frequencyThreshold)&(apedgeDF['Delta receptor detection rate']>frequencyThreshold),refinedOldcols]
     realapedgeDF.columns = olddapcols
     
     dpedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'Disappeared_%s.csv' % (weightType)), index_col=None, header=0)
-    realdpedgeDF = dpedgeDF.ix[(dpedgeDF['Delta ligand detection rate']>frequencyThreshold)&(dpedgeDF['Delta receptor detection rate']>frequencyThreshold),refinedOldcols]
+    realdpedgeDF = dpedgeDF.loc[(dpedgeDF['Delta ligand detection rate']>frequencyThreshold)&(dpedgeDF['Delta receptor detection rate']>frequencyThreshold),refinedOldcols]
     realdpedgeDF.columns = olddapcols
     
     stedgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'Stable_%s.csv' % (weightType)), index_col=None, header=0)
-    stapedgeDF = stedgeDF.ix[((stedgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(stedgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(stedgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(stedgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
-    stapedgeDF = stapedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
+    stapedgeDF = stedgeDF.loc[((stedgeDF['Ligand detection rate in condition 1']<=frequencyThreshold)|(stedgeDF['Receptor detection rate in condition 1']<=frequencyThreshold))&(stedgeDF['Ligand detection rate in condition 2']>frequencyThreshold)&(stedgeDF['Receptor detection rate in condition 2']>frequencyThreshold),]
+    stapedgeDF = stapedgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 2', 'Ligand expression in condition 2', 'Ligand specificity in condition 2', 'Receptor detection rate in condition 2', 'Receptor expression in condition 2', 'Receptor specificity in condition 2', 'Edge expression weight in condition 2', 'Edge specificity weight in condition 2']]
     stapedgeDF.columns = olddapcols
-    stdpedgeDF = stedgeDF.ix[((stedgeDF['Ligand detection rate in condition 2']<=frequencyThreshold)|(stedgeDF['Receptor detection rate in condition 2']<=frequencyThreshold))&(stedgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(stedgeDF['Receptor detection rate in condition 1']>frequencyThreshold),]
-    stdpedgeDF = stdpedgeDF.ix[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
+    stdpedgeDF = stedgeDF.loc[((stedgeDF['Ligand detection rate in condition 2']<=frequencyThreshold)|(stedgeDF['Receptor detection rate in condition 2']<=frequencyThreshold))&(stedgeDF['Ligand detection rate in condition 1']>frequencyThreshold)&(stedgeDF['Receptor detection rate in condition 1']>frequencyThreshold),]
+    stdpedgeDF = stdpedgeDF.loc[:,['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate in condition 1', 'Ligand expression in condition 1', 'Ligand specificity in condition 1', 'Receptor detection rate in condition 1', 'Receptor expression in condition 1', 'Receptor specificity in condition 1', 'Edge expression weight in condition 1', 'Edge specificity weight in condition 1']]
     stdpedgeDF.columns = olddapcols
     
     realapedgeDF = pd.concat([realapedgeDF, urapedgeDF, drapedgeDF, stapedgeDF]).reset_index()
-    realapedgeDF = realapedgeDF.ix[:,realapedgeDF.columns[1:]]
+    realapedgeDF = realapedgeDF.loc[:,realapedgeDF.columns[1:]]
     realdpedgeDF = pd.concat([realdpedgeDF, urdpedgeDF, drdpedgeDF, stdpedgeDF]).reset_index()
-    realdpedgeDF = realdpedgeDF.ix[:,realdpedgeDF.columns[1:]]
+    realdpedgeDF = realdpedgeDF.loc[:,realdpedgeDF.columns[1:]]
     
     alledgeDF = pd.read_csv(os.path.join(sourceFolder, 'Delta_edges_'+interDB, 'All_edges_%s.csv' % (weightType)), index_col=None, header=0)
     
@@ -990,8 +990,8 @@ def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightT
         clusterMapDF = pd.read_csv(clusterMapFilename, index_col=None, header=0)
         clusterSizeDF = clusterMapDF.groupby('cluster').count()
         origlabels = [str(i) for i in clusterSizeDF.index]
-        labels = [str(i)+'\n(%s cells)' % clusterSizeDF.ix[i,'cell'] for i in clusterSizeDF.index]
-        cltSizes = [float(clusterSizeDF.ix[i,'cell']) for i in clusterSizeDF.index]
+        labels = [str(i)+'\n(%s cells)' % clusterSizeDF.loc[i,'cell'] for i in clusterSizeDF.index]
+        cltSizes = [float(clusterSizeDF.loc[i,'cell']) for i in clusterSizeDF.index]
         
         # load edge properties
         edgeDF = pd.read_csv(os.path.join(opt.sourceFolder,'Edges_%s.csv' % interDB), index_col=None, header=0)
@@ -1005,9 +1005,9 @@ def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightT
             selectCols= ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate', 'Ligand total expression value', 
             'Ligand derived specificity of total expression value', 'Receptor detection rate', 'Receptor total expression value', 
             'Receptor derived specificity of total expression value', 'Edge total expression weight', 'Edge total expression derived specificity']
-        edgeDF = edgeDF.ix[:,selectCols]
+        edgeDF = edgeDF.loc[:,selectCols]
         edgeDF.columns = ["sending cluster name", "ligand", "receptor", "target cluster name", "frequency ligand", "original ligand", "specified ligand", "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
-        edgeDF = edgeDF.ix[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
+        edgeDF = edgeDF.loc[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
         print('#### %s edges are loaded' % len(edgeDF))
         if len(edgeDF) == 0:
             print('#### DONE')
@@ -1029,10 +1029,10 @@ def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightT
         cltSizes = []
         
         for clt in origlabels:
-            cltDF = sumClusterDF.ix[sumClusterDF['Cluster'] == clt,].sort_values(by=['Population (cells)'])
+            cltDF = sumClusterDF.loc[sumClusterDF['Cluster'] == clt,].sort_values(by=['Population (cells)'])
             if len(cltDF) == 2:
-                refSize = sumClusterDF.ix[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'reference dataset'),'Population (cells)']
-                tgtSize = sumClusterDF.ix[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'target dataset'),'Population (cells)']
+                refSize = sumClusterDF.loc[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'reference dataset'),'Population (cells)']
+                tgtSize = sumClusterDF.loc[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'target dataset'),'Population (cells)']
                 deltaSize = int(tgtSize) - int(refSize)
             else:
                 deltaSize = int(cltDF.iloc[0,1])
@@ -1086,7 +1086,7 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
     sendMaxWgt = 0
     sendMaxSpc = 0
     for sendClt in sendClts:
-        sendDict[labelDict[sendClt]] = edgeDF.ix[edgeDF['sending cluster name']==sendClt, ['original ligand', 'specified ligand']].values[0]
+        sendDict[labelDict[sendClt]] = edgeDF.loc[edgeDF['sending cluster name']==sendClt, ['original ligand', 'specified ligand']].values[0]
         if sendMaxWgt < sendDict[labelDict[sendClt]][0]:
             sendMaxWgt = sendDict[labelDict[sendClt]][0]
         if sendMaxSpc < sendDict[labelDict[sendClt]][1]:
@@ -1095,7 +1095,7 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
     targetMaxWgt = 0
     targetMaxSpc = 0
     for targetClt in targetClts:
-        targetDict[labelDict[targetClt]] = edgeDF.ix[edgeDF['target cluster name']==targetClt,['original receptor', 'specified receptor']].values[0]
+        targetDict[labelDict[targetClt]] = edgeDF.loc[edgeDF['target cluster name']==targetClt,['original receptor', 'specified receptor']].values[0]
         if targetMaxWgt < targetDict[labelDict[targetClt]][0]:
             targetMaxWgt = targetDict[labelDict[targetClt]][0]
         if targetMaxSpc < targetDict[labelDict[targetClt]][1]:
@@ -1117,6 +1117,9 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
     
     # set edge properties
     maxVal = adjM.max().max()
+    print("BuildSingleLRInterClusterNetwork")
+    print(nxgW)
+    print(nxgW.edges())
     for ed in nxgW.edges():
         sn = ed[0]
         tn = ed[1]
@@ -1125,12 +1128,12 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
-            ed.attr['label'] = '%.3f' % (adjM.ix[sn, tn])
+            ed.attr['label'] = '%.3f' % (adjM.loc[sn, tn])
         else:
-            if adjM.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjM.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjM.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjM.loc[sn, tn]*edgeWidth/maxVal)
     
     # set node color
     nxgW.node_attr['style']='filled,setlinewidth(0)'
@@ -1231,7 +1234,7 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
         tn = ed[1]
         if tn not in oldtns:
             if edgeWidth == 0:
-                nxgW.add_edge(rs,tn,color=matplotlib.colors.to_hex([i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[tn])]),fontsize=fontSize, fontname="Arial",label = '%.3f' % (adjM.ix[sn, tn]))
+                nxgW.add_edge(rs,tn,color=matplotlib.colors.to_hex([i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[tn])]),fontsize=fontSize, fontname="Arial",label = '%.3f' % (adjM.loc[sn, tn]))
             else:
                 if targetDict[tn][0]*edgeWidth/targetMaxWgt < 1:
                     nxgW.add_edge(rs,tn,color=matplotlib.colors.to_hex([i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[tn])]),penwidth=1)
@@ -1240,7 +1243,7 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
             oldtns.append(tn)
         if sn not in oldsns:
             if edgeWidth == 0:
-                nxgW.add_edge(sn,ls,color=matplotlib.colors.to_hex([i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]),fontsize=fontSize, fontname="Arial",label = '%.3f' % (adjM.ix[sn, tn]))
+                nxgW.add_edge(sn,ls,color=matplotlib.colors.to_hex([i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]),fontsize=fontSize, fontname="Arial",label = '%.3f' % (adjM.loc[sn, tn]))
             else:
                 if sendDict[sn][0]*edgeWidth/sendMaxWgt < 1:
                     nxgW.add_edge(sn,ls,color=matplotlib.colors.to_hex([i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]),penwidth=1)
@@ -1336,19 +1339,19 @@ def MainLRNetwork(sourceFolder, interDB, weightType, specificityThreshold, weigh
             selectCols= ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate', 'Ligand total expression value', 
             'Ligand derived specificity of total expression value', 'Receptor detection rate', 'Receptor total expression value', 
             'Receptor derived specificity of total expression value', 'Edge total expression weight', 'Edge total expression derived specificity']
-        edgeDF = edgeDF.ix[:,selectCols]
+        edgeDF = edgeDF.loc[:,selectCols]
         edgeDF.columns = ["sending cluster name", "ligand", "receptor", "target cluster name", "frequency ligand", "original ligand", "specified ligand", "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
-        edgeDF = edgeDF.ix[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
+        edgeDF = edgeDF.loc[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
         edgeDF['ligand'] = edgeDF['ligand'].astype(str)
         edgeDF['receptor'] = edgeDF['receptor'].astype(str)
-        edgeDF = edgeDF.ix[(edgeDF['ligand']==ls) & (edgeDF['receptor']==rs),]
+        edgeDF = edgeDF.loc[(edgeDF['ligand']==ls) & (edgeDF['receptor']==rs),]
         # process node properties for single dataset
         clusterMapFilename = os.path.join(sourceFolder, 'ClusterMapping.csv')
         clusterMapDF = pd.read_csv(clusterMapFilename, index_col=None, header=0)
         clusterSizeDF = clusterMapDF.groupby('cluster').count()
         origlabels = [str(i) for i in clusterSizeDF.index]
-        labels = [str(i)+'\n(%s cells)' % clusterSizeDF.ix[i,'cell'] for i in clusterSizeDF.index]
-        cltSizes = [float(clusterSizeDF.ix[i,'cell']) for i in clusterSizeDF.index]
+        labels = [str(i)+'\n(%s cells)' % clusterSizeDF.loc[i,'cell'] for i in clusterSizeDF.index]
+        cltSizes = [float(clusterSizeDF.loc[i,'cell']) for i in clusterSizeDF.index]
         print('#### %s edges are loaded' % len(edgeDF))
         if len(edgeDF) == 0:
             print('#### DONE')
@@ -1389,7 +1392,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
     vtlE = [False]*len(ligandSetE) + [True]*len(receptorSetE)
     elE = []
     for idx in curDFE.index:
-        elE.append((vlE.index('send:'+curDFE.ix[idx, 'sending cluster name'] + curDFE.ix[idx, 'target cluster name'] + "->" + curDFE.ix[idx, 'ligand']),vlE.index('target:'+curDFE.ix[idx, 'sending cluster name'] + curDFE.ix[idx, 'target cluster name'] + "->" +curDFE.ix[idx, 'receptor'])))
+        elE.append((vlE.index('send:'+curDFE.loc[idx, 'sending cluster name'] + curDFE.loc[idx, 'target cluster name'] + "->" + curDFE.loc[idx, 'ligand']),vlE.index('target:'+curDFE.loc[idx, 'sending cluster name'] + curDFE.loc[idx, 'target cluster name'] + "->" +curDFE.loc[idx, 'receptor'])))
     gE = ig.Graph.Bipartite(vtlE, elE, directed = True)
     gE.vs["name"] = vlE
     pos_listE = gE.layout('bipartite').coords
@@ -1421,7 +1424,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
     vtlS = [False]*len(ligandSetS) + [True]*len(receptorSetS)
     elS = []
     for idx in curDFS.index:
-        elS.append((vlS.index('send:'+curDFS.ix[idx, 'sending cluster name'] + curDFS.ix[idx, 'target cluster name'] + "->" + curDFS.ix[idx, 'ligand']),vlS.index('target:'+curDFS.ix[idx, 'sending cluster name'] + curDFS.ix[idx, 'target cluster name'] + "->" +curDFS.ix[idx, 'receptor'])))
+        elS.append((vlS.index('send:'+curDFS.loc[idx, 'sending cluster name'] + curDFS.loc[idx, 'target cluster name'] + "->" + curDFS.loc[idx, 'ligand']),vlS.index('target:'+curDFS.loc[idx, 'sending cluster name'] + curDFS.loc[idx, 'target cluster name'] + "->" +curDFS.loc[idx, 'receptor'])))
     gS = ig.Graph.Bipartite(vtlS, elS, directed = True)
     gS.vs["name"] = vlS
     pos_listS = gS.layout('bipartite').coords
@@ -1440,14 +1443,14 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
     adjSpecM = pd.DataFrame(0.0, index=ligandSetS+receptorSetS, columns=ligandSetS+receptorSetS)
     if dataType == '':
         for idx in curDFE.index:
-            adjM.ix['send:'+curDFE.ix[idx, 'cellligand'], 'target:'+curDFE.ix[idx, 'cellreceptor']] += curDFE.ix[idx, 'product of original']
+            adjM.loc['send:'+curDFE.loc[idx, 'cellligand'], 'target:'+curDFE.loc[idx, 'cellreceptor']] += curDFE.loc[idx, 'product of original']
         for idx in curDFS.index:
-            adjSpecM.ix['send:'+curDFS.ix[idx, 'cellligand'], 'target:'+curDFS.ix[idx, 'cellreceptor']] += curDFS.ix[idx, 'product of specified']
+            adjSpecM.loc['send:'+curDFS.loc[idx, 'cellligand'], 'target:'+curDFS.loc[idx, 'cellreceptor']] += curDFS.loc[idx, 'product of specified']
     else:
         for idx in curDFE.index:
-            adjM.ix['send:'+curDFE.ix[idx, 'cellligand'], 'target:'+curDFE.ix[idx, 'cellreceptor']] += curDFE.ix[idx, 'delta weight']
+            adjM.loc['send:'+curDFE.loc[idx, 'cellligand'], 'target:'+curDFE.loc[idx, 'cellreceptor']] += curDFE.loc[idx, 'delta weight']
         for idx in curDFS.index:
-            adjSpecM.ix['send:'+curDFS.ix[idx, 'cellligand'], 'target:'+curDFS.ix[idx, 'cellreceptor']] += curDFS.ix[idx, 'delta specificity']
+            adjSpecM.loc['send:'+curDFS.loc[idx, 'cellligand'], 'target:'+curDFS.loc[idx, 'cellreceptor']] += curDFS.loc[idx, 'delta specificity']
     
     #to graphviz format
     nxgW = nx.MultiDiGraph(adjM)
@@ -1490,7 +1493,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
             nd.attr['label'] = str(nd).split("->")[1]
     #set node cluster:
     for cps in sorted(cellpairSetE):
-        tcDF = curDF.ix[curDF['cellpair']==cps]
+        tcDF = curDF.loc[curDF['cellpair']==cps]
         lligandSet = sorted(list(set(tcDF['cellligand'])))
         rreceptorSet = sorted(list(set(tcDF['cellreceptor'])))
     
@@ -1510,12 +1513,12 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
-            ed.attr['label'] = '%.3f' % (adjM.ix[sn, tn])
+            ed.attr['label'] = '%.3f' % (adjM.loc[sn, tn])
         else:
-            if adjM.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjM.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjM.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjM.loc[sn, tn]*edgeWidth/maxVal)
         idx += 1
         
     if dataType == '':
@@ -1556,7 +1559,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
             nd.attr['label'] = str(nd).split("->")[1]
     #set node cluster:
     for cps in sorted(cellpairSetS):
-        tcDF = curDF.ix[curDF['cellpair']==cps]
+        tcDF = curDF.loc[curDF['cellpair']==cps]
         lligandSet = sorted(list(set(tcDF['cellligand'])))
         rreceptorSet = sorted(list(set(tcDF['cellreceptor'])))
     
@@ -1576,12 +1579,12 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
-            ed.attr['label'] = '%.3f' % (adjSpecM.ix[sn, tn])
+            ed.attr['label'] = '%.3f' % (adjSpecM.loc[sn, tn])
         else:
-            if adjSpecM.ix[sn, tn]*edgeWidth/maxVal < 1:
+            if adjSpecM.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
             else:
-                ed.attr['penwidth'] = int(adjSpecM.ix[sn, tn]*edgeWidth/maxVal)
+                ed.attr['penwidth'] = int(adjSpecM.loc[sn, tn]*edgeWidth/maxVal)
         idx += 1
         
     if dataType == '':
@@ -1624,7 +1627,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
         oldcols = ['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'delta ligand frequency', 'delta ligand expression', 'delta ligand specificity', 
                    'delta receptor frequency', 'delta receptor expression', 'delta receptor specificity', 'delta weight', 'delta specificity']
     dataFileName = os.path.join(resultDir, dataFileName)
-    curDF = curDF.ix[:,oldcols]
+    curDF = curDF.loc[:,oldcols]
     curDF.columns = columns
     curDF.to_csv(dataFileName, index=False, header=True, columns= columns)
     
@@ -1636,7 +1639,7 @@ def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificity
     for sendClt in origlabels:
         for targetClt in origlabels:
             flag = '%s -> %s' % (sendClt, targetClt)
-            curDF = edgeDF.ix[(edgeDF['sending cluster name']==sendClt)&(edgeDF['target cluster name']==targetClt),]
+            curDF = edgeDF.loc[(edgeDF['sending cluster name']==sendClt)&(edgeDF['target cluster name']==targetClt),]
             if dataType == '':
                 curDF = curDF.sort_values(by=['product of specified'], ascending=False)
             else:
@@ -1673,7 +1676,7 @@ def MainCltPair(sourceFolder, interDB, weightType, specificityThreshold, weightT
         origlabels = [str(i) for i in clusterSizeDF.index]
         labelDict = {}
         for i in clusterSizeDF.index:
-            labelDict[str(i)] = str(i)+' (%s cells)' % clusterSizeDF.ix[i,'cell']
+            labelDict[str(i)] = str(i)+' (%s cells)' % clusterSizeDF.loc[i,'cell']
     
         # only keep edges of interest
         if weightType == 'mean':
@@ -1684,9 +1687,9 @@ def MainCltPair(sourceFolder, interDB, weightType, specificityThreshold, weightT
             selectCols= ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate', 'Ligand total expression value', 
             'Ligand derived specificity of total expression value', 'Receptor detection rate', 'Receptor total expression value', 
             'Receptor derived specificity of total expression value', 'Edge total expression weight', 'Edge total expression derived specificity']
-        edgeDF = edgeDF.ix[:,selectCols]
+        edgeDF = edgeDF.loc[:,selectCols]
         edgeDF.columns = ["sending cluster name", "ligand", "receptor", "target cluster name", "frequency ligand", "original ligand", "specified ligand", "frequency receptor", "original receptor", "specified receptor", "product of original", "product of specified"]
-        edgeDF = edgeDF.ix[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
+        edgeDF = edgeDF.loc[(edgeDF['product of specified']>specificityThreshold)&(edgeDF['original ligand']>weightThreshold)&(edgeDF['original receptor']>weightThreshold)&(edgeDF['frequency ligand']>frequencyThreshold)&(edgeDF['frequency receptor']>frequencyThreshold),]
         print('#### %s edges are loaded' % len(edgeDF))
         if len(edgeDF) == 0:
             print('#### DONE')
@@ -1706,7 +1709,7 @@ def MainCltPair(sourceFolder, interDB, weightType, specificityThreshold, weightT
         origlabels = sorted([str(i) for i in set(sumClusterDF['Cluster'])])
         labelDict = {}
         for clt in origlabels:
-            cltDF = sumClusterDF.ix[sumClusterDF['Cluster'] == clt,].sort_values(by=['Population (cells)'])
+            cltDF = sumClusterDF.loc[sumClusterDF['Cluster'] == clt,].sort_values(by=['Population (cells)'])
             if len(cltDF) == 2:
                 deltaSize = int(cltDF.iloc[1,1]) - int(cltDF.iloc[0,1])
             else:
@@ -1714,8 +1717,8 @@ def MainCltPair(sourceFolder, interDB, weightType, specificityThreshold, weightT
             labelDict[clt] = clt+' (%s cells)' % deltaSize
         
             if len(cltDF) == 2:
-                refSize = sumClusterDF.ix[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'reference dataset'),'Population (cells)']
-                tgtSize = sumClusterDF.ix[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'target dataset'),'Population (cells)']
+                refSize = sumClusterDF.loc[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'reference dataset'),'Population (cells)']
+                tgtSize = sumClusterDF.loc[(sumClusterDF['Cluster'] == clt)&(sumClusterDF['Source'] == 'target dataset'),'Population (cells)']
                 deltaSize = int(tgtSize) - int(refSize)
             else:
                 deltaSize = int(cltDF.iloc[0,1])
@@ -1917,10 +1920,10 @@ if __name__ == '__main__':
                 edgeDF = pd.read_csv(os.path.join(opt.sourceFolder, 'Edges_%s.csv' % (interDB)), index_col=None, header=0)
                 edgeDF['Ligand symbol'] = edgeDF['Ligand symbol'].astype(str)
                 edgeDF['Receptor symbol'] = edgeDF['Receptor symbol'].astype(str)
-                if len(edgeDF.ix[(edgeDF['Ligand symbol'] == opt.drawLRNetwork[0])&(edgeDF['Receptor symbol'] == opt.drawLRNetwork[1]),])>0:
+                if len(edgeDF.loc[(edgeDF['Ligand symbol'] == opt.drawLRNetwork[0])&(edgeDF['Receptor symbol'] == opt.drawLRNetwork[1]),])>0:
                     ls = opt.drawLRNetwork[0]
                     rs = opt.drawLRNetwork[1]
-                elif len(edgeDF.ix[(edgeDF['Ligand symbol'] == opt.drawLRNetwork[1])&(edgeDF['Receptor symbol'] == opt.drawLRNetwork[0]),])>0:
+                elif len(edgeDF.loc[(edgeDF['Ligand symbol'] == opt.drawLRNetwork[1])&(edgeDF['Receptor symbol'] == opt.drawLRNetwork[0]),])>0:
                     ls = opt.drawLRNetwork[1]
                     rs = opt.drawLRNetwork[0]
                 else:

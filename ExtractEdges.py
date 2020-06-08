@@ -18,38 +18,38 @@ def TransferToGeneSymbol(homoMapDir, speciestype, interSpeciestype, taxidCol, ge
     # load data
     homoDF = pd.read_csv(homoMapDir, sep='\t', index_col=None, header=None)
     # reduce the list to genes of the given species
-    humanDF = homoDF.ix[homoDF[taxidCol] == int(interSpeciestype),]
-    homoDF = homoDF.ix[homoDF[taxidCol] == int(speciestype),]
+    humanDF = homoDF.loc[homoDF[taxidCol] == int(interSpeciestype),]
+    homoDF = homoDF.loc[homoDF[taxidCol] == int(speciestype),]
 
     ligandGIDList = list(lrM.index.values)
     receptorGIDList = list(lrM.columns.values)
     
-    lhumanDF = humanDF.ix[humanDF[geneSymbolCol].isin(ligandGIDList), [hidCol, geneSymbolCol]]
+    lhumanDF = humanDF.loc[humanDF[geneSymbolCol].isin(ligandGIDList), [hidCol, geneSymbolCol]]
     lhumanDF.columns = ['hid', 'gene']
     lhumanDF = lhumanDF.drop_duplicates(subset=['hid']).drop_duplicates(subset=['gene'])
-    rhumanDF = humanDF.ix[humanDF[geneSymbolCol].isin(receptorGIDList), [hidCol, geneSymbolCol]]
+    rhumanDF = humanDF.loc[humanDF[geneSymbolCol].isin(receptorGIDList), [hidCol, geneSymbolCol]]
     rhumanDF.columns = ['hid', 'gene']
     rhumanDF = rhumanDF.drop_duplicates(subset=['hid']).drop_duplicates(subset=['gene'])
-    lrM = lrM.ix[lhumanDF.ix[:, 'gene'], rhumanDF.ix[:, 'gene']]
-    lrM.index = lhumanDF.ix[:, 'hid']
-    lrM.columns = rhumanDF.ix[:, 'hid']
+    lrM = lrM.loc[lhumanDF.loc[:, 'gene'], rhumanDF.loc[:, 'gene']]
+    lrM.index = lhumanDF.loc[:, 'hid']
+    lrM.columns = rhumanDF.loc[:, 'hid']
     
-    lhomoDF = homoDF.ix[homoDF[hidCol].isin(lhumanDF.ix[:, 'hid']), [hidCol, geneSymbolCol]]
+    lhomoDF = homoDF.loc[homoDF[hidCol].isin(lhumanDF.loc[:, 'hid']), [hidCol, geneSymbolCol]]
     lhomoDF.columns = ['hid', 'gene']
     lhomoDF = lhomoDF.drop_duplicates(subset=['hid']).drop_duplicates(subset=['gene'])
-    rhomoDF = homoDF.ix[homoDF[hidCol].isin(rhumanDF.ix[:, 'hid']), [hidCol, geneSymbolCol]]
+    rhomoDF = homoDF.loc[homoDF[hidCol].isin(rhumanDF.loc[:, 'hid']), [hidCol, geneSymbolCol]]
     rhomoDF.columns = ['hid', 'gene']
     rhomoDF = rhomoDF.drop_duplicates(subset=['hid']).drop_duplicates(subset=['gene'])
     
-    lrM = lrM.ix[lhomoDF.ix[:, 'hid'], rhomoDF.ix[:, 'hid']]
-    lrM.index = lhomoDF.ix[:, 'gene']
-    lrM.columns = rhomoDF.ix[:, 'gene']
+    lrM = lrM.loc[lhomoDF.loc[:, 'hid'], rhomoDF.loc[:, 'hid']]
+    lrM.index = lhomoDF.loc[:, 'gene']
+    lrM.columns = rhomoDF.loc[:, 'gene']
 
     return lrM
 
 def ClusterAnnotateEM(resultDir, emDF, ann):
     # get cluster list
-    clusterIdList = sorted(list(set(ann.ix[:, 'cluster'].tolist())))
+    clusterIdList = sorted(list(set(ann.loc[:, 'cluster'].tolist())))
     
     # calculate the expressions for each cluster
     sumCounttableDFList = []
@@ -59,7 +59,7 @@ def ClusterAnnotateEM(resultDir, emDF, ann):
     for clusterId in clusterIdList:
         # get the sub dataframe of the cluster
         cellsInClusterList = list(ann.index[ann['cluster'] == clusterId])
-        clusterDF = emDF.ix[:, cellsInClusterList]
+        clusterDF = emDF.loc[:, cellsInClusterList]
         
         # replace headers for the cluster
         sumDF = clusterDF.sum(axis=1).to_frame(name=clusterId)
@@ -87,7 +87,7 @@ def GenLigandReceptorList(pairsDF):
     receptorList = []
     ligandNameList = pairsDF.index.values
     for ligandName in ligandNameList:
-        pairedRecptors = list(pairsDF.ix[ligandName, pairsDF.ix[ligandName,] > 0].index.values)
+        pairedRecptors = list(pairsDF.loc[ligandName, pairsDF.loc[ligandName,] > 0].index.values)
         subLigand = [ligandName] * len(pairedRecptors)
         ligandList = ligandList +subLigand
         receptorList = receptorList + pairedRecptors
@@ -98,14 +98,14 @@ def SplitIntoSinalProteins(sumEMDF, meanEMDF, countEMDF, cellEMDF, ligandApprove
     #split ligand and receptor
     ligandApprovedSymbolList = list(set(ligandApprovedSymbolList).intersection(set(sumEMDF.index)))
     receptorApprovedSymbolList = list(set(receptorApprovedSymbolList).intersection(set(sumEMDF.index)))
-    sumligandDF = sumEMDF.ix[ligandApprovedSymbolList,:].fillna(0.0)
-    sumreceptorDF = sumEMDF.ix[receptorApprovedSymbolList,:].fillna(0.0)
-    meanligandDF = meanEMDF.ix[ligandApprovedSymbolList,:].fillna(0.0)
-    meanreceptorDF = meanEMDF.ix[receptorApprovedSymbolList,:].fillna(0.0)
-    countligandDF = countEMDF.ix[ligandApprovedSymbolList,:].fillna(0.0)
-    countreceptorDF = countEMDF.ix[receptorApprovedSymbolList,:].fillna(0.0)
-    cellligandDF = cellEMDF.ix[ligandApprovedSymbolList,:].fillna(0.0)
-    cellreceptorDF = cellEMDF.ix[receptorApprovedSymbolList,:].fillna(0.0)
+    sumligandDF = sumEMDF.loc[ligandApprovedSymbolList,:].fillna(0.0)
+    sumreceptorDF = sumEMDF.loc[receptorApprovedSymbolList,:].fillna(0.0)
+    meanligandDF = meanEMDF.loc[ligandApprovedSymbolList,:].fillna(0.0)
+    meanreceptorDF = meanEMDF.loc[receptorApprovedSymbolList,:].fillna(0.0)
+    countligandDF = countEMDF.loc[ligandApprovedSymbolList,:].fillna(0.0)
+    countreceptorDF = countEMDF.loc[receptorApprovedSymbolList,:].fillna(0.0)
+    cellligandDF = cellEMDF.loc[ligandApprovedSymbolList,:].fillna(0.0)
+    cellreceptorDF = cellEMDF.loc[receptorApprovedSymbolList,:].fillna(0.0)
     
     # calculate specificity
     sumSpecifiedLigandDF = sumligandDF.div(sumligandDF.sum(axis=1), axis=0).fillna(0.0)
@@ -154,31 +154,31 @@ def LRExpressions(typeString, ann, cellligandDF, cellreceptorDF, countligandDF, 
     
     for origlabel in sorted(origlabels):
         LRCountDict['Cluster'].append(origlabel)
-        tempcellligandDF = cellligandDF.ix[:,[origlabel]]
-        tempcountligandDF = countligandDF.ix[:,[origlabel]]
-        tempsumligandDF = sumligandDF.ix[:,[origlabel]]
-        tempmeanligandDF = meanligandDF.ix[:,[origlabel]]
-        tempsumSpecifiedLigandDF = sumSpecifiedLigandDF.ix[:,[origlabel]]
-        tempmeanSpecifiedLigandDF = meanSpecifiedLigandDF.ix[:,[origlabel]]
+        tempcellligandDF = cellligandDF.loc[:,[origlabel]]
+        tempcountligandDF = countligandDF.loc[:,[origlabel]]
+        tempsumligandDF = sumligandDF.loc[:,[origlabel]]
+        tempmeanligandDF = meanligandDF.loc[:,[origlabel]]
+        tempsumSpecifiedLigandDF = sumSpecifiedLigandDF.loc[:,[origlabel]]
+        tempmeanSpecifiedLigandDF = meanSpecifiedLigandDF.loc[:,[origlabel]]
         tempLigandDF = pd.concat([tempcellligandDF, tempcountligandDF, tempmeanligandDF, tempmeanSpecifiedLigandDF, tempsumligandDF, tempsumSpecifiedLigandDF], axis=1)
         tempLigandDF = tempLigandDF.reset_index()
         tempLigandDF.columns = ['Ligand symbol', 'Total number of cells', 'Ligand detection rate', 'Ligand average expression value', 'Ligand derived specificity of average expression value', 'Ligand total expression value', 'Ligand derived specificity of total expression value']
         tempLigandDF['Total number of cells'] = tempLigandDF['Total number of cells'].astype(int)
         tempLigandDF = tempLigandDF.sort_values(by='Ligand detection rate', ascending=False)
-        tempLigandDF = tempLigandDF.ix[tempLigandDF['Ligand total expression value']>0]
+        tempLigandDF = tempLigandDF.loc[tempLigandDF['Ligand total expression value']>0]
         LRCountDict['Ligand count'].append(len(tempLigandDF))
-        tempcellreceptorDF = cellreceptorDF.ix[:,[origlabel]]
-        tempcountreceptorDF = countreceptorDF.ix[:,[origlabel]]
-        tempsumreceptorDF = sumreceptorDF.ix[:,[origlabel]]
-        tempmeanreceptorDF = meanreceptorDF.ix[:,[origlabel]]
-        tempmeanSpecifiedReceptorDF = meanSpecifiedReceptorDF.ix[:,[origlabel]]
-        tempsumSpecifiedReceptorDF = sumSpecifiedReceptorDF.ix[:,[origlabel]]
+        tempcellreceptorDF = cellreceptorDF.loc[:,[origlabel]]
+        tempcountreceptorDF = countreceptorDF.loc[:,[origlabel]]
+        tempsumreceptorDF = sumreceptorDF.loc[:,[origlabel]]
+        tempmeanreceptorDF = meanreceptorDF.loc[:,[origlabel]]
+        tempmeanSpecifiedReceptorDF = meanSpecifiedReceptorDF.loc[:,[origlabel]]
+        tempsumSpecifiedReceptorDF = sumSpecifiedReceptorDF.loc[:,[origlabel]]
         tempReceptorDF = pd.concat([tempcellreceptorDF, tempcountreceptorDF,tempmeanreceptorDF,tempmeanSpecifiedReceptorDF, tempsumreceptorDF,tempsumSpecifiedReceptorDF], axis=1)
         tempReceptorDF = tempReceptorDF.reset_index()
         tempReceptorDF.columns = ['Receptor symbol', 'Total number of cells', 'Receptor detection rate', 'Receptor average expression value', 'Receptor derived specificity of average expression value', 'Receptor total expression value', 'Receptor derived specificity of total expression value']
         tempReceptorDF['Total number of cells'] = tempReceptorDF['Total number of cells'].astype(int)
         tempReceptorDF = tempReceptorDF.sort_values(by='Receptor detection rate', ascending=False)
-        tempReceptorDF = tempReceptorDF.ix[tempReceptorDF['Receptor total expression value']>0]
+        tempReceptorDF = tempReceptorDF.loc[tempReceptorDF['Receptor total expression value']>0]
         LRCountDict['Receptor count'].append(len(tempReceptorDF))
         if len(tempLigandDF) > 0:
             tempLigandDF.to_excel(writer, sheet_name='Ligands in %s' % idmapDict[origlabel], index=False, header=True, columns = ['Ligand symbol', 'Total number of cells', 'Ligand detection rate', 'Ligand average expression value', 'Ligand derived specificity of average expression value', 'Ligand total expression value', 'Ligand derived specificity of total expression value'])
@@ -201,12 +201,12 @@ def LRExpressions(typeString, ann, cellligandDF, cellreceptorDF, countligandDF, 
     
 
 def FindCellsOfProtein(protein, proteinType, cellDF, countDF, sumDF, meanDF, sumSpecifiedDF, meanSpecifiedDF):
-    subCellDF = cellDF.ix[cellDF.index == protein, :].T
-    subCountDF = countDF.ix[countDF.index == protein, :].T
-    subSumDF = sumDF.ix[sumDF.index == protein, :].T
-    subMeanDF = meanDF.ix[meanDF.index == protein, :].T
-    subSumSpecifiedDF = sumSpecifiedDF.ix[sumSpecifiedDF.index == protein, :].T
-    subMeanSpecifiedDF = meanSpecifiedDF.ix[meanSpecifiedDF.index == protein, :].T
+    subCellDF = cellDF.loc[cellDF.index == protein, :].T
+    subCountDF = countDF.loc[countDF.index == protein, :].T
+    subSumDF = sumDF.loc[sumDF.index == protein, :].T
+    subMeanDF = meanDF.loc[meanDF.index == protein, :].T
+    subSumSpecifiedDF = sumSpecifiedDF.loc[sumSpecifiedDF.index == protein, :].T
+    subMeanSpecifiedDF = meanSpecifiedDF.loc[meanSpecifiedDF.index == protein, :].T
     mergedProteinDF = pd.concat([subCellDF, subCountDF, subSumDF, subMeanDF, subSumSpecifiedDF, subMeanSpecifiedDF], axis=1)
     newHeaders = ['cell '+proteinType, 'frequency '+proteinType, 'sum '+proteinType, 'mean '+proteinType, 'specified sum '+proteinType, 'specified mean '+proteinType]
     mergedProteinDF.columns = newHeaders
@@ -236,8 +236,8 @@ def GenSingleCell2CellEdge(ligandApprovedSymbolDict, receptorApprovedSymbolDict,
     receptorCellListDF = receptorApprovedSymbolDict[receptor]
     for ligandCellListIndex in ligandCellListDF.index:
         for receptorCellListIndex in receptorCellListDF.index:
-            ligandCellDF = ligandCellListDF.ix[ligandCellListIndex, :].to_frame().T.reset_index(drop=True)
-            receptorCellDF = receptorCellListDF.ix[receptorCellListIndex, :].to_frame().T.reset_index(drop=True)
+            ligandCellDF = ligandCellListDF.loc[ligandCellListIndex, :].to_frame().T.reset_index(drop=True)
+            receptorCellDF = receptorCellListDF.loc[receptorCellListIndex, :].to_frame().T.reset_index(drop=True)
             mergedPairDF = pd.concat([ligandCellDF, receptorCellDF], axis=1)
             edgeList.append(mergedPairDF)
     
@@ -251,7 +251,7 @@ def GenSingleCell2CellEdge(ligandApprovedSymbolDict, receptorApprovedSymbolDict,
     #remove values equal zero
     edgeListDF = edgeListDF[edgeListDF['product of sum'] > 0]
     if len(edgeListDF) > 0:
-        edgeListDF = edgeListDF.ix[:,['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'cell ligand', 'frequency ligand', 'mean ligand', 'sum ligand', 'specified mean ligand', 'specified sum ligand', 
+        edgeListDF = edgeListDF.loc[:,['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'cell ligand', 'frequency ligand', 'mean ligand', 'sum ligand', 'specified mean ligand', 'specified sum ligand', 
            'cell receptor', 'frequency receptor', 'mean receptor', 'sum receptor', 'specified mean receptor', 'specified sum receptor', 'product of mean', 'product of sum', 'product of specified mean', 'product of specified sum']]
         newCols = ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand-expressing cells', 'Ligand detection rate', 'Ligand average expression value', 'Ligand total expression value', 
             'Ligand derived specificity of average expression value', 'Ligand derived specificity of total expression value',  'Receptor-expressing cells', 'Receptor detection rate', 'Receptor average expression value', 'Receptor total expression value', 
@@ -291,7 +291,7 @@ def GenerateCell2CellTable(interDB, sumEMDF, meanEMDF, countEMDF, cellEMDF, type
     ligandApprovedSymbolList = list(pairsDF.index.values)
     receptorApprovedSymbolList = list(pairsDF.columns.values)
     
-    print('#### extract signaling proteins')
+    print('#### extract signaling factors')
     # split original and speciefied countable to ligand and receptor file
     cellligandDF, cellreceptorDF, countligandDF, countreceptorDF, sumligandDF, sumreceptorDF, meanligandDF, meanreceptorDF, sumSpecifiedLigandDF, sumSpecifiedReceptorDF, meanSpecifiedLigandDF, meanSpecifiedReceptorDF = SplitIntoSinalProteins(sumEMDF, meanEMDF, countEMDF, cellEMDF, ligandApprovedSymbolList, receptorApprovedSymbolList)
     LRExpressions(typeString, ann, cellligandDF, cellreceptorDF, countligandDF, countreceptorDF, sumligandDF, sumreceptorDF, meanligandDF, meanreceptorDF, sumSpecifiedLigandDF, sumSpecifiedReceptorDF, meanSpecifiedLigandDF, meanSpecifiedReceptorDF, resultDir)
@@ -370,7 +370,7 @@ def main(species, emFile, annFile, idType, interDB, interSpecies, coreNum, outFo
     else:
         sys.exit("Cannot process the expression matrix file, please check the format of the expression matrix file, which can only be csv, tsv, txt, xls or xlsx.")
 
-    em = em.ix[em.max(axis=1)>0,]
+    em = em.loc[em.max(axis=1)>0,]
     
     #id conversion
     if idType != 'symbol' and idType != 'custom':
@@ -378,9 +378,9 @@ def main(species, emFile, annFile, idType, interDB, interSpecies, coreNum, outFo
             idType = 'ID'
         idT = pd.read_csv('ids/' + species + '_' + idType + '.csv', dtype=object, index_col=0, header=0)
         commonIDs = list(set(idT.index).intersection(set(em.index)))
-        idT = idT.ix[commonIDs,]
-        em = em.ix[commonIDs,]
-        em.index = idT.ix[commonIDs,'Symbol']
+        idT = idT.loc[commonIDs,]
+        em = em.loc[commonIDs,]
+        em.index = idT.loc[commonIDs,'Symbol']
         em = em.groupby(level=0).sum()
         
     if os.path.exists(opt.annFile):
@@ -433,7 +433,7 @@ def main(species, emFile, annFile, idType, interDB, interSpecies, coreNum, outFo
     rset = sorted(list(set(lrL['Receptor'])))
     lrM = pd.DataFrame(0,index=lset,columns=rset)
     for idx in lrL.index:
-        lrM.ix[lrL.ix[idx,'Ligand'], lrL.ix[idx,'Receptor']] = 1
+        lrM.loc[lrL.loc[idx,'Ligand'], lrL.loc[idx,'Receptor']] = 1
     interDB = interDB.split('.')[0]
     
     # change gene symbols if necessary

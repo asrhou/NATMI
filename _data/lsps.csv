@@ -1,5 +1,5 @@
 Ligand gene symbol,Ligand HGNC ID,Ligand location,Receptor gene symbol,Receptor HGNC ID,HGNC L R,PMID support
-RLN1,"<a href='https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:10026'>HGNC:10026</a>",secreted,RXFP2,HGNC:17318,HGNC:10026 HGNC:17318,"11809971,16411781,"
+RLN1,"<a href='https://www.genenames.org/data/gene-symbol-report/#!/hgnc_id/HGNC:10026'>HGNC:10026</a>",secreted,RXFP2,HGNC:17318,HGNC:10026 HGNC:17318,"<a href='https://www.ncbi.nlm.nih.gov/pubmed/11809971'>11809971</a>,<a href='https://www.ncbi.nlm.nih.gov/pubmed/16411781'>16411781</a>"
 RLN1,HGNC:10026,secreted,RXFP1,HGNC:19718,HGNC:10026 HGNC:19718,"11809971,16411781,11809971,"
 RLN2,HGNC:10027,secreted,RXFP2,HGNC:17318,HGNC:10027 HGNC:17318,"11809971,15649866,12506116, 15649866,"
 RLN2,HGNC:10027,secreted,RXFP1,HGNC:19718,HGNC:10027 HGNC:19718,"11809971,12506116, 15649866,12506116, 15649866,"

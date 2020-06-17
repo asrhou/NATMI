@@ -47,9 +47,9 @@ To use NATMI, following software is required:
 
 - Python libraries [pandas](https://pandas.pydata.org/), [XlsxWriter](https://xlsxwriter.readthedocs.io/index.html) and [xlrd](https://xlrd.readthedocs.io/en/latest/) (for general data processing).
 
-- Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/) and [PyGraphviz](https://pygraphviz.github.io/) (for cell-to-cell communication network visualization).
+- Python libraries [seaborn](https://seaborn.pydata.org/), [igraph](https://igraph.org/python/), [NetworkX](https://networkx.github.io/), [PyGraphviz](https://pygraphviz.github.io/), [bokeh](https://docs.bokeh.org/en/latest/) and [holoviews](https://holoviews.org/index.html) (for cell-to-cell communication network visualization).
 
-*NATMI was tested using **python 2.7.17 version** with pandas 0.24.2, XlsxWriter 1.2.8, xlrd 1.2.0, seaborn 0.9.0 , igraph 0.7.1, NetworkX 2.2 and PyGraphviz 1.3.1 and **python 3.7.6 version** with pandas 1.0.3, XlsxWriter 1.2.8, xlrd 1.2.0, seaborn 0.10.1 , igraph 0.7.1, NetworkX 2.4 and PyGraphviz 1.5.*
+*NATMI was tested using **python 2.7.17 version** with pandas 0.24.2, XlsxWriter 1.2.8, xlrd 1.2.0, seaborn 0.9.0 , igraph 0.7.1, NetworkX 2.2 and PyGraphviz 1.3.1 and **python 3.7.6 version** with pandas 1.0.3, XlsxWriter 1.2.8, xlrd 1.2.0, seaborn 0.10.1 , igraph 0.7.1, NetworkX 2.4, PyGraphviz 1.5, bokeh 2.0.2 and holoviews 1.13.2.*
 
 To install NATMI, run the following command in the desired installation directory:
 ```bat

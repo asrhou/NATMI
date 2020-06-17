@@ -238,6 +238,7 @@ def IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance):
     g.add_vertices(adjM.shape[0])
     nNameList = []
     nWeightList = []
+    
     for nidx in adjM.index:
         tidx = labels.index(nidx)
         nNameList.append(labels[tidx])
@@ -257,7 +258,7 @@ def IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance):
     
     # set node positions based on the layout
     if layout == 'circle' or layout == 'sphere':
-        pos_list = g.layout(layout).coords
+        pos_list = reversed(g.layout(layout).coords)
     else:
         # set the seed to make the graph reproducable
         np.random.seed(0)
@@ -273,6 +274,106 @@ def IgraphFromAdjacency(adjM, layout, labels, cltSizes, clusterDistance):
 
     posDict = {n: [p[0]*clusterDistance, -p[1]*clusterDistance] for n, p in enumerate(pos_list)}
     return posDict
+def DrawDeltaHeatmap(readmeStr, typeStr, numStr, tempM1, tempM2, tempMD, tempMF, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat):
+    # draw networks of both datasets
+    newlbls = []
+    for idx in tempM1.index:
+        newlbls.append(idx.split('\n')[0])
+    oldidx = tempM1.index
+    tempM1.index = newlbls
+    tempM2.index = newlbls
+    tempMD.index = newlbls
+    tempMF.index = newlbls
+    
+    newcts = []
+    for col in tempM1.columns:
+        newcts.append(col.split('\n')[0])
+    oldcol = tempM1.columns
+    tempM1.columns = newcts
+    tempM2.columns = newcts
+    tempMD.columns = newcts
+    tempMF.columns = newcts
+    
+    cmap = 'afmhot_r'
+    import matplotlib.pyplot as plt
+    
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    if numStr == 'int':
+        if tempM1.max().max() < 100:
+            g = sns.heatmap(tempM1, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=cmap)
+        else:
+            g = sns.heatmap(tempM1, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    else:
+        g = sns.heatmap(tempM1, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+        
+    ax.set_xlabel('Cell-type expressing receptor (receiving)')
+    ax.set_ylabel('Cell-type expressing ligand (sending)')
+    fig = g.get_figure()
+    plotFileName = 'heatmap_cond1_%s-based.%s' % (typeStr, plotFormat)
+    readmeStr += 'heatmap_cond1_%s-based.%s: cluster-to-cluster communication heatmap in condition 1, the element is %s.\n' % (typeStr, plotFormat, typeStr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    if numStr == 'int':
+        if tempM2.max().max() < 100:
+            g = sns.heatmap(tempM2, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=cmap)
+        else:
+            g = sns.heatmap(tempM2, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    else:
+        g = sns.heatmap(tempM2, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    ax.set_xlabel('Cell-type expressing receptor (receiving)')
+    ax.set_ylabel('Cell-type expressing ligand (sending)')
+    fig = g.get_figure()
+    plotFileName = 'heatmap_cond2_%s-based.%s' % (typeStr, plotFormat)
+    readmeStr += 'heatmap_cond2_%s-based.%s: cluster-to-cluster communication heatmap in condition 2, the element is %s.\n' % (typeStr, plotFormat, typeStr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    # draw delta networks
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    if numStr == 'int':
+        if tempMD.max().max() < 100 and tempMD.min().min() > -10:
+            g = sns.heatmap(tempMD, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=cmap)
+        else:
+            g = sns.heatmap(tempMD, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    else:
+        g = sns.heatmap(tempMD, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    ax.set_xlabel('Cell-type expressing receptor (receiving)')
+    ax.set_ylabel('Cell-type expressing ligand (sending)')
+    fig = g.get_figure()
+    plotFileName = 'heatmap_delta_diff_%s-based.%s' % (typeStr, plotFormat)
+    readmeStr += 'heatmap_delta_diff_%s-based.%s: cluster-to-cluster communication heatmap in which the element is the difference of %s.\n' % (typeStr, plotFormat, typeStr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    # draw fold change networks
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    if numStr == 'int':
+        if tempMF.max().max() < 100 and tempMF.min().min() > -10:
+            g = sns.heatmap(tempMF, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=cmap)
+        else:
+            g = sns.heatmap(tempMF, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    else:
+        g = sns.heatmap(tempMF, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    ax.set_xlabel('Cell-type expressing receptor (receiving)')
+    ax.set_ylabel('Cell-type expressing ligand (sending)')
+    fig = g.get_figure()
+    plotFileName = 'heatmap_fold_change_%s-based.%s' % (typeStr, plotFormat)
+    readmeStr += 'heatmap_fold_change_%s-based.%s: cluster-to-cluster communication heatmap in which the element is the fold change of %s.\n' % (typeStr, plotFormat, typeStr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    tempM1.columns =  oldcol
+    tempM1.index = oldidx
+    tempM2.columns =  oldcol
+    tempM2.index = oldidx
+    tempMD.columns =  oldcol
+    tempMD.index = oldidx
+    tempMF.columns =  oldcol
+    tempMF.index = oldidx
+    
+    return readmeStr
 
 def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, layout, plotFormat):
     # draw networks of both datasets
@@ -320,8 +421,9 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             nd.attr['width'] = str(round(radis,2))
             nd.attr['height'] = str(round(radis,2))
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -392,8 +494,9 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             nd.attr['width'] = str(round(radis,2))
             nd.attr['height'] = str(round(radis,2))
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -487,8 +590,9 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             nd.attr['width'] = str(round(radis,2))
             nd.attr['height'] = str(round(radis,2))
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -595,8 +699,9 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             nd.attr['width'] = str(round(radis,2))
             nd.attr['height'] = str(round(radis,2))
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -635,6 +740,102 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
                     adjSpecMF.loc[idx, col] = adjSpecM2.loc[idx, col] / adjSpecM1.loc[idx, col]
     return readmeStr, adjSpecMF
 
+def DrawChord(readmeStr, typeStr, numStr, tempM, colors, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, plotFormat):
+    import sys
+    if 2 == sys.version_info[0]:
+        return readmeStr
+    
+    from matplotlib.colors import LinearSegmentedColormap
+    cmap = LinearSegmentedColormap.from_list('Custom', colors, len(colors))
+    
+    newlbls = []
+    for idx in tempM.index:
+        newlbls.append(idx.split('\n')[0])
+    oldidx = tempM.index
+    tempM.index = newlbls
+    
+    newcts = []
+    for col in tempM.columns:
+        newcts.append(col.split('\n')[0])
+    oldcol = tempM.columns
+    tempM.columns = newcts
+    
+    import holoviews as hv
+    from holoviews import dim, opts
+    hv.extension('matplotlib')
+    nodeDF = pd.DataFrame({'name':list(newcts)}).reset_index()
+    nodes = hv.Dataset(nodeDF, 'index')
+    linkDict = {'source':[],'target':[],'value':[]}
+    for idx in tempM.index:
+        sid = int(nodeDF.loc[nodeDF['name']==idx,'index'])
+        for col in tempM.columns:
+            if tempM.loc[idx,col] > 0:
+                tid = int(nodeDF.loc[nodeDF['name']==col,'index'])
+                linkDict['source'].append(sid)
+                linkDict['target'].append(tid)
+                linkDict['value'].append(int(tempM.loc[idx,col]*1000))
+    links = pd.DataFrame(linkDict)
+    
+    chd = hv.Chord((links, nodes))
+    chd = chd.opts(opts.Chord(cmap=cmap, node_color=dim('index').astype(str), edge_color=dim('source').astype(str), labels='name'))
+    chd = chd.opts(fontsize={'legend': fontSize*4, 'labels': fontSize*4, 'legend_title': fontSize*4}, fig_size=plotWidth*plotHeight*5)
+    if dataType == '':
+        plotFileName = 'chord_%s-based.%s' % (typeStr, plotFormat)
+        readmeStr += 'chord_%s-based.%s: the cluster-to-cluster communication chord diagram in which the edge weight is %s.\n' % (typeStr, plotFormat, typeStr)
+    else:
+        plotFileName = '%s_chord_%s-based.%s' % (dataType, typeStr, plotFormat)
+        readmeStr += 'xxx_chord_%s-based.%s: dynamic cluster-to-cluster communication chord diagram in which the edge weight is %s.\n' % (typeStr, plotFormat, typeStr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    
+    hv.save(chd, plotFileName)
+    
+    tempM.columns =  oldcol
+    tempM.index = oldidx
+    
+    return readmeStr
+
+def DrawHeatmap(readmeStr, typeStr, numStr, tempM, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, plotFormat):
+    newlbls = []
+    for idx in tempM.index:
+        newlbls.append(idx.split('\n')[0])
+    oldidx = tempM.index
+    tempM.index = newlbls
+    
+    newcts = []
+    for col in tempM.columns:
+        newcts.append(col.split('\n')[0])
+    oldcol = tempM.columns
+    tempM.columns = newcts
+    
+    cmap = 'afmhot_r'
+    import matplotlib.pyplot as plt
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    if numStr == 'int':
+        if tempM.max().max() < 100:
+            g = sns.heatmap(tempM, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=cmap)
+        else:
+            g = sns.heatmap(tempM, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    else:
+        g = sns.heatmap(tempM, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+        
+    ax.set_xlabel('Cell-type expressing receptor (receiving)')
+    ax.set_ylabel('Cell-type expressing ligand (sending)')
+    fig = g.get_figure()
+    
+    if dataType == '':
+        plotFileName = 'heatmap_%s-based.%s' % (typeStr, plotFormat)
+        readmeStr += 'heatmap_%s-based.%s: the cluster-to-cluster communication heatmap in which the element is %s.\n' % (typeStr, plotFormat, typeStr)
+    else:
+        plotFileName = '%s_heatmap_%s-based.%s' % (dataType, typeStr, plotFormat)
+        readmeStr += 'xxx_heatmap_%s-based.%s: dynamic cluster-to-cluster communication heatmap in which the element is %s.\n' % (typeStr, plotFormat, typeStr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    tempM.columns =  oldcol
+    tempM.index = oldidx
+    
+    return readmeStr
+
 def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDict, labels, specificityThreshold, weightThreshold, frequencyThreshold, interDB, weightType, layout, plotFormat):
     
     # convert to a graphviz graph
@@ -653,8 +854,9 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
     for ed in nxgS.edges():
         sn = ed[0]
         tn = ed[1]
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]
-        ed.attr['color'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]
+        #ed.attr['color'] = matplotlib.colors.to_hex(newcol)
+        ed.attr['color'] = colorDict[sn]
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
@@ -684,8 +886,9 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
             nd.attr['width'] = str(round(radis,2))
             nd.attr['height'] = str(round(radis,2))
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -720,11 +923,11 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
     warnings.simplefilter("ignore")
     return readmeStr
     
-def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
+def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
     readmeStr = '\n'
     
     # color scheme
-    colors = sns.hls_palette(n_colors=len(labels)).as_hex()
+    colors = sns.color_palette(ccolorList,len(labels)).as_hex()
     colorDict = {}
     cltSizeDict = {}
     for idx in range(len(colors)):
@@ -750,6 +953,11 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specific
     
     #============total specificity
     readmeStr, adjSpecMF = DrawDeltaGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS1, adjSpecM1, nxgS2, adjSpecM2, nxgSD, adjSpecMD, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDictSpec, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
+    
+    ## draw heatmap
+    readmeStr = DrawDeltaHeatmap(readmeStr, 'edge-count', 'int', adjCountM1, adjCountM2, adjCountMD, adjCountMF, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    readmeStr = DrawDeltaHeatmap(readmeStr, 'total-expression', 'float', adjM1, adjM2, adjMD, adjMF, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    readmeStr = DrawDeltaHeatmap(readmeStr, 'total-specificity', 'float', adjSpecM1, adjSpecM2, adjSpecMD, adjSpecMF, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
     
     adjMFileName = os.path.join(resultDir, '%s_Mtx.xlsx' % dataType)
     readmeStr += 'xxx_Mtx.xlsx: all adjacency matrices of the dynamic networks.\n'
@@ -812,11 +1020,11 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specific
         file_object.write('\n')
         file_object.write(readmeStr)
 
-def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
+def BuildInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
     readmeStr = '\n'
     
     # color scheme
-    colors = sns.hls_palette(n_colors=len(labels)).as_hex()
+    colors = sns.color_palette(ccolorList,len(labels)).as_hex()
     colorDict = {}
     cltSizeDict = {}
     for idx in range(len(colors)):
@@ -842,6 +1050,17 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityTh
     
     #============total specificity
     readmeStr = DrawGraphvizPlot(readmeStr, 'total-specificity', 'float', nxgS, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, edgeWidth, colorDict, cltSizeDict, maxClusterSize, wposDictSpec, labels, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,layout,plotFormat)
+    
+    ## draw chord plot
+    readmeStr = DrawChord(readmeStr, 'edge-count', 'int', adjCountM, colors, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    readmeStr = DrawChord(readmeStr, 'total-expression', 'float', adjM, colors, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    readmeStr = DrawChord(readmeStr, 'total-specificity', 'float', adjSpecM, colors, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    
+    ## draw heatmap
+    readmeStr = DrawHeatmap(readmeStr, 'edge-count', 'int', adjCountM, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    readmeStr = DrawHeatmap(readmeStr, 'total-expression', 'float', adjM, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    readmeStr = DrawHeatmap(readmeStr, 'total-specificity', 'float', adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    
     
     if dataType == '':
         edgeDFFileName = os.path.join(resultDir, 'Edges.csv')
@@ -983,6 +1202,9 @@ def FilterDeltaEdges(sourceFolder, interDB, weightType, frequencyThreshold):
     return kindDict
     
 def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, layout, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance):
+    #customize cmap
+    ccolorList = ['#FF6DB6','#490092','#24FF24','#FFB677','#006DDB','#FFFF6D','#000000','#B66DFF','#920000','#004949','#6DB6FF','#924900','#009292','#B6DBFF','#DBD100']
+        
     # load data
     clusterMapFilename = os.path.join(sourceFolder, 'ClusterMapping.csv')
     if os.path.exists(clusterMapFilename):
@@ -993,6 +1215,7 @@ def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightT
         labels = [str(i)+'\n(%s cells)' % clusterSizeDF.loc[i,'cell'] for i in clusterSizeDF.index]
         cltSizes = [float(clusterSizeDF.loc[i,'cell']) for i in clusterSizeDF.index]
         
+                      
         # load edge properties
         edgeDF = pd.read_csv(os.path.join(opt.sourceFolder,'Edges_%s.csv' % interDB), index_col=None, header=0)
         
@@ -1019,7 +1242,7 @@ def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightT
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
-        BuildInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
+        BuildInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
     else:
         # process node properties for delta dataset
         sumClusterDF = pd.read_excel(os.path.join(sourceFolder, 'cluster_comparison.xlsx'), index_col=None, header=0)
@@ -1056,16 +1279,107 @@ def MainNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightT
                 continue
             tempedgeDF = dynamDict[kind]
             #cluster to cluster weighted directed network
-            print ('#### plotting the weighted directed cell-to-cell communication network for delta interactions')
-            BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, tempedgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, kind)
+            print('#### plotting the weighted directed cell-to-cell communication network for delta interactions')
+            BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, tempedgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, kind)
     
     print('#### DONE')
             
-def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType = ''):
+def PlotHeatmapHist(lstr, rstr, cmap, ls, rs, adjM, ax, ax_histx, ax_histy):
+    # plot heatmap
+    sns.heatmap(adjM, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap, cbar=False)
+    ax.set_xlabel('Cell-type expressing receptor (receiving)')
+    ax.set_ylabel('Cell-type expressing ligand (sending)')
+    # Sort the values for the bar plot to have the same order as clusters
+    target = [t.get_text() for t in np.array(ax.get_yticklabels())]
+    ind= np.array([list(rs.index.values).index(t) for t in target])
+    
+    ax_histx.tick_params(axis="x", labelbottom=False)
+    ax_histy.tick_params(axis="y", labelleft=False)
+    # plot bar plot in ax
+    ax_histy.barh(np.arange(len(target)), ls.values[ind], 1.0, align='edge',color='w',edgecolor='k',linewidth=1)
+    ax_histy.set_ylim(0,len(ls))
+    # labels read top-to-bottom
+    ax_histy.invert_yaxis()
+    ax_histy.set_ylabel(lstr+ ' Expression')
+    ax_histy.yaxis.set_label_position("right")
+    ax_histy.spines["right"].set_color("none")
+    ax_histy.spines["top"].set_color("none")
+    
+    ax_histx.bar(np.arange(len(target)), rs.values[ind], 1.0, align='edge',color='w',edgecolor='k',linewidth=1)
+    ax_histx.set_xlim(0,len(rs))
+    ax_histx.set_title(rstr+ ' Expression')
+    ax_histx.spines["right"].set_color("none")
+    ax_histx.spines["top"].set_color("none")
+          
+# draw lrheatmap
+def DrawLRHeatmap(readmeStr, origlabels, edgeDF, adjExpM, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat):
+    # draw networks of both datasets
+    newlbls = []
+    for idx in adjExpM.index:
+        newlbls.append(idx.split('\n')[0])
+    oldidx = adjExpM.index
+    adjExpM.index = newlbls
+    adjSpecM.index = newlbls
+    
+    newcts = []
+    for col in adjExpM.columns:
+        newcts.append(col.split('\n')[0])
+    oldcol = adjExpM.columns
+    adjExpM.columns = newcts
+    adjSpecM.columns = newcts
+    adjExpM = adjExpM.reindex(index=origlabels,columns=origlabels).fillna(0.0)
+    adjSpecM = adjSpecM.reindex(index=origlabels,columns=origlabels).fillna(0.0)
+    ledgeDF = edgeDF.loc[:,['sending cluster name', u'ligand', 'frequency ligand', u'original ligand', u'specified ligand']]
+    ledgeDF = ledgeDF.set_index('sending cluster name')
+    ledgeDF = ledgeDF.drop_duplicates()
+    lstr = ledgeDF.iloc[0,0]
+    ledgeDF = ledgeDF.reindex(origlabels).fillna(0.000001)
+    redgeDF = edgeDF.loc[:,['target cluster name', u'receptor', 'frequency receptor', u'original receptor', u'specified receptor']]
+    redgeDF = redgeDF.set_index('target cluster name')
+    redgeDF = redgeDF.drop_duplicates()
+    rstr = redgeDF.iloc[0,0]
+    redgeDF = redgeDF.reindex(origlabels).fillna(0.000001)
+    
+    cmap = 'afmhot_r'
+    # definitions for the axes
+    import matplotlib.pyplot as plt
+    left, bottom = 0.1, 0.1
+    cellNum = float(len(origlabels))
+    subwidth, subhight = 0.95*(2.0/(4+cellNum)), 0.95*(2.0/(4+cellNum))
+    width, height = 0.95*((2+cellNum)/(4+cellNum)), 0.95*((2+cellNum)/(4+cellNum))
+    spacing = 0.001
+    
+    rect_heatmap = [left, bottom, width, height]
+    rect_histx = [left, bottom + height + spacing, width, subhight]
+    rect_histy = [left + width + spacing, bottom, subwidth, height]
+    fig = plt.figure(figsize=(plotWidth, plotWidth))
+    ax = fig.add_axes(rect_heatmap)
+    ax_histx = fig.add_axes(rect_histx, sharex=ax)
+    ax_histy = fig.add_axes(rect_histy, sharey=ax)
+    PlotHeatmapHist(lstr, rstr, cmap, ledgeDF['original ligand'], redgeDF['original receptor'], adjExpM, ax, ax_histx, ax_histy)
+    if dataType == '':
+        plotFileName = 'heatmap_%s-%s.%s' % (lstr, rstr, plotFormat)
+        readmeStr += 'heatmap_%s-%s.%s: the cluster-to-cluster expression heatmap of %s-%s.\n' % (lstr, rstr, plotFormat, lstr, rstr)
+    else:
+        plotFileName = '%s_heatmap_%s-%.%s' % (dataType, lstr, rstr, plotFormat)
+        readmeStr += '%s_heatmap_%s-%s.%s: the %s cluster-to-cluster expression heatmap of %s-%s.\n' % (dataType, lstr, rstr, plotFormat, dataType, lstr, rstr)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    adjExpM = adjExpM.loc[newlbls,newcts]
+    adjSpecM = adjSpecM.loc[newlbls,newcts]
+    adjExpM.columns =  oldcol
+    adjExpM.index = oldidx
+    adjSpecM.columns =  oldcol
+    adjSpecM.index = oldidx
+    
+    return readmeStr
+          
+def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType = ''):
     readmeStr = '\n'
     
     # color scheme
-    colors = sns.hls_palette(n_colors=len(labels)).as_hex()
+    colors = sns.color_palette(ccolorList,len(labels)).as_hex()
     colorDict = {}
     cltSizeDict = {}
     for idx in range(len(colors)):
@@ -1118,13 +1432,12 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
     # set edge properties
     maxVal = adjM.max().max()
     print("BuildSingleLRInterClusterNetwork")
-    print(nxgW)
-    print(nxgW.edges())
     for ed in nxgW.edges():
         sn = ed[0]
         tn = ed[1]
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]
-        ed.attr['color'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[sn])]
+        #ed.attr['color'] = matplotlib.colors.to_hex(newcol)
+        ed.attr['color'] = colorDict[sn]
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
@@ -1152,8 +1465,9 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
             nd.attr['height'] = str(round(radis,2))
         
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -1209,8 +1523,9 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
             nd.attr['height'] = str(round(radis,2))
             
         nd.attr['fixedsize'] = 'true'
-        newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
-        nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        #newcol = [i+0.5*(1-i) for i in matplotlib.colors.to_rgb(colorDict[nd])]
+        #nd.attr['fillcolor'] = matplotlib.colors.to_hex(newcol)
+        nd.attr['fillcolor'] = colorDict[nd]
         nd.attr['pin'] = 'true'
         nd.attr['pos'] = '%s,%s' % (wposDict[idx][0]*plotWidth/2,wposDict[idx][1]*plotHeight/2)
         nd.attr['fontsize'] = fontSize
@@ -1277,6 +1592,10 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
             continue
     warnings.simplefilter("ignore")
     
+    # draw lrheatmap
+    readmeStr = DrawLRHeatmap(readmeStr, origlabels, edgeDF, adjM, adjSpecM, dataType, resultDir, plotWidth, plotHeight, fontSize, specificityThreshold,weightThreshold,frequencyThreshold,interDB,weightType,plotFormat)
+    
+    
     if dataType == '':
         edgeDFFileName = os.path.join(resultDir, 'Edges.csv')
         readmeStr += 'Edges.csv: all filtered edges via %s-%s.\n' % (ls.split('\n')[0], rs.split('\n')[0])
@@ -1325,6 +1644,9 @@ def BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, speci
         file_object.write(readmeStr)
 
 def MainLRNetwork(sourceFolder, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, plotFormat, layout, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance):
+    #customize cmap
+    ccolorList = ['#FF6DB6','#490092','#24FF24','#FFB677','#006DDB','#FFFF6D','#000000','#B66DFF','#920000','#004949','#6DB6FF','#924900','#009292','#B6DBFF','#DBD100']
+    
     # check if it is delta network
     originalFileName = os.path.join(sourceFolder, 'Edges_%s.csv' % (interDB))
     if os.path.exists(originalFileName):
@@ -1362,9 +1684,82 @@ def MainLRNetwork(sourceFolder, interDB, weightType, specificityThreshold, weigh
         if not os.path.exists(resultDir):
             os.mkdir(resultDir)
         print('#### the folder "%s" has been created to save the analysis results' % os.path.abspath(resultDir))
-        BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
+        BuildSingleLRInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, ls, rs, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir)
     print('#### DONE')
           
+def DrawTopLRCltPairs(readmeStr, edgeDF, plotFormat,plotWidth, plotHeight, fontSize, resultDir, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
+    # prepare pairs.
+    edgeDF['ligand'] = edgeDF['ligand'].astype(str)
+    edgeDF['receptor'] = edgeDF['receptor'].astype(str)
+    edgeDF['cellpair'] = edgeDF['sending cluster name'] + "->" + edgeDF['target cluster name']
+    edgeDF['lrpair'] = edgeDF['ligand'] + "->" + edgeDF['receptor']
+    # for expression
+    if dataType == '':
+        edgeDFE = edgeDF.sort_values(by=['product of original'], ascending=False)
+        edgeDFS = edgeDF.sort_values(by=['product of specified'], ascending=False)
+    else:
+        edgeDFE = edgeDF.sort_values(by=['delta weight'], ascending=False)
+        edgeDFS = edgeDF.sort_values(by=['delta specificity'], ascending=False)
+    if keepTopEdge > 0:
+        topLRE = list(edgeDFE.loc[:,['lrpair']].drop_duplicates().head(keepTopEdge)['lrpair'])
+        topLRS = list(edgeDFS.loc[:,['lrpair']].drop_duplicates().head(keepTopEdge)['lrpair'])
+    else:
+        topLRE = list(edgeDFE.loc[:,['lrpair']].drop_duplicates().head(10)['lrpair'])
+        topLRS = list(edgeDFS.loc[:,['lrpair']].drop_duplicates().head(10)['lrpair'])
+    topEdgeDFE = edgeDFE.loc[edgeDFE['lrpair'].isin(topLRE)]
+    topEdgeDFS = edgeDFE.loc[edgeDFS['lrpair'].isin(topLRS)]
+    lrCltMtxE = pd.DataFrame()
+    for idx in topEdgeDFE.index:
+        if dataType == '':
+            lrCltMtxE.loc[topEdgeDFE.loc[idx,'lrpair'],topEdgeDFE.loc[idx,'cellpair']] = topEdgeDFE.loc[idx,'product of original']
+        else:
+            lrCltMtxE.loc[topEdgeDFE.loc[idx,'lrpair'],topEdgeDFE.loc[idx,'cellpair']] = topEdgeDFE.loc[idx,'delta weight']
+    lrCltMtxS = pd.DataFrame()
+    for idx in topEdgeDFS.index:
+        if dataType == '':
+            lrCltMtxS.loc[topEdgeDFS.loc[idx,'lrpair'],topEdgeDFS.loc[idx,'cellpair']] = topEdgeDFS.loc[idx,'product of specified']
+        else:
+            lrCltMtxS.loc[topEdgeDFS.loc[idx,'lrpair'],topEdgeDFS.loc[idx,'cellpair']] = topEdgeDFS.loc[idx,'delta specificity']
+    lrnum = lrCltMtxE.shape[0]
+    if lrCltMtxE.shape[0]*2 < lrCltMtxE.shape[1]:
+        lrCltMtxE = lrCltMtxE.iloc[:lrnum,:lrnum*2]
+    if lrCltMtxS.shape[0]*2 < lrCltMtxS.shape[1]:
+        lrCltMtxS = lrCltMtxS.iloc[:lrnum,:lrnum]
+    
+    #draw heatmap
+    cmap = 'afmhot_r'
+    import matplotlib.pyplot as plt
+    
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    g = sns.heatmap(lrCltMtxE, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    ax.set_xlabel('Cell-type pair')
+    ax.set_ylabel('Ligand-receptor pair')
+    fig = g.get_figure()
+    
+    if dataType == '':
+        plotFileName = 'heatmap_top_LRpairs_expression-based.%s' % (plotFormat)
+        readmeStr += 'heatmap_top_LRpairs_expression-based.%s: heatmap for top ligand-receptor pairs based on the expression level.\n' % (plotFormat)
+    else:
+        plotFileName = '%s_heatmap_top_LRpairs_expression-based.%s' % (dataType, plotFormat)
+        readmeStr += '%s_heatmap_top_LRpairs_expression-based.%s: heatmap for top %s ligand-receptor pairs based on the expression level.\n' % (dataType, plotFormat, dataType)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
+    f, ax = plt.subplots(figsize=(plotWidth, plotHeight))
+    g = sns.heatmap(lrCltMtxS, square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
+    ax.set_xlabel('Cell-type pair')
+    ax.set_ylabel('Ligand-receptor pair')
+    fig = g.get_figure()
+    
+    if dataType == '':
+        plotFileName = 'heatmap_top_LRpairs_specificity-based.%s' % (plotFormat)
+        readmeStr += 'heatmap_top_LRpairs_specificity-based.%s: heatmap for top ligand-receptor pairs based on the specificity.\n' % (plotFormat)
+    else:
+        plotFileName = '%s_heatmap_top_LRpairs_specificity-based.%s' % (dataType, plotFormat)
+        readmeStr += '%s_heatmap_top_LRpairs_specificity-based.%s: heatmap for top %s ligand-receptor pairs based on the specificity.\n' % (dataType, plotFormat, dataType)
+    plotFileName = os.path.join(resultDir, plotFileName)
+    fig.savefig(plotFileName, bbox_inches = "tight")
+    
 def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType):
     
     # prepare lr edges.
@@ -1513,7 +1908,7 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
         if edgeWidth == 0:
             ed.attr['fontsize'] = fontSize
             ed.attr['fontname'] = "Arial"
-            ed.attr['label'] = '%.3f' % (adjM.loc[sn, tn])
+            ed.attr['label'] = '%.2f' % (adjM.loc[sn, tn])
         else:
             if adjM.loc[sn, tn]*edgeWidth/maxVal < 1:
                 ed.attr['penwidth'] = 1
@@ -1635,6 +2030,8 @@ def DrawBipartieGraph(flag, readmeStr, curDF, sendCltLabel, targetCltLabel, plot
     
 def BuildInterClusterPlot(origlabels, labelDict, edgeDF, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, plotFormat,plotWidth, plotHeight, fontSize, edgeWidth, clusterDistance, resultDir, interDB, dataType = ''):
     readmeStr = '\n'
+    
+    DrawTopLRCltPairs(readmeStr, edgeDF, plotFormat,plotWidth, plotHeight, fontSize, resultDir, interDB, weightType, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, dataType)
     
     for sendClt in origlabels:
         for targetClt in origlabels:

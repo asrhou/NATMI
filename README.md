@@ -18,6 +18,7 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
    3. [Ligand-Receptor Interactions (user-supplied interactions)](#3.3)
    4. [Expression Data](#3.4)
    5. [Cell Labels Metafile (single-cell analysis only)](#3.5)
+   6. [Prepare Input Data from Popular Single-cell Analysis Tools](#3.6)
 4. [**Command Line Utilities**](#4)
    1. [ExtractEdges.py](#4.1)
    2. [DiffEdges.py](#4.2)
@@ -141,6 +142,45 @@ For single-cell gene expression data, the user needs to provide a metafile with 
 |Barcode2|Cell-type1|
 |Barcode3|Cell-type2|
 |...|...|
+
+### 3.6 Prepare Input Data from Popular Single-cell Analysis Tools <a name="3.6"></a>
+
+#### 3.6.1 SCANPY
+
+Extract normalised expression table from SCANPY object:
+```
+adata.to_df().to_csv('em.csv',index=True,header=True)
+```
+
+Extract annotations from SCANPY object:
+```
+adata.obs['cell type'].to_csv('metadata.csv',index=True,header=True)
+```
+
+#### 3.6.2 Cell Ranger
+
+In order to analyze Chromium single-cell data, it is recommanded to [use SCANPY to load the outputs of Cell Ranger (feature-barcode matrix and clustering) for further analysis](http://cf.10xgenomics.com/supp/cell-exp/notebook_tutorial-3.0.0.html). When the feature-barcode matrix and clustering results are loaded into SCANPY. The user can use the code above to prepare the input for NATMI.
+
+#### 3.6.3 Seurat
+
+Extract normalised expression table from Seurat object:
+
+```
+write.csv(object@scale.data,"em.csv", row.names = T) # Seurat 2.X
+```
+or
+```
+write.csv(GetAssayData(object = object, slot = "scale.data"),"em.csv", row.names = T) # Seurat 3.X
+```
+
+Extract annotations from Seurat object:
+```
+write.csv(object@idents,"metadata.csv", row.names = T) # Seurat 2.X
+```
+or
+```
+write.csv(Idents(object = object),"metadata.csv", row.names = T) # Seurat 3.X
+```
 
 ## 4. Command Line Utilities [(top)](#table-of-contents) <a name="4"></a>
 

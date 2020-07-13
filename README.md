@@ -163,14 +163,14 @@ In order to analyze Chromium single-cell data, it is recommanded to [use SCANPY 
 
 #### 3.6.3 Seurat
 
-Extract normalised expression table from Seurat object:
+Transfrom expression data to CPM/TPM values and extract normalised expression table from Seurat object:
 
 ```
-write.csv(object@scale.data,"em.csv", row.names = T) # Seurat 2.X
+write.csv(100 * (exp(as.matrix(object@data)) - 1), "em.csv", row.names = T)  # Seurat 2.X
 ```
 or
 ```
-write.csv(GetAssayData(object = object, slot = "scale.data"),"em.csv", row.names = T) # Seurat 3.X
+write.csv(100 * (exp(as.matrix(GetAssayData(object = object, slot = "data"))) - 1), "em.csv", row.names = T) # Seurat 3.X
 ```
 
 Extract annotations from Seurat object:

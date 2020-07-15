@@ -429,11 +429,11 @@ def main(species, emFile, annFile, idType, interDB, interSpecies, coreNum, outFo
         lrL = pd.concat([lrL,lrE],ignore_index=True)
         
     #to adj matrix
-    lset = sorted(list(set(lrL['Ligand'])))
-    rset = sorted(list(set(lrL['Receptor'])))
+    lset = sorted(list(set(lrL['Ligand gene symbol'])))
+    rset = sorted(list(set(lrL['Receptor gene symbol'])))
     lrM = pd.DataFrame(0,index=lset,columns=rset)
     for idx in lrL.index:
-        lrM.loc[lrL.loc[idx,'Ligand'], lrL.loc[idx,'Receptor']] = 1
+        lrM.loc[lrL.loc[idx,'Ligand gene symbol'], lrL.loc[idx,'Receptor gene symbol']] = 1
     interDB = interDB.split('.')[0]
     
     # change gene symbols if necessary
@@ -449,7 +449,7 @@ def main(species, emFile, annFile, idType, interDB, interSpecies, coreNum, outFo
         taxidCol = 1
         geneSymbolCol = 3
         lrM = TransferToGeneSymbol(homoMapDir, species, interSpeciesType, taxidCol, geneSymbolCol, hidCol, lrM)
-    
+        
     #build the folder to save the analysis results
     if outFolder != '':
         resultDir = os.path.abspath(outFolder)

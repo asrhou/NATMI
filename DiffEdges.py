@@ -98,9 +98,48 @@ def IdentifyLREdgeChanges(sizeClusterDF, refEdgeDF, testEdgeDF, interDB, weightT
         file_object.write('Delta_edges_xxx folder: variations in the edges of two datasets using the certain ligand-receptor pair list\n')
         
     mergedDF = pd.merge(refEdgeDF, testEdgeDF, how='outer', on=['sending cluster name', 'target cluster name', 'ligand', 'receptor']).fillna(0)
+    
+    #fill empty expressions
+    avals = set(mergedDF['ligand'])
+    avalcts = set(mergedDF['sending cluster name'])
+    avars = set(mergedDF['receptor'])
+    avarcts = set(mergedDF['target cluster name'])
+    for aval in avals:
+        for avalct in avalcts:
+            if len(set(mergedDF.loc[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct),'original ligand_x'])) > 1:
+                tmpExp = max(set(mergedDF.loc[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct),'original ligand_x']))
+                tmpcols = ['count ligand_x', 'frequency ligand_x', 'original ligand_x', 'specified ligand_x']
+                expedDF = mergedDF.loc[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct)&(mergedDF['original ligand_x']==tmpExp), tmpcols].iloc[[0],]
+                for nonidx in mergedDF.index[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct)&(mergedDF['original ligand_x']==0)]:
+                    for tmpcol in tmpcols:
+                        mergedDF.loc[nonidx,tmpcol] = expedDF.loc[expedDF.index[0],tmpcol]
+            if len(set(mergedDF.loc[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct),'original ligand_y'])) > 1:
+                tmpExp = max(set(mergedDF.loc[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct),'original ligand_y']))
+                tmpcols = ['count ligand_y', 'frequency ligand_y', 'original ligand_y', 'specified ligand_y']
+                expedDF = mergedDF.loc[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct)&(mergedDF['original ligand_y']==tmpExp), tmpcols].iloc[[0],]
+                for nonidx in mergedDF.index[(mergedDF['ligand']==aval)&(mergedDF['sending cluster name']==avalct)&(mergedDF['original ligand_y']==0)]:
+                    for tmpcol in tmpcols:
+                        mergedDF.loc[nonidx,tmpcol] = expedDF.loc[expedDF.index[0],tmpcol]
+    for avar in avars:
+        for avarct in avarcts:
+            if len(set(mergedDF.loc[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct),'original receptor_x'])) > 1:
+                tmpExp = max(set(mergedDF.loc[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct),'original receptor_x']))
+                tmpcols = ['count receptor_x', 'frequency receptor_x', 'original receptor_x', 'specified receptor_x']
+                expedDF = mergedDF.loc[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct)&(mergedDF['original receptor_x']==tmpExp), tmpcols].iloc[[0],]
+                for nonidx in mergedDF.index[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct)&(mergedDF['original receptor_x']==0)]:
+                    for tmpcol in tmpcols:
+                        mergedDF.loc[nonidx,tmpcol] = expedDF.loc[expedDF.index[0],tmpcol]
+            if len(set(mergedDF.loc[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct),'original receptor_y'])) > 1:
+                tmpExp = max(set(mergedDF.loc[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct),'original receptor_y']))
+                tmpcols = ['count receptor_y', 'frequency receptor_y', 'original receptor_y', 'specified receptor_y']
+                expedDF = mergedDF.loc[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct)&(mergedDF['original receptor_y']==tmpExp), tmpcols].iloc[[0],]
+                for nonidx in mergedDF.index[(mergedDF['receptor']==avar)&(mergedDF['target cluster name']==avarct)&(mergedDF['original receptor_y']==0)]:
+                    for tmpcol in tmpcols:
+                        mergedDF.loc[nonidx,tmpcol] = expedDF.loc[expedDF.index[0],tmpcol]
+            
     oldColNames = ['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_x', 'frequency ligand_x', 'original ligand_x', 'specified ligand_x', 'count receptor_x', 'frequency receptor_x', 'original receptor_x', 'specified receptor_x', 'product of original_x', 'product of specified_x', 'count ligand_y', 'frequency ligand_y', 'original ligand_y', 'specified ligand_y', 'count receptor_y', 'frequency receptor_y', 'original receptor_y', 'specified receptor_y', 'product of original_y', 'product of specified_y']
     deltaColNames = ['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Delta ligand expressing cells', 'Delta ligand detection rate', 'Delta ligand expression', 'Delta ligand specificity', 'Delta receptor expressing cells', 'Delta receptor detection rate', 'Delta receptor expression', 'Delta receptor specificity', 'Delta edge expression weight', 'Delta edge specificity weight']
-
+    
     disaperEdgeDF = mergedDF.loc[(mergedDF['product of original_y']==0)&(mergedDF['product of original_x']>0),['sending cluster name', 'ligand', 'receptor', 'target cluster name', 'count ligand_x', 'frequency ligand_x', 'original ligand_x', 'specified ligand_x', 'count receptor_x', 'frequency receptor_x', 'original receptor_x', 'specified receptor_x', 'product of original_x', 'product of specified_x']]
     disaperEdgeDF.columns = deltaColNames
     disaperEdgeDF = disaperEdgeDF.sort_values(by='Delta edge expression weight', ascending=False)

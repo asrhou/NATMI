@@ -166,11 +166,11 @@ In order to analyze Chromium single-cell data, it is recommanded to [use SCANPY 
 Transfrom expression data to CPM/TPM values and extract normalised expression table from Seurat object:
 
 ```
-write.csv(100 * (exp(as.matrix(object@data)) - 1), "em.csv", row.names = T)  # Seurat 2.X
+write.csv(100 * (exp(as.matrix(object@data))), "em.csv", row.names = T)  # Seurat 2.X
 ```
 or
 ```
-write.csv(100 * (exp(as.matrix(GetAssayData(object = object, slot = "data"))) - 1), "em.csv", row.names = T) # Seurat 3.X
+write.csv(100 * (exp(as.matrix(GetAssayData(object = object, slot = "data")))), "em.csv", row.names = T) # Seurat 3.X
 ```
 
 Extract annotations from Seurat object:
@@ -311,7 +311,7 @@ Visualise cell-connectivity-summary networks from the results of ExtractEdges.py
    python VisInteractions.py --sourceFolder /path/to/result/folder --interDB lrc2p --weightType mean --detectionThreshold 0.2 --plotFormat pdf --drawNetwork y --plotWidth 12 --plotHeight 10 --layout kk --fontSize 8 --edgeWidth 0 --maxClusterSize 0 --clusterDistance 1
 ```
 
-If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing networks with three different weights. If run on the output of DiffEdges.py, VisInteractions.py creates a new folder in the output folder of DiffEdges.py, containing networks with three different weights in reference and target datasets. Additionally, delta networks are drawn, where yellow edges are (non-significant) edges with the fold change of their weights in two conditions of two or less. For other edges, a red color indicates the edges with a weight higher in the reference dataset, and a green color indicates the edges with a weight higher in the target dataset. The color intensity scales with the degree of change.
+If run on the output of ExtractEdges.py, VisInteractions.py creates a new folder in the output folder of ExtractEdges.py containing networks with three different weights. If run on the output of DiffEdges.py, VisInteractions.py creates a new folder in the output folder of DiffEdges.py, containing networks with three different weights in reference and target datasets. Additionally, delta networks are drawn, where yellow edges are (non-significant) edges with the fold change of their weights in two conditions of two or less. For other edges, a red color indicates the edges with a weight higher in the reference dataset, and a blue color indicates the edges with a weight higher in the target dataset. The color intensity scales with the degree of change.
 
 Visualise cell-to-cell communication networks between all possible pairs of cell types using results of ExtractEdges.py or DiffEdges.py:
 

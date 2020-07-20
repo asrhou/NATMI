@@ -1160,6 +1160,7 @@ def BuildInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, s
         columns=['Sending cluster', 'Ligand symbol', 'Receptor symbol', 'Target cluster', 'Ligand detection rate', 'Ligand total expression value', 
             'Ligand derived specificity of total expression value', 'Receptor detection rate', 'Receptor total expression value', 
             'Receptor derived specificity of total expression value', 'Edge total expression weight', 'Edge total expression derived specificity']
+    edgeDF = edgeDF.loc[:,edgeDF.columns[:-2]]
     edgeDF.columns = columns
     edgeDF.to_csv(edgeDFFileName, columns=columns, index=False)
     

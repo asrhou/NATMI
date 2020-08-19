@@ -48,6 +48,20 @@ def IdentifyPopulationChanges(refClusterMapDF, testClusterMapDF, resultFolder, r
     
     sumClusterDF = pd.concat([refClusterSizeDF, testClusterSizeDF])
     sumClusterDF.columns = ['Cluster', 'Population (cells)', 'Fraction (%)', 'Source']
+    newsumClusterDFDict = {'Cluster':[], 'Population (cells)':[], 'Fraction (%)':[], 'Source':[]}
+    for cct in set(sumClusterDF['Cluster']):
+        tsumClusterDF = sumClusterDF.loc[sumClusterDF['Cluster']==cct,]
+        if len(tsumClusterDF) == 1:
+            sourcetype = tsumClusterDF.loc[tsumClusterDF.index[0],'Source']
+            newsumClusterDFDict['Cluster'].append(cct)
+            newsumClusterDFDict['Population (cells)'].append(0)
+            newsumClusterDFDict['Fraction (%)'].append(0.0)
+            if sourcetype == 'reference dataset':
+                newsumClusterDFDict['Source'].append('target dataset')
+            else:
+                newsumClusterDFDict['Source'].append('reference dataset')
+    newsumClusterDF = pd.DataFrame(newsumClusterDFDict)
+    sumClusterDF = pd.concat([sumClusterDF, newsumClusterDF])
     sumClusterDF = sumClusterDF.sort_values(by=['Cluster'])
     sumClusterDF.set_index('Cluster').to_excel(os.path.join(resultFolder,'cluster_comparison.xlsx'), index=True, header=True)
     
@@ -73,11 +87,11 @@ def IdentifyPopulationChanges(refClusterMapDF, testClusterMapDF, resultFolder, r
     # visualise population changes in clusters
     sns.set_style("whitegrid")
     fig = plt.figure(figsize=(plotWidth, plotHeight))
-    ax = sns.barplot(y="Cluster", x="Population (cells)", hue="Source", data=sumClusterDF, order=cltOrder, palette={'reference dataset':'r','target dataset':'lime'})
+    ax = sns.barplot(y="Cluster", x="Population (cells)", hue="Source", data=sumClusterDF, order=cltOrder, palette={'reference dataset':'red','target dataset':'blue'})
     fig = ax.get_figure()
     fig.savefig(os.path.join(resultFolder,'cluster_size_comparison.pdf'), bbox_inches='tight')
     fig = plt.figure(figsize=(plotWidth, plotHeight))
-    ax = sns.barplot(y="Cluster", x="Fraction (%)", hue="Source", data=sumClusterDF, order=cltOrder, palette={'reference dataset':'r','target dataset':'lime'})
+    ax = sns.barplot(y="Cluster", x="Fraction (%)", hue="Source", data=sumClusterDF, order=cltOrder, palette={'reference dataset':'red','target dataset':'blue'})
     fig = ax.get_figure()
     fig.savefig(os.path.join(resultFolder,'cluster_fraction_comparison.pdf'), bbox_inches='tight')
     

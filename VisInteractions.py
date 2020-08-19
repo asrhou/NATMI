@@ -563,6 +563,7 @@ def DrawDeltaGraphvizPlot(readmeStr, typeStr, numStr, nxgS1, adjSpecM1, nxgS2, a
             cltSizeColorDict[clt] = (1,0,0)
         else:
             cltSizeColorDict[clt] = (1, 1, 0)
+    
     # draw delta networks
                 
     # convert to a graphviz graph
@@ -966,7 +967,9 @@ def DrawGraphvizPlot(readmeStr, typeStr, numStr, nxgS, adjSpecM, dataType, resul
 def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edgeDF, specificityThreshold, weightThreshold, frequencyThreshold, keepTopEdge, interDB, weightType, layout, plotFormat, plotWidth, plotHeight, fontSize, edgeWidth, maxClusterSize, clusterDistance, resultDir, dataType=''):
     readmeStr = '\n'
     
-    compT = pd.read_excel(os.path.join(resultDir,'..','cluster_comparison.xlsx'), index_col=0,header=0)
+    compT = pd.read_excel(os.path.join(resultDir,'..','cluster_comparison.xlsx'), index_col=None,header=0)
+    compT = compT.sort_values(by=['Cluster','Source'])
+    compT = compT.set_index('Cluster')
     cltFDdict = {}
     maxFC = 0
     inflist = []
@@ -980,7 +983,7 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edge
                 cltFDdict[compT.index[idx]] = 1.0*tempFC
             if maxFC < tempFC:
                 maxFC = tempFC
-        elif compT.iloc[idx,1] == 0:
+        elif compT.iloc[idx,1] * compT.iloc[idx+1,1] == 0:
             inflist.append(idx)
     #set inf as 2 x max fold change
     maxFC = maxFC *2
@@ -1786,7 +1789,8 @@ def DrawTopLRCltPairs(readmeStr, edgeDF, plotFormat,plotWidth, plotHeight, fontS
         topLRE = list(edgeDFE.loc[:,['lrpair']].drop_duplicates().head(10)['lrpair'])
         topLRS = list(edgeDFS.loc[:,['lrpair']].drop_duplicates().head(10)['lrpair'])
     topEdgeDFE = edgeDFE.loc[edgeDFE['lrpair'].isin(topLRE)]
-    topEdgeDFS = edgeDFE.loc[edgeDFS['lrpair'].isin(topLRS)]
+    topEdgeDFS = edgeDFS.loc[edgeDFS['lrpair'].isin(topLRS)]
+    
     lrCltMtxE = pd.DataFrame()
     for idx in topEdgeDFE.index:
         if dataType == '':
@@ -1799,6 +1803,7 @@ def DrawTopLRCltPairs(readmeStr, edgeDF, plotFormat,plotWidth, plotHeight, fontS
             lrCltMtxS.loc[topEdgeDFS.loc[idx,'lrpair'],topEdgeDFS.loc[idx,'cellpair']] = topEdgeDFS.loc[idx,'product of specified']
         else:
             lrCltMtxS.loc[topEdgeDFS.loc[idx,'lrpair'],topEdgeDFS.loc[idx,'cellpair']] = topEdgeDFS.loc[idx,'delta specificity']
+    
     lrnum = lrCltMtxE.shape[0]
     if lrCltMtxE.shape[0]*2 < lrCltMtxE.shape[1]:
         ctnum = lrnum*2
@@ -1833,6 +1838,7 @@ def DrawTopLRCltPairs(readmeStr, edgeDF, plotFormat,plotWidth, plotHeight, fontS
     
     #draw heatmap
     cmap = 'afmhot_r'
+    #cmap = 'coolwarm'
     import matplotlib.pyplot as plt
     lrCltMtxE = lrCltMtxE.divide(lrCltMtxE.max(axis=1),axis=0)
     f, ax = plt.subplots(figsize=(max(lrCltMtxS.shape),max(lrCltMtxS.shape)/scaleE))

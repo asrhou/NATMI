@@ -408,3 +408,7 @@ Not sure how to best use NATMI? Please check our manual above and/or read throug
 
 :a:: Yes. When you run [ExtractEdges.py](#4.1), in addition to set argument '--interDB' to your interaction file name without extension, please set the argument '--interSpecies' to 'expandp' or 'expanda', NATMI will automatically combine your interactions with 'lrc2p' (literature supported ligand-receptor pairs in connectomeDB2020) or 'lrc2a' (literature supported and putative ligand-receptor pairs in connectomeDB2020) database and uses the combined pair list to extract ligand-receptor-mediated edges. Moreover, if '--interSpecies' is set to 'human', NATMI only uses your interactions to build the cell-to-cell communication network.
 
+:question:   For human and mouse, NATMI can map between multiple gene symbols or map protein IDs to gene IDs. How are the potential redundancy handled?
+
+:a:: If multiple human/mouse IDs are associated with the same gene symbol, their expression levels are summed up as the total expression level of the corresponding gene symbol. Please see [3.1](#3.1) for more details.
+

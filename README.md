@@ -38,9 +38,11 @@ Contact: Rui Hou [rui.hou@research.uwa.edu.au]
 
 ## 1. About NATMI <a name="1"></a>
 
-**NATMI** is fast, flexible and easy-to-use tool to construct **cell-to-cell communication networks** from user-supplied **multi-omics data** (single-cell and bulk) in a **variety of species**. 
+**NATMI** is fast, flexible and easy-to-use tool (can be run in the terminal using simple commands) to construct **cell-to-cell communication networks** from user-supplied **multi-omics data** (single-cell and bulk) in a **variety of species**. 
 
-NATMI is: **python-based** ([software requirements](#2)) and is built on [**connectomeDB2020**](#3.2) (default). Users can also add and interrogate their **own interactions** in **any species** or explore existing [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) datastets. 
+NATMI is **python-based** ([software requirements](#2)), but **no additional coding in python is required**. After the analysis is finished, results can be viewed directly or imported to other software of choice such as, for example, R or excel.
+
+NATMI is built on [**connectomeDB2020**](#3.2) (default), but users can also add and interrogate their **own interactions** in **any species** or explore existing [Tabula Muris](https://tabula-muris.ds.czbiohub.org/), [Tabula Muris Senis](https://tabula-muris-senis.ds.czbiohub.org/) and [FANTOM5 cell atlas](http://fantom.gsc.riken.jp/5/suppl/Ramilowski_et_al_2015/) datastets. 
 
 *Developed and maintained by Rui Hou [rui.hou@research.uwa.edu.au] at the laboratory of Professor Alistair Forrest [alistair.forrest@perkins.uwa.edu.au] at the Harry Perkins Institute of Medical Research.*
 

@@ -65,6 +65,8 @@ To install NATMI, run the following command in the desired installation director
 
 This tool currently provides command-line utilities only.
 
+A **Docker image** of NATMI can be found in https://hub.docker.com/r/asrhou/natmi. The Docker image has all required packages installed and contains connectomeDB2020 database. For users **who are not familiar with Python**, this Docker image can greatly simplify the deployment of NATMI.
+
 ## **3. Required Data and Formats** [(top)](#table-of-contents) <a name="3"></a>
 
 To explore cell-to-cell communication NATMI uses: 

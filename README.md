@@ -11,7 +11,9 @@ How to cite:
 1. Hou, R., Denisenko, E., Ong, H.T. et al. Predicting cell-to-cell communication networks using NATMI. Nat Commun 11, 5011 (2020). https://doi.org/10.1038/s41467-020-18873-z
 2. Ramilowski, J., Goldberg, T., Harshbarger, J. et al. A draft network of ligand–receptor-mediated multicellular signalling in human. Nat Commun 6, 7866 (2015). https://doi.org/10.1038/ncomms8866
 
-Contact: Rui Hou [rui.hou@research.uwa.edu.au]
+**Contact:** Rui Hou [rui.hou@research.uwa.edu.au]
+
+**Docker Image** for **NATMI**: https://hub.docker.com/r/asrhou/natmi
 
 ## Table of Contents
 1. [**About NATMI**](#1)

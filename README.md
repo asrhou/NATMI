@@ -12,7 +12,8 @@ How to cite:
 2. Ramilowski, J., Goldberg, T., Harshbarger, J. et al. A draft network of ligand–receptor-mediated multicellular signalling in human. Nat Commun 6, 7866 (2015). https://doi.org/10.1038/ncomms8866
 
 Contact: Rui Hou [rui.hou@research.uwa.edu.au]
-(Docker Image for NATMI: https://hub.docker.com/r/asrhou/natmi)
+
+*Docker Image for NATMI: https://hub.docker.com/r/asrhou/natmi
 
 ## Table of Contents
 1. [**About NATMI**](#1)

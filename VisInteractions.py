@@ -978,8 +978,11 @@ def BuildDeltaInterClusterNetwork(origlabels, labels, cltSizes, ccolorList, edge
             if compT.iloc[idx,1] > compT.iloc[idx+1,1]:
                 tempFC = compT.iloc[idx,1]/compT.iloc[idx+1,1]
                 cltFDdict[compT.index[idx]] = -1.0*tempFC
-            if compT.iloc[idx,1] < compT.iloc[idx+1,1]:
+            elif compT.iloc[idx,1] < compT.iloc[idx+1,1]:
                 tempFC = compT.iloc[idx+1,1]/compT.iloc[idx,1]
+                cltFDdict[compT.index[idx]] = 1.0*tempFC
+            else:
+                tempFC = 1
                 cltFDdict[compT.index[idx]] = 1.0*tempFC
             if maxFC < tempFC:
                 maxFC = tempFC

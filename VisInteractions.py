@@ -305,7 +305,7 @@ def DrawDeltaHeatmap(readmeStr, typeStr, numStr, tempM1, tempM2, tempMD, tempMF,
     f, ax = plt.subplots(figsize=(figWidth, figWidth))
     if numStr == 'int':
         if tempM1.max().max() < 500:
-            g = sns.heatmap(tempM1, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=RdOnly)
+            g = sns.heatmap(tempM1, square=True, annot=True, fmt=".0f", linewidths=.5, ax=ax, cmap=RdOnly)
         else:
             g = sns.heatmap(tempM1, square=True, annot=False, linewidths=.5, ax=ax, cmap=RdOnly)
     else:
@@ -323,7 +323,7 @@ def DrawDeltaHeatmap(readmeStr, typeStr, numStr, tempM1, tempM2, tempMD, tempMF,
     f, ax = plt.subplots(figsize=(figWidth, figWidth))
     if numStr == 'int':
         if tempM2.max().max() < 500:
-            g = sns.heatmap(tempM2, square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=BuOnly)
+            g = sns.heatmap(tempM2, square=True, annot=True, fmt=".0f", linewidths=.5, ax=ax, cmap=BuOnly)
         else:
             g = sns.heatmap(tempM2, square=True, annot=False, linewidths=.5, ax=ax, cmap=BuOnly)
     else:
@@ -853,7 +853,7 @@ def DrawHeatmap(readmeStr, typeStr, numStr, tempM, dataType, resultDir, plotWidt
     f, ax = plt.subplots(figsize=(max(tempM.shape), max(tempM.shape)))
     if numStr == 'int':
         if tempM.max().max() < 100:
-            g = sns.heatmap(tempM.astype(int), square=True, annot=True, fmt="d", linewidths=.5, ax=ax, cmap=cmap)
+            g = sns.heatmap(tempM.astype(int), square=True, annot=True, fmt=".0f", linewidths=.5, ax=ax, cmap=cmap)
         else:
             g = sns.heatmap(tempM.astype(int), square=True, annot=False, linewidths=.5, ax=ax, cmap=cmap)
     else:

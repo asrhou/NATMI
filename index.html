@@ -18,6 +18,8 @@ NATMI uses connectomeDB2020 (the most up-to-date manually curated ligand-recepto
 <ol>
   <li><a href="#s1"><strong>About NATMI</strong></a></li>
   <li><a href="#s2"><strong>connectomeDB2020 database</a></li>
+  <li><a href="#s3"><strong>ICELLNETdb database</a></li>
+  <li><a href="#s4"><strong>CellphoneDB database</a></li>
 </ol>
 
 <h2 id="1-about-natmi-">1. About NATMI <a name="s1"></a></h2>
@@ -49,7 +51,7 @@ NATMI uses connectomeDB2020 (the most up-to-date manually curated ligand-recepto
   {% endfor %}
 </table>
 
-<h2 id="3-ICELLNETdb-converted-">3. ICELLNETdb-converted <a name="s2"></a></h2>
+<h2 id="3-ICELLNETdb-converted-">3. ICELLNETdb-converted <a name="s3"></a></h2>
 
 <p>
   Converted ICELLNETdb for manual check.
@@ -57,6 +59,28 @@ NATMI uses connectomeDB2020 (the most up-to-date manually curated ligand-recepto
 
 <table>
   {% for row in site.data.ICELLNETdb-converted %}
+    {% if forloop.first %}
+    <tr>
+      {% for pair in row %}
+        <th>{{ pair[0] }}</th>
+      {% endfor %}
+    </tr>
+    {% endif %}
+
+    {% tablerow pair in row %}
+      {{ pair[1] }}
+    {% endtablerow %}
+  {% endfor %}
+</table>
+
+<h2 id="4-CellphoneDB-converted-">4. CellphoneDB-converted <a name="s4"></a></h2>
+
+<p>
+  Converted CellphoneDB for manual check.
+</p>
+
+<table>
+  {% for row in site.data.CellPhoneDBv5-converted %}
     {% if forloop.first %}
     <tr>
       {% for pair in row %}
